@@ -78,7 +78,41 @@ needs it. Build prints a pre-existing workspace-root warning from a stray
   fade-up, all gated by `@media (prefers-reduced-motion: reduce)`.
 
 # Stage 2 Report
-_TBD._
+
+- [x] `components/flower.tsx` — server component porting the mockup's
+  `flowerSVG(petal, core, n)`. Renders `<n>` `<ellipse>` petals (same
+  `rx = 12 + (i%2?1.2:-0.8)`, `ry = 19 + (i%3?0:1.2)`, `rotate((360/n)*i)`
+  geometry) + center `<circle>`. Props: `petal` (NAMED key like `red`/`blue` **or**
+  raw hex), `core`, `petals`, `index`, `className`. `aria-hidden="true"` (purely
+  decorative). Per-flower `--spin-dur` (~6–11s) and `--spin-delay` (negative, to
+  desync) are derived **deterministically from `index`** via a Knuth
+  multiplicative hash — no `Math.random()`, so SSR and client markup match (no
+  hydration drift). Timing is emitted as inline CSS custom properties.
+- [x] `components/reveal.tsx` — `"use client"` polymorphic wrapper. Generic
+  `as` prop (default `div`) with `ComponentPropsWithoutRef<T>` passthrough so
+  `.reveal` lands on the caller's chosen node and native attrs still type-check.
+  On mount an `IntersectionObserver` (threshold `.12`) adds `.in` once then
+  `unobserve`s; cleanup `disconnect`s. Reduced motion is double-guarded — CSS
+  shows the node regardless, and the effect also short-circuits via
+  `matchMedia` so it never hides content when JS is slow/absent.
+- [x] `app/globals.css` — added a "Motion primitives" block: `.flower`
+  (`animation: windspin var(--spin-dur,8s) ease-in-out var(--spin-delay,0s)
+  infinite`) + `.flower svg` sizing; the `@keyframes windspin` gust from
+  `DESIGN-BRIEF.md` (0→24°→300°→360°→rest); `.reveal` / `.reveal.in` fade-up
+  (opacity + `translateY(26px)` → none). A single
+  `@media (prefers-reduced-motion: reduce)` disables the spin and forces reveals
+  visible.
+- [x] `app/page.tsx` — placeholder now imports both primitives (via the `@/`
+  alias) so the build exercises them: a `Reveal as="main"` wrapping a row of five
+  `Flower`s (one per named petal), each with a distinct `index` + `petals` count.
+- [x] Verified: `npx tsc --noEmit`, `npx eslint .`, `npm run build` all clean.
+
+Issues: The mockup's own `.flower` had only a `transition: transform` (for a
+hover lift) and **no** spin — windspin is net-new per the brief, so the base
+`.flower` transition was dropped in favor of the continuous `animation` (they'd
+both target `transform`). If any Stage 3 flower needs a hover-scale, wrap it in
+an inner element rather than re-adding a `transform` transition on `.flower`
+itself. Workspace-root lockfile warning persists (pre-existing, harmless).
 
 ---
 

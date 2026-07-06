@@ -49,3 +49,64 @@ a {
   color: inherit;
   text-decoration: none;
 }
+
+/* ---------------------------------------------------------------------------
+   Motion primitives — consumed by components/flower.tsx + components/reveal.tsx.
+--------------------------------------------------------------------------- */
+
+/* Flower — daisy SVG wrapper + wind-spin. A full 360° gust (slow build → fast
+   middle → ease out → rest → loop), per-flower timing fed via --spin-dur /
+   --spin-delay (see Flower). */
+.flower {
+  display: inline-block;
+  line-height: 0;
+  animation: windspin var(--spin-dur, 8s) ease-in-out var(--spin-delay, 0s)
+    infinite;
+}
+.flower svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+@keyframes windspin {
+  0% {
+    transform: rotate(0deg);
+  }
+  18% {
+    transform: rotate(24deg);
+  }
+  55% {
+    transform: rotate(300deg);
+  }
+  82% {
+    transform: rotate(360deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Reveal — fade-up on scroll into view; Reveal toggles `.in`. */
+.reveal {
+  opacity: 0;
+  transform: translateY(26px);
+  transition:
+    opacity 0.7s ease,
+    transform 0.7s cubic-bezier(0.2, 0.7, 0.3, 1);
+}
+.reveal.in {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .flower {
+    animation: none;
+  }
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
