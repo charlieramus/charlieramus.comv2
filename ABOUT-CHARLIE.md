@@ -122,3 +122,59 @@ Instagram `@charlieramus_` (personal) · Letterboxd `cwramus`.
 ## 9. Anything else
 **[BRAIN-DUMP → Charlie]** _Boulder, school, interests outside tech, film taste
 (Letterboxd!), what you want people to feel on the site. Dump it all._
+
+# About Charlie
+
+## Snapshot
+
+High school junior based in Boulder, Colorado. Self taught developer who builds full products solo, from backend architecture to design systems to marketing copy, working mostly in Next.js, TypeScript and Tailwind with Claude Code as a daily collaborator.
+
+## Flagship Project: Ostiara
+
+A SaaS platform for door to door sales teams across home service verticals like pest control, solar, roofing, fencing and security.
+
+Built solo end to end:
+
+- Full marketing site with six routes and a full copy audit, correcting language that implied a free trial once the actual model became a free tier of 25 house lookups per session
+- Admin dashboard at /dashboard/admin
+- Teams and roles system built on Clerk Organizations rather than pure Supabase, with a lightweight teams mirror table synced by webhook and row level security helpers that read org id and role straight from the JWT
+- A custom design system: Cabinet Grotesk and Geist typography, a violet accent (#8C43F6), tabular numerals on every price and stat, no gradients and no centered layouts
+
+Ran customer discovery interviews on how reps across different home service verticals actually generate on site price quotes, and found a real split between reps who work off fixed price menus and reps whose quotes depend on measurements taken on site. That distinction changes what the tool needs to do for each group.
+
+## Side Projects
+
+**VaultDNA**
+An Obsidian plugin that encodes a personal knowledge base into synthetic DNA sequences, built around real DNA storage constraints like homopolymer run limits and GC content biasing. Scoped as a quick one to two week build running alongside Ostiara.
+
+**MyLifeInARepo**
+A personal life tracking system built as a git repo of daily markdown files, parsed into structured data and rendered through a Next.js dashboard. Includes a financial module for net worth, budgeting and cash flow forecasting, a bank statement import pipeline and a transaction categorization engine modeled on how Monarch Money handles rule based categorization.
+
+**Querryn**
+A Chrome extension that rates the credibility of sources for students writing academic papers. Uses a tiered domain trust system and exports citations in MLA, APA, Chicago and BibTeX. Submitted to the Chrome Web Store.
+
+**Browser automation experiments**
+A Chrome extension exploring the chrome.debugger protocol, using Input.dispatchKeyEvent to script keystroke level input into web pages. A solid dive into a browser API most developers never touch.
+
+**This portfolio site**
+Next.js, TypeScript, Tailwind and Cloudflare Pages. Fixed left sidebar with continuous scroll on the right, strict monochrome palette with a single orange accent in dark mode, a masonry photography grid with a fullscreen lightbox and MDX for articles.
+
+## Currently Writing
+
+An opinion piece pushing back on the six hobbies hexagon framework that circulates online, arguing that trying to instrumentalize leisure destroys what makes it worthwhile in the first place. Four beat structure, confessional opening, a deliberately unresolved ending, and Satisfactory as the case study for where play tips into work.
+
+## How I Work
+
+Every feature gets broken into staged prompt documents before any code gets written, so Claude Code can execute one stage at a time instead of guessing at scope. Each of those documents opens with the same canary word as a simple check against hallucinated output.
+
+## Interests
+
+Biotech, entrepreneurship and architecture sit alongside the software work. Also into atmospheric, surreal audio fiction in the vein of Solar Sands.
+
+## Off the Screen
+
+Rock climbing, skiing, mountain biking, weightlifting, journaling, photography and reading. Recently picked up a Cervelo Aspero for gravel riding.
+
+## Recognition
+
+Photo credit with Boulder Reporting Lab. Built a following as a Roblox Bloxburg creator, with content that has passed 300k+ views.

@@ -25,7 +25,42 @@ preview.
 - Set `<body>` base bg/color/font to the paper/ink/Inter defaults.
 
 # Stage 1 Report
-_TBD._
+
+- [x] `app/globals.css` — replaced the scaffold's `--background`/`--foreground`
+  vars with the mockup's palette in an `@theme` block: `--color-paper`,
+  `--color-panel`, `--color-ink`, `--color-ink-soft`, `--color-red`,
+  `--color-blue`, `--color-yellow`, `--color-pink`, `--color-cyan`,
+  `--color-line`. These generate `bg-*`/`text-*`/`border-*` utilities and are
+  also exposed as `var(--color-*)` for the component CSS coming in Stages 2–3.
+- [x] `app/globals.css` — fonts mapped in a separate `@theme inline` block:
+  `--font-serif`, `--font-sans`, `--font-script` each reference the runtime
+  variable next/font sets on `<html>` (see below). `inline` is required so the
+  utilities emit the runtime var instead of resolving at build time.
+- [x] `app/globals.css` — base rules ported from the mockup's `<body>`:
+  `background: var(--color-paper)`, `color: var(--color-ink)`,
+  `font-family: var(--font-sans)`, `16px`/`1.6`, `-webkit-font-smoothing`,
+  `overflow-x: hidden`, plus `html { scroll-behavior: smooth }` and the
+  `a { color: inherit; text-decoration: none }` reset.
+- [x] `app/layout.tsx` — swapped Geist for **Libre Baskerville** (serif, weights
+  400/700 — non-variable so enumerated), **Inter** (sans, variable), **Caveat**
+  (script, variable) via `next/font/google`, each with `display: "swap"`.
+  Exposed as `--font-libre-baskerville` / `--font-inter` / `--font-caveat` on
+  `<html>` (distinct names from the `@theme` tokens to avoid a self-referential
+  `var()` collision); the `@theme inline` block aliases them to
+  `--font-serif`/`--font-sans`/`--font-script`. Metadata updated to Charlie's
+  site.
+- [x] `app/page.tsx` — scaffold placeholder rewritten to a minimal token demo
+  (used `bg-foreground`/`text-background`, which no longer exist and would fail
+  the Tailwind v4 build). Real homepage is Stage 3.
+- [x] Verified: `npx tsc --noEmit` clean, `npx eslint .` clean, `npm run build`
+  succeeds (fonts self-hosted at build time, `/` prerendered static).
+
+Issues: Libre Baskerville has no 700-italic, and the mockup's CSS never actually
+renders italic (only its Google Fonts `<link>` requested `ital,400`), so italic
+is omitted — add `style: ["normal","italic"]` at weight 400 only if Stage 3 copy
+needs it. Build prints a pre-existing workspace-root warning from a stray
+`C:\Users\jason\package-lock.json` (unrelated to this change); silence later via
+`turbopack.root` in `next.config.ts` if desired.
 
 ---
 
