@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Portfolio layout mockup — structure study of hellodani.co</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Inter:wght@400;500;600&family=Caveat:wght@600;700&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --paper: #F4F3EE;
+    --panel: #E4E3DD;
+    --ink: #14140f;
+    --ink-soft: #55554d;
+    --red: #F32317;
+    --blue: #0015D4;
+    --yellow: #FFCB41;
+    --pink: #FF8FCA;
+    --cyan: #84DEF9;
+    --line: #cfcdc2;
+    --serif: 'Libre Baskerville', Georgia, serif;
+    --sans: 'Inter', system-ui, sans-serif;
+    --script: 'Caveat', cursive;
+    --edge: clamp(20px, 6vw, 90px);
+    --maxw: 1200px;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--paper); color: var(--ink);
+    font-family: var(--sans); font-size: 16px; line-height: 1.6;
+    -webkit-font-smoothing: antialiased; overflow-x: hidden;
+  }
+  a { color: inherit; text-decoration: none; }
+  .wrap { max-width: var(--maxw); margin: 0 auto; padding: 0 var(--edge); }
+
+  /* reveal-on-scroll (inferred motion) */
+  .reveal { opacity: 0; transform: translateY(26px); transition: opacity .7s ease, transform .7s cubic-bezier(.2,.7,.3,1); }
+  .reveal.in { opacity: 1; transform: none; }
+
+  /* ---------- NAV (static — NOT sticky, scrolls away) ---------- */
+  nav {
+    position: relative; z-index: 3;
+    display: flex; justify-content: center; align-items: center; gap: clamp(28px,4vw,56px);
+    padding: 24px var(--edge);
+  }
+  nav a { color: var(--red); font-weight: 500; font-size: 15px; }
+  nav a:hover { opacity: .6; }
+  nav .logo { font-family: var(--script); font-size: 30px; font-weight: 700; letter-spacing: .5px; color: var(--ink); }
+
+  /* ---------- FLOWER ---------- */
+  .flower { display: inline-block; line-height: 0; transition: transform .4s cubic-bezier(.2,.7,.3,1); }
+  .flower svg { width: 100%; height: 100%; display: block; }
+
+  /* ---------- HERO ---------- */
+  .hero { position: relative; text-align: center; min-height: 90vh; display: flex; flex-direction: column; padding-bottom: 40px; overflow: hidden; }
+  .hero .bloom { position: absolute; z-index: 0; pointer-events: none; top: 50%; transform: translateY(-50%); width: clamp(320px, 37vw, 720px); }
+  .hero .bloom.left  { left: -9vw; }
+  .hero .bloom.right { right: -9vw; }
+  .hero .inner { position: relative; z-index: 2; width: min(90vw, 560px); margin: auto; }
+  .hero .rule { height: 0; border-top: 1px dashed var(--line); max-width: 470px; margin: 30px auto 0; }
+  .rainbow { width: 54px; margin: 0 auto 18px; display: block; }
+  .hi { font-size: 15px; color: var(--ink); margin-bottom: 10px; }
+  .hero h1 { font-family: var(--serif); font-weight: 400; font-size: clamp(26px, 4vw, 52px); line-height: 1.14; letter-spacing: -.005em; }
+  .hero p.lede { margin: 22px auto 0; max-width: 42ch; font-size: 15px; color: var(--ink-soft); }
+  .btn {
+    display: inline-flex; align-items: center; gap: 9px; background: var(--ink); color: #fff;
+    font-weight: 500; font-size: 15px; padding: 13px 26px; border-radius: 40px;
+    transition: transform .18s ease, background .18s ease; white-space: nowrap;
+  }
+  .btn:hover { transform: translateY(-2px); background: var(--red); }
+  .hero .btn { margin-top: 30px; }
+
+  /* ---------- STEP ---------- */
+  .step { text-align: center; padding: 18px 0 30px; }
+  .step .bm { font-size: 22px; display: block; margin-bottom: 8px; color: var(--red); }
+  .step .t { font-family: var(--serif); font-size: 17px; }
+
+  /* ---------- CAROUSEL ---------- */
+  .carousel { display: flex; gap: 20px; overflow-x: auto; padding: 6px var(--edge) 30px; scroll-snap-type: x mandatory; }
+  .carousel::-webkit-scrollbar { height: 0; }
+  .shot { scroll-snap-align: center; flex: 0 0 auto; width: 330px; height: 210px; border-radius: 14px; overflow: hidden; box-shadow: 0 16px 40px rgba(0,0,0,.10); background:#fff; }
+  .bbar { height: 26px; background: #f0efe9; display:flex; align-items:center; gap:5px; padding: 0 10px; border-bottom:1px solid #e6e4db; }
+  .bbar i { width:8px; height:8px; border-radius:50%; background:#d9d7cd; display:inline-block; }
+  .shot .body { height: calc(100% - 26px); display:grid; place-items:center; color:#fff; font-family:var(--serif); font-size: 18px; text-align:center; padding:12px; }
+  .s-acie .body { background:#fbfbf8; color:#888; font-size:13px; }
+  .s-dark .body { background: radial-gradient(circle at 50% 45%, #2c2c2c, #111); }
+  .s-warm .body { background: linear-gradient(120deg,#f6b24a,#e8743b); }
+  .s-mint .body { background: linear-gradient(120deg,#dff5e1,#bfe9c8); color:#2f6b3d; }
+  .s-lav  .body { background: linear-gradient(120deg,#e7d9ff,#c7b3f0); color:#4a3b6b; }
+
+  /* ---------- SECTION HEADS ---------- */
+  section { padding: clamp(46px,6vw,80px) 0; }
+  .head h2 { font-family: var(--serif); font-weight: 700; font-size: clamp(28px,4vw,46px); letter-spacing: -.01em; }
+  .head p { margin-top: 12px; color: var(--ink-soft); font-family: var(--serif); font-size: 15px; max-width: 46ch; }
+
+  /* ---------- PROJECT BANDS ----------
+     each band = [work panel]  <gap = the separator>  [tile stack] , alternating sides */
+  .proj { display: flex; flex-direction: column; gap: 26px; margin-top: 42px; }
+  .band { display: grid; grid-template-columns: 1fr 190px; gap: 26px; align-items: stretch; }
+  .band.flip { grid-template-columns: 190px 1fr; }
+  .band.flip .panel { order: 2; }
+  .band.flip .stack { order: 1; }
+
+  .panel { background: var(--panel); border-radius: 22px; padding: 30px 30px 46px; position: relative; min-height: 300px; overflow: hidden; }
+  .panel .stage { position: relative; height: 100%; min-height: 210px; }
+  .panel .label { position: absolute; left: 0; bottom: -18px; font-size: 15px; }
+  .panel .label b { font-weight: 600; }
+  .panel .label span { color: var(--ink-soft); margin-left: 8px; }
+
+  /* tile stack: colored flower squircle + empty white squircle */
+  .stack { display: grid; grid-template-rows: 1fr 1fr; gap: 22px; }
+  .tile { border-radius: 26px; display:grid; place-items:center; }
+  .tile.white { background: #fff; }
+  .tile .flower { width: 46%; }
+
+  /* device cards inside a panel */
+  .card { position: absolute; border-radius: 12px; box-shadow: 0 14px 34px rgba(0,0,0,.16); background:#fff; overflow:hidden; }
+  .band:hover .card { transform: translateY(-4px); }
+  .card, .band .card { transition: transform .35s cubic-bezier(.2,.7,.3,1); }
+
+  /* Corti-style detailed UI card */
+  .ui { padding: 14px; background:#e9e8e2; width: 66%; left: 0; top: 8%; height: 210px; transform: rotate(-4deg); }
+  .ui .pill { display:inline-flex; align-items:center; gap:6px; background:#f4f3ef; border-radius:20px; padding:6px 12px; font-size:10px; color:#333; }
+  .ui .thumb { position:absolute; right:14px; top:12px; width:42px; height:34px; border-radius:8px; background:linear-gradient(135deg,#caa24a,#7a5a1e); }
+  .ui .big { background:#fff; border-radius:14px; margin-top:12px; padding:16px 14px; font-family:var(--serif); font-size:15px; line-height:1.2; box-shadow:0 4px 12px rgba(0,0,0,.05); }
+  .ui .srch { position:absolute; left:22px; top:118px; width:34px; height:34px; border-radius:50%; background:#111; display:grid; place-items:center; color:#fff; font-size:13px; }
+  .ui .statrow { position:absolute; left:52px; bottom:16px; display:flex; align-items:center; gap:8px; font-size:11px; }
+  .ui .statrow .av { width:26px; height:26px; border-radius:7px; background:linear-gradient(135deg,#6b8cae,#2b3d55); }
+  .ui .statrow .plus { width:16px;height:16px;border-radius:50%;background:var(--red);color:#fff;display:grid;place-items:center;font-size:11px; }
+  .ui .statrow b { font-size:15px; }
+  .ui .statrow small { color:#888; font-size:9px; max-width:70px; line-height:1.1; }
+  .ui .wave { position:absolute; right:14px; bottom:16px; width:30px;height:30px;border-radius:50%;background:#eceae2;display:grid;place-items:center;font-size:12px;color:#555; }
+  .photo { width: 40%; right: 2%; bottom: 6%; height: 150px; }
+
+  /* generic mini dashboard / gallery cards */
+  .mini { width: 60%; height: 150px; }
+  .mini .cap { height: 18px; background:#f1f0ea; display:flex; gap:4px; align-items:center; padding:0 8px; }
+  .mini .cap i { width:6px;height:6px;border-radius:50%;background:#dcdad0; }
+  .mini .scr { height: calc(100% - 18px); }
+  .boxrow { display:flex; gap:6px; padding:8px; }
+  .boxrow .b { flex:1; height:100%; border-radius:6px; background:rgba(255,255,255,.6); }
+
+  /* get-in-touch full width bar */
+  .touch {
+    background: var(--panel); border-radius: 22px; padding: 26px 26px 26px 34px;
+    display: flex; align-items: center; justify-content: space-between; gap: 24px;
+  }
+  .touch p { font-size: 17px; max-width: 60ch; }
+
+  /* ---------- SERVICES ---------- */
+  .fan { position: relative; height: 150px; margin: 40px 0; }
+  .fan .fc { position: absolute; width: 90px; height: 122px; border-radius: 10px; box-shadow:0 8px 20px rgba(0,0,0,.14); overflow:hidden; transform-origin: bottom center; }
+  .svc-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 0 40px; max-width: 880px; }
+  .svc-grid div { padding: 16px 0; border-bottom: 1px dashed var(--line); font-size: 16px; }
+
+  /* ---------- ABOUT ---------- */
+  .about-grid { display:grid; grid-template-columns: 1.05fr 1fr; gap: 50px; align-items: center; margin-top: 40px; }
+  .collage { position: relative; height: 300px; }
+  .collage .ph { position:absolute; width: 130px; height: 150px; border-radius: 8px; box-shadow: 0 10px 26px rgba(0,0,0,.18); border: 5px solid #fff; overflow:hidden; }
+  .ph.p1 { left: 2%; bottom: 8%; transform: rotate(-8deg); }
+  .ph.p2 { left: 26%; top: 0; transform: rotate(4deg); }
+  .ph.p3 { right: 18%; bottom: 2%; transform: rotate(-3deg); width: 150px; }
+  .ph.p4 { right: 0; top: 18%; transform: rotate(7deg); width: 110px; height: 120px; }
+  .about-grid .bio p { font-size: 17px; color: var(--ink); max-width: 42ch; }
+  .about-grid .bio p + p { margin-top: 18px; }
+
+  /* ---------- PERSONAL / EXPLORE BENTO ---------- */
+  .pbento { display:grid; grid-template-columns: 1.25fr 1fr 1fr 1fr;
+    grid-template-rows: repeat(2, minmax(0,1fr)); gap:14px; margin-top:34px; }
+  .p-career  { grid-column:1; grid-row:1 / span 2; }
+  .p-photo   { grid-column:2; grid-row:1; }
+  .p-graphic { grid-column:3; grid-row:1; }
+  .p-writing { grid-column:4; grid-row:1; }
+  .p-blog    { grid-column:2; grid-row:2; }
+  .p-tiles   { grid-column:3; grid-row:2; display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  .p-play    { grid-column:4; grid-row:2; }
+
+  /* shared card system */
+  .pcard { background:#EFEEE7; border:1px solid var(--line); border-radius:16px; padding:14px; display:flex; flex-direction:column; color:var(--ink); transition:transform .25s ease, box-shadow .25s ease; }
+  .pcard:hover { transform:translateY(-4px); box-shadow:0 14px 32px rgba(0,0,0,.08); }
+  .kick { display:inline-flex; align-items:center; gap:6px; font-size:8.5px; font-weight:600; letter-spacing:.12em; text-transform:uppercase; color:var(--ink-soft); margin-bottom:8px; }
+  .kick .fdot { width:11px; height:11px; border-radius:4px; display:inline-block; }
+  .pcard h3 { font-family:var(--serif); font-weight:700; font-size:14px; letter-spacing:-.01em; margin-bottom:5px; }
+  .pcard .sub { color:var(--ink-soft); font-size:10.5px; line-height:1.45; margin-bottom:10px; }
+  .pcard .go { margin-top:auto; font-size:8.5px; font-weight:600; letter-spacing:.1em; text-transform:uppercase; color:var(--blue); }
+  .pcard:hover .go { color:var(--red); }
+
+  /* image/thumbnail grids with halftone dot overlay */
+  .pgrid { flex:1; display:grid; grid-auto-rows:1fr; gap:6px; margin-bottom:10px; min-height:0; }
+  .p-photo .pgrid { grid-template-columns:repeat(4,1fr); }
+  .p-graphic .pgrid { grid-template-columns:repeat(3,1fr); }
+  .pgrid i { position:relative; border-radius:7px; overflow:hidden; }
+  .pgrid i::after { content:""; position:absolute; inset:0; background-image:radial-gradient(rgba(22,22,18,.30) 1px, transparent 1.2px); background-size:5px 5px; mix-blend-mode:multiply; }
+
+  /* writing list (thumbnail + year + serif title) */
+  .wlist { list-style:none; display:flex; flex-direction:column; margin-bottom:10px; }
+  .wlist li { display:flex; gap:9px; align-items:center; padding:7px 0; border-top:1px solid var(--line); }
+  .wlist li:first-child { border-top:0; padding-top:0; }
+  .wlist .thumb { width:32px; height:28px; border-radius:6px; flex:none; }
+  .wlist .yr { font-size:8.5px; color:var(--ink-soft); letter-spacing:.06em; margin-bottom:1px; }
+  .wlist .wt { font-family:var(--serif); font-weight:700; font-size:11.5px; line-height:1.18; }
+
+  /* blog list */
+  .blist { list-style:none; display:flex; flex-direction:column; margin-bottom:10px; }
+  .blist li { display:flex; justify-content:space-between; gap:10px; font-size:10.5px; padding:6px 0; border-top:1px solid var(--line); }
+  .blist li:first-child { border-top:0; padding-top:0; }
+  .blist li span { color:var(--ink-soft); font-size:8.5px; white-space:nowrap; }
+
+  /* flower tiles — echo the work section (colored flower + white, side by side) */
+  .ptile { border-radius:14px; display:grid; place-items:center; padding:10px; min-height:0; }
+  .ptile.white { background:#fff; border:1px solid var(--line); }
+  .ptile .flower { width:62%; }
+
+  /* Career Journey (dark timeline card, styled after the reference) */
+  .cj { background:#EFEEE7; border:1px solid var(--line); border-radius:16px; padding:14px 14px 12px; color:var(--ink); position:relative; overflow:hidden; }
+  .cj-title { font-size:9px; font-weight:600; letter-spacing:.2em; text-transform:uppercase; color:var(--ink-soft); }
+  .cj-timeline { position:relative; margin-top:14px; height:308px; }
+  .cj-year { position:absolute; left:0; width:32px; font-size:9.5px; color:var(--ink-soft); transform:translateY(-50%); }
+  .cj-line { position:absolute; left:42px; right:0; height:1px; background:rgba(20,20,15,.09); }
+  .cj-band { position:absolute; left:48px; top:0; bottom:0; width:30px; border-radius:6px;
+    background: repeating-linear-gradient(45deg,#c7d19a 0 6px,#dbe4b8 6px 12px); }
+  .cj-band span { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); writing-mode:vertical-rl; rotate:180deg; font-size:9px; color:#5a6b34; white-space:nowrap; letter-spacing:.02em; }
+  .role { position:absolute; background:#fff; border:1px solid var(--line); border-radius:9px; padding:7px 9px; display:flex; align-items:center; gap:7px; box-shadow:0 6px 16px rgba(20,20,15,.08); }
+  .role .lg { width:19px; height:19px; border-radius:5px; flex:none; display:grid; place-items:center; font-size:9.5px; font-weight:800; }
+  .role .rt { font-size:10px; font-weight:600; color:var(--ink); line-height:1.18; }
+  .role .rt span { color:var(--ink-soft); font-weight:400; }
+  .role .dt { font-size:8.5px; color:var(--ink-soft); margin-left:auto; padding-left:9px; white-space:nowrap; letter-spacing:.04em; }
+  .role.big { flex-direction:column; align-items:flex-start; justify-content:space-between; padding:11px; }
+  .role.big .lg { width:24px; height:24px; }
+  .role.big .rt { font-size:12px; margin-top:auto; }
+  .role.big .dt { margin-left:0; margin-top:5px; padding-left:0; }
+
+  /* ---------- CONTACT (red Get in touch) ---------- */
+  .contact { padding: clamp(50px,6vw,80px) var(--edge) 0; }
+  .contact .box {
+    background: var(--red); color: #fff; border-radius: 40px;
+    width: clamp(340px, 53vw, 1060px); margin: 0 auto;
+    padding: clamp(28px,2.6vw,42px) 34px clamp(14px,1.8vw,26px);
+    text-align: center; display: flex; flex-direction: column; align-items: center;
+    min-height: 390px; position: relative; z-index: 2;
+  }
+  .contact .peace { width: 46px; margin-bottom: clamp(18px,2.5vw,30px); }
+  .contact .peace svg { width: 100%; height: auto; display: block; }
+  .contact .vibe { font-family: var(--serif); font-weight: 700; font-size: clamp(18px,1.5vw,24px); }
+  .contact .huge { margin-top: auto; font-weight: 400; font-size: clamp(40px,7vw,140px); line-height: .9; letter-spacing: -.02em; white-space: nowrap; }
+  .pills { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-top: -26px; position: relative; z-index: 1; }
+  .pills a { background: var(--panel); color: var(--ink); padding: 24px 24px 14px; border-radius: 16px; font-size: 15px; }
+  .pills a:hover { background: #dbdad0; }
+  .legal-min { text-align: center; color: var(--ink-soft); font-size: 13px; padding: 30px var(--edge) 40px; }
+
+  /* ---------- FLOWER GRID FINALE ---------- */
+  .finale { position: relative; padding: 56px 0; }
+  .grid-flowers { display: grid; grid-template-columns: repeat(8, 1fr); gap: 12px 6px; align-items: center; justify-items: center; }
+  .grid-flowers .flower { width: 92px; height: 92px; }
+  .grid-flowers .flower:hover { transform: rotate(24deg) scale(1.06); }
+  .finale .center-text {
+    position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%);
+    background: var(--paper); padding: 18px 32px; text-align: center;
+    font-family: var(--serif); font-size: clamp(18px,2.2vw,24px); line-height: 1.35; z-index: 3;
+  }
+
+  /* ---------- FOOTER ---------- */
+  footer { padding: 56px var(--edge) 44px; border-top: 1px solid var(--line); }
+  footer .frow { display:flex; justify-content: space-between; align-items:flex-end; gap:30px; flex-wrap: wrap; }
+  footer .big { font-family: var(--script); font-size: clamp(40px,7vw,78px); }
+  footer .links { display:flex; gap: 26px; font-size: 15px; }
+  footer .links a { color: var(--red); }
+  footer .legal { margin-top: 34px; padding-top: 20px; border-top:1px solid var(--line); display:flex; justify-content:space-between; color:var(--ink-soft); font-size:13px; flex-wrap:wrap; gap:8px; }
+
+  .ribbon { position: fixed; bottom: 14px; left: 14px; z-index: 99; background: var(--ink); color:#fff; font-size:12px; font-weight:600; padding:7px 13px; border-radius:30px; opacity:.9; }
+
+  /* keep hero flowers clear of the text on smaller desktops */
+  @media (max-width: 1200px) {
+    .hero .bloom { width: 30vw; }
+    .hero .inner { width: min(86vw, 500px); }
+  }
+  @media (max-width: 880px) {
+    .band, .band.flip { grid-template-columns: 1fr; }
+    .band.flip .panel { order: 1; } .band.flip .stack { order: 2; }
+    .stack { grid-template-rows: none; grid-template-columns: 1fr 1fr; height: 150px; }
+    .about-grid { grid-template-columns: 1fr; }
+    .svc-grid { grid-template-columns: 1fr 1fr; }
+    .grid-flowers { grid-template-columns: repeat(5,1fr); }
+    .touch { flex-direction: column; align-items: flex-start; }
+    .hero .bloom { opacity: .3; width: 30vw; }
+    .contact .box { width: 90vw; min-height: 400px; }
+    .contact .huge { white-space: normal; font-size: clamp(40px,13vw,74px); }
+    .pbento { grid-template-columns: 1fr 1fr; grid-template-rows: auto; }
+    .p-career  { grid-column:1 / -1; grid-row:auto; }
+    .p-photo, .p-writing, .p-blog, .p-tiles { grid-column:auto; grid-row:auto; }
+  }
+</style>
+</head>
+<body>
+
+  <!-- HERO (nav sits at the top of the hero; nothing is sticky) -->
+  <header class="hero">
+    <div class="bloom left"  data-flower="#84DEF9|#0015D4|7"></div>
+    <div class="bloom right" data-flower="#F32317|#F4F3EE|8"></div>
+    <nav>
+      <a href="#work">works</a>
+      <span class="logo">studio</span>
+      <a href="#garden">garden</a>
+    </nav>
+    <div class="inner reveal">
+      <svg class="rainbow" viewBox="0 0 100 55"><g fill="none" stroke-width="6" stroke-linecap="round">
+        <path d="M8 52 A42 42 0 0 1 92 52" stroke="#F32317"/>
+        <path d="M18 52 A32 32 0 0 1 82 52" stroke="#FFCB41"/>
+        <path d="M28 52 A22 22 0 0 1 72 52" stroke="#0015D4"/>
+      </g></svg>
+      <div class="hi">Hi, I'm [ your name ]</div>
+      <h1>Visual and Product designer you can count on</h1>
+      <p class="lede">Placeholder tagline goes here — one or two lines on how you simplify complex ideas into products people love. Swap this copy for your own.</p>
+      <div class="rule"></div>
+      <a class="btn" href="#">Chat with me</a>
+    </div>
+  </header>
+
+  <!-- STEP -->
+  <div class="step reveal">
+    <span class="bm">🔖</span>
+    <span class="t">Step into my digital home</span>
+  </div>
+
+  <!-- CAROUSEL -->
+  <div class="carousel reveal">
+    <div class="shot s-acie"><div class="bbar"><i></i><i></i><i></i></div><div class="body">Project preview one</div></div>
+    <div class="shot s-dark"><div class="bbar"><i></i><i></i><i></i></div><div class="body">✳</div></div>
+    <div class="shot s-warm"><div class="bbar"><i></i><i></i><i></i></div><div class="body">Project preview two</div></div>
+    <div class="shot s-lav"><div class="bbar"><i></i><i></i><i></i></div><div class="body">Placeholder headline</div></div>
+    <div class="shot s-mint"><div class="bbar"><i></i><i></i><i></i></div><div class="body">Project preview three</div></div>
+    <div class="shot s-dark"><div class="bbar"><i></i><i></i><i></i></div><div class="body">Preview four</div></div>
+  </div>
+
+  <!-- PERSONAL / EXPLORE (sits above the work section) -->
+  <section id="personal"><div class="wrap">
+    <div class="head reveal">
+      <h2>A little more personal</h2>
+      <p>Placeholder subline — the blog, my career path, a few essays, and photos. Everything beyond the client work.</p>
+    </div>
+    <div class="pbento">
+      <!-- Career Journey (dark timeline) -->
+      <article class="cj p-career reveal">
+        <div class="cj-title">Career Journey</div>
+        <div class="cj-timeline">
+          <!-- gridlines + year labels: 2027 (top) → 2020 (bottom) -->
+          <div class="cj-line" style="top:0"></div>   <div class="cj-year" style="top:0">2027</div>
+          <div class="cj-line" style="top:44px"></div><div class="cj-year" style="top:44px">2026</div>
+          <div class="cj-line" style="top:88px"></div><div class="cj-year" style="top:88px">2025</div>
+          <div class="cj-line" style="top:132px"></div><div class="cj-year" style="top:132px">2024</div>
+          <div class="cj-line" style="top:176px"></div><div class="cj-year" style="top:176px">2023</div>
+          <div class="cj-line" style="top:220px"></div><div class="cj-year" style="top:220px">2022</div>
+          <div class="cj-line" style="top:264px"></div><div class="cj-year" style="top:264px">2021</div>
+          <div class="cj-line" style="top:308px"></div><div class="cj-year" style="top:308px">2020</div>
+
+          <!-- freelance band -->
+          <div class="cj-band"><span>Freelance &amp; Side Projects</span></div>
+
+          <!-- roles -->
+          <div class="role" style="top:51px; left:92px;">
+            <span class="lg" style="background:#CC785C;color:#fff">A</span>
+            <span class="rt">Design Engineer <span>· Anthropic</span></span>
+          </div>
+          <div class="role" style="top:93px; right:-20px;">
+            <span class="lg" style="background:#FF2D20;color:#fff">L</span>
+            <span class="rt">Product Designer <span>· Laravel</span></span>
+          </div>
+          <div class="role big" style="top:134px; left:92px; right:12px; height:90px;">
+            <span class="lg" style="background:#4353FF;color:#fff">W</span>
+            <span class="rt">Senior Staff Designer <span>· Webflow</span></span>
+            <span class="dt">DEC 21 — DEC 24</span>
+          </div>
+          <div class="role" style="top:260px; left:92px; right:12px;">
+            <span class="lg" style="background:#FF90E8;color:#111">G</span>
+            <span class="rt">Product Designer <span>· Gumroad</span></span>
+            <span class="dt">AUG — DEC 21</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- Photography (short, halftone thumbnail row) -->
+      <a class="pcard p-photo reveal" href="#">
+        <span class="kick"><span class="fdot" style="background:var(--cyan)"></span> Photography</span>
+        <h3>Through the viewfinder</h3>
+        <div class="pgrid">
+          <i style="background:linear-gradient(150deg,#2f5c86,#c98a3a)"></i>
+          <i style="background:linear-gradient(150deg,#c9a24a,#7a5a1e)"></i>
+          <i style="background:linear-gradient(150deg,#2b5c7a,#173445)"></i>
+          <i style="background:linear-gradient(150deg,#5a6b52,#2c3a28)"></i>
+        </div>
+        <span class="go">View the gallery ↗</span>
+      </a>
+
+      <!-- Graphic design portfolio (short) -->
+      <a class="pcard p-graphic reveal" href="#">
+        <span class="kick"><span class="fdot" style="background:var(--red)"></span> Graphic design</span>
+        <h3>Posters &amp; type</h3>
+        <div class="pgrid">
+          <i style="background:linear-gradient(150deg,#F32317,#FFCB41)"></i>
+          <i style="background:linear-gradient(150deg,#0015D4,#84DEF9)"></i>
+          <i style="background:linear-gradient(150deg,#14140f,#5a5a5a)"></i>
+        </div>
+        <span class="go">See the portfolio ↗</span>
+      </a>
+
+      <!-- Latest writing (short) -->
+      <a class="pcard p-writing reveal" href="#">
+        <span class="kick"><span class="fdot" style="background:var(--yellow)"></span> Latest writing</span>
+        <ul class="wlist">
+          <li>
+            <span class="thumb" style="background:linear-gradient(135deg,#2b3d55,#84def9)"></span>
+            <div><div class="yr">2026</div><div class="wt">On the quiet craft of interfaces</div></div>
+          </li>
+          <li>
+            <span class="thumb" style="background:linear-gradient(135deg,#3a2a5a,#c7b3f0)"></span>
+            <div><div class="yr">2025</div><div class="wt">Notes on shipping slowly</div></div>
+          </li>
+        </ul>
+        <span class="go">Read all essays ↗</span>
+      </a>
+
+      <!-- From the blog (short) -->
+      <a class="pcard p-blog reveal" href="#">
+        <span class="kick"><span class="fdot" style="background:var(--blue)"></span> From the blog</span>
+        <ul class="blist">
+          <li>Redesigning the portfolio, again <span>Jun 26</span></li>
+          <li>A week of small experiments <span>May 26</span></li>
+          <li>What good defaults feel like <span>Apr 26</span></li>
+        </ul>
+        <span class="go">Read the blog ↗</span>
+      </a>
+
+      <!-- Accent flower tiles (short, side by side) -->
+      <div class="p-tiles">
+        <div class="ptile reveal" style="background:var(--pink)" data-flower="blue|#0015D4|6"></div>
+        <div class="ptile white reveal" data-flower="red|#F32317|6"></div>
+      </div>
+
+      <!-- Playground (short) -->
+      <a class="pcard p-play reveal" href="#">
+        <span class="kick"><span class="fdot" style="background:var(--yellow)"></span> Playground</span>
+        <h3>Side experiments</h3>
+        <p class="sub">Placeholder — half-finished ideas, generative sketches, and things made just for fun.</p>
+        <span class="go">Poke around ↗</span>
+      </a>
+    </div>
+  </div></section>
+
+  <!-- WORK -->
+  <section id="work"><div class="wrap">
+    <div class="head reveal">
+      <h2>Tiny fraction of my work</h2>
+      <p>Placeholder subline — teaming with founders on their next product breakthrough, design that's both functional and great looking.</p>
+    </div>
+
+    <div class="proj">
+      <!-- Band 1: work panel LEFT (detailed Corti-style UI) + tile stack RIGHT -->
+      <div class="band reveal">
+        <div class="panel">
+          <div class="stage">
+            <div class="card ui">
+              <span class="pill">◍ Powering safer, faster care</span>
+              <span class="thumb"></span>
+              <div class="big">Placeholder product<br/>headline here</div>
+              <div class="srch">⌕</div>
+              <div class="statrow"><span class="av"></span><span class="plus">+</span><b>250K</b><small>placeholder metric caption</small></div>
+              <div class="wave">▷</div>
+            </div>
+            <div class="card photo" style="background:linear-gradient(160deg,#ffcf8a,#e8743b)"></div>
+            <div class="label"><b>Project One</b><span>medtech, ai</span></div>
+          </div>
+        </div>
+        <div class="stack">
+          <div class="tile" style="background:var(--blue)" data-flower="yellow|#FFCB41|6"></div>
+          <div class="tile white"></div>
+        </div>
+      </div>
+
+      <!-- Band 2: tile stack LEFT + work panel RIGHT -->
+      <div class="band flip reveal">
+        <div class="panel">
+          <div class="stage">
+            <div class="card mini" style="left:0;top:6%;height:170px;transform:rotate(-3deg)">
+              <div class="cap"><i></i><i></i></div>
+              <div class="scr" style="background:#3a2a5a"><div class="boxrow" style="height:100%;flex-wrap:wrap;gap:6px">
+                <div class="b" style="background:#ffcb41"></div><div class="b" style="background:#84def9"></div><div class="b" style="background:#7a4fd0"></div>
+                <div class="b" style="background:#2fae6b"></div><div class="b" style="background:#e8743b"></div><div class="b" style="background:#84def9"></div>
+              </div></div>
+            </div>
+            <div class="card" style="width:30%;right:4%;bottom:6%;height:150px;transform:rotate(6deg);background:linear-gradient(160deg,#c9a06a,#7a5a34)"></div>
+            <div class="label"><b>Project Two</b><span>b2b, saas</span></div>
+          </div>
+        </div>
+        <div class="stack">
+          <div class="tile" style="background:var(--pink)" data-flower="blue|#0015D4|6"></div>
+          <div class="tile white"></div>
+        </div>
+      </div>
+
+      <!-- get-in-touch full-width bar -->
+      <div class="touch reveal">
+        <p>There's a product case study as well. Feel free to get in touch to check it out.</p>
+        <a class="btn" href="#">Case study</a>
+      </div>
+
+      <!-- Band 3: work panel LEFT + tile stack RIGHT -->
+      <div class="band reveal">
+        <div class="panel">
+          <div class="stage">
+            <div class="card photo" style="left:2%;top:12%;width:34%;height:150px;transform:rotate(-5deg);background:linear-gradient(160deg,#f0603a,#c23a20)"></div>
+            <div class="card mini" style="left:22%;top:6%;width:64%;height:180px;transform:rotate(3deg)">
+              <div class="cap"><i></i><i></i></div>
+              <div class="scr" style="background:#c9cbd0;padding:8px;display:grid;grid-template-columns:1.4fr 1fr;gap:6px">
+                <div style="background:#fff;border-radius:6px"></div>
+                <div style="display:grid;grid-template-rows:1fr 1fr;gap:6px"><div style="background:#111;border-radius:6px"></div><div style="background:#f0603a;border-radius:6px"></div></div>
+              </div>
+            </div>
+            <div class="label"><b>Project Three</b><span>fintech</span></div>
+          </div>
+        </div>
+        <div class="stack">
+          <div class="tile" style="background:var(--yellow)" data-flower="red|#F32317|6"></div>
+          <div class="tile white"></div>
+        </div>
+      </div>
+
+      <!-- Band 4: tile stack LEFT + dark work panel RIGHT -->
+      <div class="band flip reveal">
+        <div class="panel">
+          <div class="stage">
+            <div class="card" style="left:6%;top:12%;width:82%;height:150px;transform:rotate(-2deg);background:radial-gradient(circle at 60% 40%,#2b6bff,#0a0a1a)"></div>
+            <div class="label"><b>Project Four</b><span>saas</span></div>
+          </div>
+        </div>
+        <div class="stack">
+          <div class="tile" style="background:var(--blue)" data-flower="yellow|#FFCB41|6"></div>
+          <div class="tile white"></div>
+        </div>
+      </div>
+    </div>
+  </div></section>
+
+  <!-- SERVICES -->
+  <section id="garden"><div class="wrap">
+    <div class="head reveal">
+      <h2>I've got your back with…</h2>
+      <p>Digital aesthetics that engage and emotionally connect with your users</p>
+    </div>
+    <div class="fan reveal" id="fan"></div>
+    <div class="svc-grid reveal">
+      <div>Product Design</div><div>Animation</div><div>Framer</div>
+      <div>Websites / Apps</div><div>Midjourney</div><div>Marketing</div>
+      <div>Design systems</div><div>Visual identity</div><div>Iconography</div>
+    </div>
+  </div></section>
+
+  <!-- ABOUT -->
+  <section><div class="wrap">
+    <div class="head reveal">
+      <h2>Behind the pixels</h2>
+      <p>Finally, a quick peek behind the work — swap this for a short, friendly intro.</p>
+    </div>
+    <div class="about-grid reveal">
+      <div class="collage">
+        <div class="ph p1" style="background:linear-gradient(135deg,#f6c26b,#c9743a)"></div>
+        <div class="ph p2" style="background:linear-gradient(135deg,#7fb2e5,#2a5b9c)"></div>
+        <div class="ph p3" style="background:linear-gradient(135deg,#f2a35e,#d94f3d)"></div>
+        <div class="ph p4" style="background:linear-gradient(135deg,#9fd7a0,#4f9c6b)"></div>
+      </div>
+      <div class="bio">
+        <p>This is placeholder copy for the about section. A couple of short sentences go here — where you're based, what you care about, how you like to work.</p>
+        <p>Keep it warm and human, but this is just filler text for the layout. Replace it whenever you're ready.</p>
+      </div>
+    </div>
+  </div></section>
+
+  <!-- CONTACT: red "Get in touch" block — sits ABOVE the flower grid -->
+  <section class="contact"><div class="wrap">
+    <div class="box reveal">
+      <div class="peace">
+        <svg viewBox="0 0 40 48" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M13 27 L10.5 13 a2.4 2.4 0 0 1 4.8 -0.6 L17 25"/>
+          <path d="M17 25 L17 10 a2.4 2.4 0 0 1 4.8 0 L22 26"/>
+          <path d="M22 26 L24 18.5 a2.3 2.3 0 0 1 4.5 1.1 L27 30"/>
+          <path d="M13 27 c-4.2 2 -5.2 6.2 -3.2 11 2 4.8 6 7.6 11.7 7.6 6.7 0 10.5 -4.6 10.5 -11.4"/>
+        </svg>
+      </div>
+      <div class="vibe">Think we vibe?</div>
+      <div class="huge">Get in touch</div>
+    </div>
+    <div class="pills reveal">
+      <a href="#work">works</a>
+      <a href="#garden">garden</a>
+      <a href="#">x (twitter)</a>
+      <a href="#">linkedIn</a>
+      <a href="#">dribbble</a>
+    </div>
+  </div></section>
+
+  <!-- FLOWER GRID FINALE (bottom of page) -->
+  <section class="finale">
+    <div class="grid-flowers" id="grid"></div>
+    <div class="center-text">Great design is always<br />hidden in the plain sight.</div>
+  </section>
+
+  <div class="legal-min">© 2026 — mockup layout study · placeholder content · structure rebuilt from screenshots of hellodani.co</div>
+
+  <div class="ribbon">MOCKUP · structure study · placeholder text</div>
+
+<script>
+  function flowerSVG(petal, core, n){
+    n = n || 7; let p = '';
+    for (let i=0;i<n;i++){
+      const a = (360/n)*i;
+      const rx = 12 + (i%2?1.2:-0.8);
+      const ry = 19 + (i%3?0:1.2);
+      p += `<ellipse cx="50" cy="28" rx="${rx}" ry="${ry}" fill="${petal}" transform="rotate(${a} 50 50)"/>`;
+    }
+    return `<svg viewBox="0 0 100 100">${p}<circle cx="50" cy="50" r="11" fill="${core}"/></svg>`;
+  }
+  const NAMED = { red:'#F32317', blue:'#0015D4', yellow:'#FFCB41', pink:'#FF8FCA', cyan:'#84DEF9' };
+  document.querySelectorAll('[data-flower]').forEach(el=>{
+    const [pName, core, n] = el.getAttribute('data-flower').split('|');
+    el.classList.add('flower');
+    el.innerHTML = flowerSVG(NAMED[pName]||pName, core, parseInt(n||7));
+  });
+
+  // Finale grid
+  const PET = ['#FF8FCA','#0015D4','#84DEF9','#F32317','#FFCB41'];
+  const COR = ['#ffffff','#FFCB41','#0015D4','#84DEF9','#FF8FCA','#F32317'];
+  const grid = document.getElementById('grid');
+  for (let i=0;i<40;i++){
+    const d = document.createElement('div'); d.className = 'flower';
+    const petal = PET[(i*3 + (i%2)) % PET.length];
+    let core = COR[(i*5) % COR.length]; if (core === petal) core = '#ffffff';
+    d.innerHTML = flowerSVG(petal, core, 5 + (i % 4));
+    grid.appendChild(d);
+  }
+
+  // Fanned card stack
+  const fan = document.getElementById('fan');
+  const fanColors = ['#1c1c1c','#f4f3ee','#111','#dff5e1','#111','#e7ecff','#cfe9d6','#0b0b0b','#f7c8e0'];
+  fanColors.forEach((c,i)=>{
+    const card = document.createElement('div'); card.className = 'fc';
+    const angle = (i - fanColors.length/2) * 7;
+    card.style.left = (i*44) + 'px';
+    card.style.transform = `rotate(${angle}deg)`;
+    card.style.zIndex = i;
+    card.style.background = c;
+    fan.appendChild(card);
+  });
+
+  // Scroll reveal (inferred motion)
+  const io = new IntersectionObserver((es)=>{
+    es.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target);} });
+  }, { threshold: .12 });
+  document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+</script>
+</body>
+</html>
