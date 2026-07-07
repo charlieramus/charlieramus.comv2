@@ -268,4 +268,56 @@ field drives sorting, so no date parsing is needed. Verified: `tsc` / `eslint` /
   decide (e.g. how the bento maps to `experience`/`projects`).
 
 # Stage 5 Report
-_TBD._
+
+**Verification — all clean:** `npx tsc --noEmit` ✓ · `npx eslint .` ✓ ·
+`npm run build` ✓ (exit 0, `/` still prerendered static).
+
+**Consistency sweep across `data/`:**
+- [x] **Ordering.** `experience.ts` newest-first (2026 · 2026 · 2025) with numeric
+  `start`/`end`; `writing.ts` newest-first via `order` 1–4 (Jul 2026 → Dec 2025);
+  `projects-design.ts` newest-first (2025 · 2025 · 2024). **`projects-web.ts` is
+  intentionally curation-ordered** (flagship → `spotlight` → long tail), *not*
+  chronological — by Charlie's Stage 2 call; the `spotlight` flag (not array index)
+  is the real signal, so this is correct, not a violation.
+- [x] **Types.** All `date`/`dates` are strings; no `Date` objects.
+- [x] **Links.** Every `href` is a real URL or `""` — Ostiara repo, Liberty Puzzles,
+  `charlieramus.com`, and the 5 socials resolve; MyLifeInARepo/VaultDNA/Querryn/
+  browser-automation + all gear are `""` (nothing half-formed).
+- [x] **Assets.** No entry points at a missing `/public` file: `projects-*` `image`/
+  `images` unset, `photos` empty, all MDX `headerImage: ""` — every image is an
+  explicit **V4** TODO, so the build references no broken asset.
+- [x] **Tag casing.** Consistent Title Case across `experience`/`projects-web`; the
+  only lowercase tag, `chrome.debugger`, is a deliberate API identifier, and
+  proper-noun tags (`Next.js`, `TypeScript`, `MDX`, `EdTech`) keep their canonical
+  casing. No fix needed.
+- [x] **Colors → theme tokens.** Found + fixed the one issue: `experience.ts`
+  `logoFg` used raw hex (`#fff`, `#141414`) while `logoBg` already used tokens.
+  Tokenized to `var(--color-paper)` / `var(--color-ink)` (both defined in
+  `globals.css @theme`), so **all colors in `data/` now use `var(--color-*)`** and
+  match the `logoBg` pattern.
+
+**Import-ready for V3 — confirmed:**
+- [x] Every content type is exported: `Snapshot`, `Experience`/`ExperienceLink`,
+  `WebProject`, `DesignProject`, `GearItem`, `Social`, `Photo`, `WritingEntry`.
+- [x] **No page imports the data yet** — `grep "from .*data/"` across `**/*.{ts,tsx}`
+  returns zero matches. `app/page.tsx` is untouched (still the mockup placeholder
+  rendering the V1 section components with their hardwired copy).
+
+**What V3 will need to decide (hand-off):**
+- **Bento → data mapping.** The mockup's `.pbento` cards (`.p-career`, `.p-photo`,
+  `.p-graphic`, `.p-writing`, `.p-blog`, `.p-play`) need wiring: `.p-career` →
+  `experience.entries` timeline; `.p-writing` → `writing` (top N); photo/graphic →
+  `photos`/`designProjects`.
+- **The "highlights right now" surface** (Charlie's Stage 2 idea): compose from
+  `webProjects.filter(spotlight)` + `photos.filter(featured)` + latest `writing` +
+  latest article. All flags/fields exist; photos stay empty until V4.
+- **Hero = name.** Render `snapshot.name` as the hero headline; `tagline` is
+  `<meta>`-only (do not surface it as a visible hero line).
+- **Roles chips vs prose** (`snapshot.roles` is a 4-item default).
+- **Work bands** (`.band`/`.panel`) map to `webProjects` (long tail) + `designProjects`.
+
+Issues: None. Content model V1→V2 complete and internally consistent. Open items are
+all **V4** (real header images for the 4 essays; the `photos` gallery via the
+downscale/thumb/blur sync) and the **V3** composition decisions above. Git note:
+Stages 1–4 are already committed (`f5f1709 stage4v2`); the Stage 5 `experience.ts`
+tokenization is the only uncommitted change — left for Charlie to commit.
