@@ -1,5 +1,6 @@
 import Flower from "@/components/flower";
 import Reveal from "@/components/reveal";
+import { webProjects, type WebProject } from "@/data/projects-web";
 
 // Reusable [colored flower tile + white tile] stack that flanks each band.
 function Stack({
@@ -23,39 +24,58 @@ function Stack({
   );
 }
 
-// The mockup's "Tiny fraction of my work" — alternating panel/stack bands.
-// CUSTOMIZE: real projects + case studies land in later stages.
+// Compact caption under each band's (placeholder) device visual: title + date +
+// the top tags. Full descriptions live on /web-projects (V4) and the flagship's
+// blurb is in the .touch bar — the visual panels can't hold a paragraph each.
+function Caption({ p }: { p: WebProject }) {
+  return (
+    <div className="label">
+      <b>{p.title}</b>
+      <span>
+        {p.date} · {p.tags.slice(0, 2).join(", ").toLowerCase()}
+      </span>
+    </div>
+  );
+}
+
+// Homepage work = the top 4 curated projects (Charlie's V3 call: the two
+// spotlight builds, then charlieramus.com + VaultDNA — Querryn dropped to the
+// /web-projects long tail). The four bespoke panels keep their placeholder
+// visuals until V4 screenshots; only the captions + case-study bar are wired.
+const BAND_TITLES = ["Ostiara", "MyLifeInARepo", "charlieramus.com", "VaultDNA"];
+const bands = BAND_TITLES.map(
+  (t) => webProjects.find((p) => p.title === t) as WebProject,
+);
+const [flagship] = bands; // Ostiara
+
 export default function Work() {
   return (
     <section id="work">
       <div className="wrap">
         <Reveal className="head">
           <h2>Tiny fraction of my work</h2>
+          {/* CUSTOMIZE: work subline */}
           <p>
-            Placeholder subline — teaming with founders on their next product
-            breakthrough, design that&apos;s both functional and great looking.
+            A few things I&apos;ve built solo, end to end — from the backend and
+            data model to the design system and the copy.
           </p>
         </Reveal>
 
         <div className="proj">
-          {/* Band 1 — detailed UI panel LEFT + stack RIGHT */}
+          {/* Band 1 — detailed UI panel LEFT + stack RIGHT (flagship: Ostiara) */}
           <Reveal className="band">
             <div className="panel">
               <div className="stage">
                 <div className="card ui">
-                  <span className="pill">◍ Powering safer, faster care</span>
+                  <span className="pill">◍ Door-to-door, streamlined</span>
                   <span className="thumb" />
-                  <div className="big">
-                    Placeholder product
-                    <br />
-                    headline here
-                  </div>
+                  <div className="big">{flagship.title}</div>
                   <div className="srch">⌕</div>
                   <div className="statrow">
                     <span className="av" />
                     <span className="plus">+</span>
-                    <b>250K</b>
-                    <small>placeholder metric caption</small>
+                    <b>5</b>
+                    <small>home-service verticals</small>
                   </div>
                   <div className="wave">▷</div>
                 </div>
@@ -63,10 +83,7 @@ export default function Work() {
                   className="card photo"
                   style={{ background: "linear-gradient(160deg,#ffcf8a,#e8743b)" }}
                 />
-                <div className="label">
-                  <b>Project One</b>
-                  <span>medtech, ai</span>
-                </div>
+                <Caption p={bands[0]} />
               </div>
             </div>
             <Stack bg="var(--color-blue)" petal="yellow" core="#FFCB41" index={10} />
@@ -109,23 +126,23 @@ export default function Work() {
                     background: "linear-gradient(160deg,#c9a06a,#7a5a34)",
                   }}
                 />
-                <div className="label">
-                  <b>Project Two</b>
-                  <span>b2b, saas</span>
-                </div>
+                <Caption p={bands[1]} />
               </div>
             </div>
             <Stack bg="var(--color-pink)" petal="blue" core="#0015D4" index={11} />
           </Reveal>
 
-          {/* Full-width get-in-touch bar */}
+          {/* Full-width case-study bar → the flagship (Ostiara) blurb */}
           <Reveal className="touch">
-            <p>
-              There&apos;s a product case study as well. Feel free to get in touch
-              to check it out.
-            </p>
-            <a className="btn" href="#">
-              Case study
+            <p>{flagship.description}</p>
+            <a
+              className="btn"
+              href={flagship.href || "/web-projects"}
+              {...(flagship.href
+                ? { target: "_blank", rel: "noopener noreferrer" }
+                : {})}
+            >
+              View {flagship.title} ↗
             </a>
           </Reveal>
 
@@ -175,10 +192,7 @@ export default function Work() {
                     </div>
                   </div>
                 </div>
-                <div className="label">
-                  <b>Project Three</b>
-                  <span>fintech</span>
-                </div>
+                <Caption p={bands[2]} />
               </div>
             </div>
             <Stack bg="var(--color-yellow)" petal="red" core="#F32317" index={12} />
@@ -199,13 +213,15 @@ export default function Work() {
                     background: "radial-gradient(circle at 60% 40%,#2b6bff,#0a0a1a)",
                   }}
                 />
-                <div className="label">
-                  <b>Project Four</b>
-                  <span>saas</span>
-                </div>
+                <Caption p={bands[3]} />
               </div>
             </div>
             <Stack bg="var(--color-blue)" petal="yellow" core="#FFCB41" index={13} />
+          </Reveal>
+
+          {/* Curation continues on the inner route (dead until V4) */}
+          <Reveal as="a" className="proj-all" href="/web-projects">
+            See all my work ↗
           </Reveal>
         </div>
       </div>

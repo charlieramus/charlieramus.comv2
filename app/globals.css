@@ -923,6 +923,20 @@ body {
     max-width: 60ch;
   }
 
+  /* "See all my work" link under the work bands → /web-projects (V4 route). */
+  .proj-all {
+    align-self: center;
+    margin-top: 8px;
+    font-weight: 600;
+    font-size: 13px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-blue);
+  }
+  .proj-all:hover {
+    color: var(--color-red);
+  }
+
   /* ---------- SERVICES ---------- */
   .fan {
     position: relative;

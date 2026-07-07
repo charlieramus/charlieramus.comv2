@@ -1,15 +1,14 @@
 import Reveal from "@/components/reveal";
+import { webProjects } from "@/data/projects-web";
 
-// "Step into my digital home" + the horizontally-scrolling project carousel.
-// CUSTOMIZE: swap these placeholder previews for real project shots.
-const SHOTS: { variant: string; body: string }[] = [
-  { variant: "s-acie", body: "Project preview one" },
-  { variant: "s-dark", body: "✳" },
-  { variant: "s-warm", body: "Project preview two" },
-  { variant: "s-lav", body: "Placeholder headline" },
-  { variant: "s-mint", body: "Project preview three" },
-  { variant: "s-dark", body: "Preview four" },
-];
+// "Step into my digital home" — a horizontally-scrolling tour of the projects.
+// Each .shot is a browser-window placeholder (real screenshots = V4); the caption
+// is wired to the real project title so the tour reads honestly today.
+const VARIANTS = ["s-acie", "s-dark", "s-warm", "s-lav", "s-mint", "s-dark"];
+const SHOTS = webProjects.map((p, i) => ({
+  variant: VARIANTS[i % VARIANTS.length],
+  title: p.title,
+}));
 
 export default function DigitalHome() {
   return (
@@ -27,7 +26,7 @@ export default function DigitalHome() {
               <i />
               <i />
             </div>
-            <div className="body">{shot.body}</div>
+            <div className="body">{shot.title}</div>
           </div>
         ))}
       </Reveal>

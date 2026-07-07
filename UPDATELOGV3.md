@@ -202,7 +202,57 @@ until the V4 image sync populates real thumbnails.
   to fit more? Recommend top-4 + link.
 
 # Stage 3 Report
-_TBD._
+
+**Decisions (Charlie, this session):** (a) **Top 4 work bands = Ostiara, MyLifeInARepo,
+charlieramus.com, VaultDNA** — Charlie swapped Querryn out for charlieramus.com; Querryn +
+Browser-automation drop to the `/web-projects` long tail. (b) Caption richness = "whatever
+you recommend" → I went **compact** (title · date · tags), because the mockup's visual
+panels can't hold a paragraph each without a redesign; the flagship's full blurb lives in
+the `.touch` bar and per-project descriptions land on `/web-projects` (V4).
+
+- [x] **`components/work.tsx` ← `webProjects`.** Four bands selected **by title** (honors
+  Charlie's curation, robust to array reordering): `bands = BAND_TITLES.map(find)`. Each
+  band keeps its bespoke placeholder device visuals; a `<Caption>` helper wires the
+  `.label` to `title` + `date` + top-2 `tags` (mockup's `<b>name</b><span>meta</span>`
+  shape, no new CSS). Band 1 is the flagship (Ostiara); its `.ui` device card lost the
+  literal **"Placeholder product headline / placeholder metric caption"** filler — now
+  reads the flagship title + an honest "5 home-service verticals" stat, so nothing says
+  "Placeholder" on the shipped preview.
+- [x] **`.touch` case-study bar → flagship (Ostiara).** `<p>` = `flagship.description`
+  (real 3-sentence blurb); button = "View Ostiara ↗" → `flagship.href` (GitHub, external
+  new-tab) with a `/web-projects` fallback if href is ever empty.
+- [x] **"See all my work ↗" link** added after the bands → `/web-projects` (dead until V4).
+  New CSS: one small `.proj-all` rule (centered uppercase link, blue→red hover).
+- [x] **`components/digital-home.tsx` ← `webProjects`.** The six `.shot` browser-window
+  placeholders now caption the six real project titles (Ostiara → Browser-automation),
+  cycling the mockup's color variants. Visuals stay placeholder (real screenshots = V4);
+  the carousel scrolls horizontally within itself (`overflow-x:auto`, unchanged).
+
+**Data flow:** `webProjects` → work bands (title/date/tags caption, flagship drives the
+touch bar) + digital-home shot captions. `image` fields stay empty (V4 screenshots). No
+content re-typed inline.
+
+**Verify:** `npx tsc --noEmit`, `npx eslint .`, `npm run build` clean. Rendered on the prod
+server at 1440 / 768 / 375: no console errors; four bands read Ostiara → MyLifeInARepo →
+(touch: Ostiara blurb) → charlieramus.com → VaultDNA with correct captions; bands collapse
+to one column < 880px and the touch bar stacks; carousel shows real titles and scrolls
+internally on mobile.
+
+**Horizontal-overflow finding (correcting Stages 1–2):** the residual doc `scrollWidth`
+(511 @375 / 783 @768) is **not** the carousel — the carousel is a proper internal scroller.
+The real overflow is `.fan .fc` in the **services** section (Stage 4): an
+absolutely-positioned fanned card sticks out to x=511. The page does **not** actually
+scroll horizontally (`body{overflow-x:hidden}` clips it; `window.scrollTo(9999,0)` leaves
+`scrollX` at 0), but `scrollWidth` exceeds `clientWidth`. **Left for Stage 4** to constrain
+the fan (it's the services component). Carousel confirmed clean.
+
+**Dead links (V4 targets) added this stage:** `/web-projects` (see-all link). The touch
+button points at Ostiara's real GitHub; carousel shots are captions, not links.
+
+**Issues:** (1) The `.touch` bar now holds Ostiara's full 3-sentence blurb — informative
+but ~6 lines tall on desktop (the mockup had one sentence); acceptable for a case-study
+bar, trim later if Charlie wants it lighter. (2) Band device visuals remain decorative
+placeholders until the V4 screenshot pass. (3) Services-fan overflow noted above.
 
 ---
 
