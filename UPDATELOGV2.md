@@ -155,7 +155,45 @@ but this v2 rebuild is Vercel + the paper palette, so I didn't bake in either lo
   reference it without churn.
 
 # Stage 3 Report
-_TBD._
+
+Mostly a **verification pass** — the seeded data reads true against `ABOUT-CHARLIE.md`,
+so the only code change was finalizing the `Photo` type.
+
+- [x] **`projects-design.ts`** — verified all 3 entries (Notion Brand Pitch 2025 ·
+  Spotify IMC 2025 · Photography Presentation UI 2024) read true and match the §4
+  Design seed. `images` left empty (V4). No newer design work in the brain-dump →
+  surfaced as a question below; no change made.
+- [x] **`gear.ts`** — confirmed the core kit against §6: **Canon EOS R5** ✓,
+  **DJI Air 2s** ✓, **RF 24-105 f/4** ✓, **Sigma 150-600** ✓. **Cervelo Aspero
+  correctly absent** — it's a bike, and it already lives in the bio/interests
+  (`about.ts`, Stage 1), not here. Bags/accessories (Kiboko, Thule, tripod, Deity
+  mic) are seeded from the current site and **beyond §6's scope** → flagged for
+  Charlie to confirm; kept as-is.
+- [x] **`socials.ts`** — sanity-checked all 5 links + handles (LinkedIn · GitHub
+  `charlieramus` · IG `@chahramii` photography · IG `@charlieramus_` personal ·
+  Letterboxd `cwramus`) against §8; all well-formed and consistent. `contactEmail`
+  = `charlie.ramus12@gmail.com` matches Charlie's address → confirmed as the
+  "Get in touch" contact. No change.
+- [x] **`photos.ts`** — kept the empty stub (gallery is authored in V4 via the
+  downscale/thumb/blur sync). **Finalized the `Photo` type**: clarified `caption`/
+  `code` docs and added three optional, V4-populated fields — `featured?` (mirrors
+  the `spotlight` flag on projects so V3's "highlights" surface can pull a photo),
+  `location?`, and `date?` (so V3 can pick a *recent-trip* photo per Charlie's
+  highlights idea). All optional → no churn, V4 fills them incrementally.
+
+**Data flow (for V3):** `designProjects` → the design band; `gear`/`gearSections` →
+the gear list (V4 route); `socials` + `contactEmail` → footer/contact card;
+`photos.filter(p => p.featured)` → the "highlights" photo slot (empty until V4).
+
+**DECISIONS → Charlie (surfaced, not blocking):**
+1. **Newer design work?** The brain-dump's "Anything newer?" prompt is blank — if
+   there's design work past 2025, send it and I'll add entries.
+2. **Gear bags/accessories** (Kiboko V1 30L+, Thule Aspect V2, carbon-fiber tripod,
+   Deity V-Mic D4 Mini) came from the current site, not `ABOUT-CHARLIE.md §6` —
+   confirm they're current or correct them.
+
+Issues: None blocking. Two confirmations above are cosmetic and can land anytime.
+`photos` stays intentionally empty (V4). Verified: `tsc` / `eslint` / `build` all clean.
 
 ---
 
