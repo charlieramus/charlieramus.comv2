@@ -1,5 +1,6 @@
 import Hero from "@/components/hero";
 import DigitalHome from "@/components/digital-home";
+import RightNow from "@/components/right-now";
 import PersonalBento from "@/components/personal-bento";
 import Work from "@/components/work";
 import Services from "@/components/services";
@@ -12,6 +13,7 @@ export default function Home() {
     <>
       <Hero />
       <DigitalHome />
+      <RightNow />
       <PersonalBento />
       <Work />
       <Services />

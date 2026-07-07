@@ -277,7 +277,51 @@ placeholders until the V4 screenshot pass. (3) Services-fan overflow noted above
   until then). Design it deliberately; don't bolt it on.
 
 # Stage 4 Report
-_TBD._
+
+**Decision (Charlie, this session):** the "highlights right now" surface = "whatever you
+recommend" → I built a **new "Right now" section in V3** (option 1): a compact strip after
+the digital-home carousel with the three real, text-backed items; the recent-trip photo
+highlight is deferred to V4 (photos empty until the gallery sync).
+
+- [x] **`components/services.tsx` ← `data/services.ts`.** Swapped the inline `SERVICES`/
+  heading/sub for `services` (→ `.svc-grid` cells), `servicesHeading` ("Things I build and
+  make"), `servicesSub`. Heading/sub now non-freelance, matching the honest capabilities
+  list. **Fixed the fan overflow** (the Stage-3 note): the `.fc` cards were laid out at
+  `left:i*44px` from the edge and blew past the viewport on mobile (x=511); they're now
+  centered on `50%` via `translateX`, and `.fan { overflow:hidden }` clips the outer cards
+  on narrow screens (decorative deck — tucking is fine).
+- [x] **`components/finale.tsx` ← `data/about.ts`.** Quote wired to a new `finaleQuote`
+  export ("The whole thing, built by hand — / backend, design, and the words in between."),
+  echoing the about copy; `\n` drives the line break. Flowers stay decorative.
+- [x] **`components/right-now.tsx` (new) + `app/page.tsx`.** New `<RightNow />` between the
+  carousel and the bento. Three cards from real data: **Building** ← `webProjects.filter(
+  spotlight)[0]` (Ostiara), **Journaling** ← spotlight[1] (MyLifeInARepo), **Latest essay**
+  ← newest `writing`. Card desc = the project's first sentence (derived, not re-typed) or
+  the essay's date; CTAs link GitHub / `/web-projects` / `/writing`. Reuses the bento's
+  `.kick`/`.fdot`/`.go` language; small dedicated `.now-*` CSS (card grid, clamp, hover).
+- [x] **Global horizontal-overflow eliminated.** Beyond the fan, two pre-existing bleeds
+  surfaced once the fan was fixed: the contact `.box` (`53vw`/`90vw` > wrap) and the
+  finale flower field (edge flowers + wind-spin). Fixed with `.contact .box{max-width:100%}`
+  and `.finale{overflow:hidden}`. **Result: `no-hscroll` and `scrollX==0` at 375/768/1440**
+  (was carried since Stage 1). This clears the Stage-5 "no horizontal scroll" goal early.
+
+**Data flow:** `data/services` → services grid + heading/sub; `data/about.finaleQuote` →
+finale line; `webProjects.filter(spotlight)` + newest `writing` → Right Now cards. No
+content re-typed inline.
+
+**Verify:** `npx tsc --noEmit`, `npx eslint .`, `npm run build` clean. Rendered on the prod
+server at 1440 / 768 / 375: no console errors; services reads the honest list with a
+centered fan; finale shows the new quote over the flower grid; Right Now stacks 3→1 columns
+cleanly with clamped descriptions; **zero horizontal scroll at every width**.
+
+**Dead links (V4 targets) added this stage:** `/writing` (Right Now essay card),
+`/web-projects` (Right Now journal card fallback). Ostiara's Right Now card links to its
+real GitHub.
+
+**Issues:** (1) The Right Now photo highlight is intentionally absent until V4 (photos
+empty) — the section ships with 3 items, add a 4th photo card in V4. (2) The services fan
+is clipped at the edges on mobile by design (decorative). (3) Nothing else outstanding for
+Stage 5 except the final full-page sweep + Vercel preview.
 
 ---
 

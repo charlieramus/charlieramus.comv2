@@ -1,4 +1,5 @@
 import Flower from "@/components/flower";
+import { finaleQuote } from "@/data/about";
 
 // Finale flower field — the mockup builds 40 flowers with a deterministic
 // color/petal pattern. Reproduced exactly (indices seed the wind-spin, so the
@@ -27,10 +28,14 @@ export default function Finale() {
           />
         ))}
       </div>
+      {/* CUSTOMIZE: closing line lives in data/about.ts (finaleQuote) */}
       <div className="center-text">
-        Great design is always
-        <br />
-        hidden in the plain sight.
+        {finaleQuote.split("\n").map((line, i, all) => (
+          <span key={i}>
+            {line}
+            {i < all.length - 1 && <br />}
+          </span>
+        ))}
       </div>
     </section>
   );

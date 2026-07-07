@@ -1,6 +1,7 @@
 import Reveal from "@/components/reveal";
+import { services, servicesHeading, servicesSub } from "@/data/services";
 
-// Fanned card stack colors + the services list (CUSTOMIZE for real services).
+// Fanned card stack — decorative (colors only; the real list is `services`).
 const FAN_COLORS = [
   "#1c1c1c",
   "#f4f3ee",
@@ -13,40 +14,30 @@ const FAN_COLORS = [
   "#f7c8e0",
 ];
 
-const SERVICES = [
-  "Product Design",
-  "Animation",
-  "Framer",
-  "Websites / Apps",
-  "Midjourney",
-  "Marketing",
-  "Design systems",
-  "Visual identity",
-  "Iconography",
-];
-
 export default function Services() {
   return (
     <section id="garden">
       <div className="wrap">
         <Reveal className="head">
-          <h2>I&apos;ve got your back with…</h2>
-          <p>
-            Digital aesthetics that engage and emotionally connect with your
-            users
-          </p>
+          {/* CUSTOMIZE: heading/sub live in data/services.ts */}
+          <h2>{servicesHeading}</h2>
+          <p>{servicesSub}</p>
         </Reveal>
 
         <Reveal className="fan">
           {FAN_COLORS.map((color, i) => {
-            const angle = (i - FAN_COLORS.length / 2) * 7;
+            const angle = (i - (FAN_COLORS.length - 1) / 2) * 7;
+            // Centered on the fan's midpoint (was left:i*44 from the edge, which
+            // overflowed the viewport on mobile). `.fan { overflow:hidden }` clips
+            // the outer cards on narrow screens — decorative, so tucking is fine.
+            const offset = (i - (FAN_COLORS.length - 1) / 2) * 44;
             return (
               <div
                 key={i}
                 className="fc"
                 style={{
-                  left: `${i * 44}px`,
-                  transform: `rotate(${angle}deg)`,
+                  left: "50%",
+                  transform: `translateX(calc(-50% + ${offset}px)) rotate(${angle}deg)`,
                   zIndex: i,
                   background: color,
                 }}
@@ -56,7 +47,7 @@ export default function Services() {
         </Reveal>
 
         <Reveal className="svc-grid">
-          {SERVICES.map((service) => (
+          {services.map((service) => (
             <div key={service}>{service}</div>
           ))}
         </Reveal>

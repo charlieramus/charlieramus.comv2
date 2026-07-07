@@ -31,3 +31,10 @@ export const aboutParagraphs: string[] = [
 // name) — this is the one-sentence summary that describes the site. CUSTOMIZE.
 export const tagline =
   "Charlie Ramus — a self-taught developer in Boulder building full products solo, from backend to design system to shipped copy.";
+
+// The big serif line that closes the page (finale flower grid). Charlie's thesis,
+// in his own framing — echoes the about copy ("backend architecture, the design
+// system, and the marketing copy in between"). `\n` marks the line break.
+// CUSTOMIZE: swap for any closing line you like; the flowers stay decorative.
+export const finaleQuote =
+  "The whole thing, built by hand —\nbackend, design, and the words in between.";

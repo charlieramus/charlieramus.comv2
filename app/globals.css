@@ -942,6 +942,9 @@ body {
     position: relative;
     height: 150px;
     margin: 40px 0;
+    /* Cards are centered on 50% and fanned out; clip the outer ones on narrow
+       screens so the decorative deck never widens the page. */
+    overflow: hidden;
   }
   .fan .fc {
     position: absolute;
@@ -962,6 +965,59 @@ body {
     padding: 16px 0;
     border-bottom: 1px dashed var(--color-line);
     font-size: 16px;
+  }
+
+  /* ---------- RIGHT NOW (V3 "what's fresh" strip; photo slot added in V4) ---------- */
+  .now-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+    margin-top: 32px;
+  }
+  .now-card {
+    background: #efeee7;
+    border: 1px solid var(--color-line);
+    border-radius: 16px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    color: var(--color-ink);
+    transition:
+      transform 0.25s ease,
+      box-shadow 0.25s ease;
+  }
+  .now-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 14px 32px rgba(0, 0, 0, 0.08);
+  }
+  .now-card h3 {
+    font-family: var(--font-serif);
+    font-weight: 700;
+    font-size: 21px;
+    letter-spacing: -0.01em;
+    margin: 10px 0 8px;
+  }
+  .now-card .now-desc {
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--color-ink-soft);
+    margin-bottom: 16px;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .now-card .go {
+    margin-top: auto;
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-blue);
+  }
+  .now-card:hover .go {
+    color: var(--color-red);
   }
 
   /* ---------- ABOUT ---------- */
@@ -1026,6 +1082,9 @@ body {
     color: #fff;
     border-radius: 40px;
     width: clamp(340px, 53vw, 1060px);
+    /* Cap to the wrap so the 53vw/90vw width can't overflow past the --edge
+       gutter on tablet/mobile (was pushing ~8-15px of horizontal scroll). */
+    max-width: 100%;
     margin: 0 auto;
     padding: clamp(28px, 2.6vw, 42px) 34px clamp(14px, 1.8vw, 26px);
     text-align: center;
@@ -1088,6 +1147,9 @@ body {
   .finale {
     position: relative;
     padding: 56px 0;
+    /* Full-bleed flower field: clip the edge flowers (and their wind-spin) so the
+       decorative grid never adds horizontal page scroll on narrow viewports. */
+    overflow: hidden;
   }
   .grid-flowers {
     display: grid;
@@ -1187,6 +1249,9 @@ body {
     .p-play {
       grid-column: auto;
       grid-row: auto;
+    }
+    .now-grid {
+      grid-template-columns: 1fr;
     }
   }
 }
