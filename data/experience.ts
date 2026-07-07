@@ -38,8 +38,8 @@ export const entries: Experience[] = [
     href: "",
     links: [{ label: "GitHub", href: "https://github.com/charlieramus/ostiara" }],
     description:
-      "An app for door-to-door salespeople to optimize their work — built for individual salespeople and enterprises.",
-    tags: ["JavaScript", "Auth", "Branding", "Algorithms", "UI/UX Design", "Databases"],
+      "Building Ostiara solo, end to end: a SaaS platform for door-to-door sales teams across home-service verticals — pest control, solar, roofing, fencing, security. Shipped the marketing site, an admin dashboard, and a teams-and-roles system on Clerk Organizations with Supabase row-level security, all wearing a design system I built for it. Ran customer-discovery interviews to learn how reps actually quote prices on a doorstep.",
+    tags: ["Next.js", "TypeScript", "Clerk", "Supabase", "Design Systems", "Customer Discovery"],
     logo: "S",
     logoBg: "var(--color-blue)",
     logoFg: "#fff",
@@ -68,7 +68,7 @@ export const entries: Experience[] = [
     href: "",
     links: [],
     description:
-      "Built an architecture community. Designed and shared original architectural builds grabbing 300,000+ interactions, created tutorial content, and engaged a community of fellow builders.",
+      "Built an architecture-building community on Roblox (Bloxburg): designed and shared original builds that passed 300,000+ views, produced tutorial content, and grew a global audience of fellow builders. Started as genuine enjoyment and became an exercise in showing up consistently.",
     tags: ["Community Building", "Content Creation", "Figma", "3D Modeling"],
     logo: "C",
     logoBg: "var(--color-yellow)",

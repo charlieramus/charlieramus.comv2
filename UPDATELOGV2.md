@@ -90,7 +90,53 @@ Issues: None blocking. Open for later stages — (1) `roles` is a 4-item default
   (§4 asks). Order the array accordingly and note the call.
 
 # Stage 2 Report
-_TBD._
+
+**`data/experience.ts`** — kept all 3 roles, enriched from the brain-dump:
+- [x] **Ostiara** description rewritten with the real substance (SaaS for door-to-door
+  home-service sales — pest control/solar/roofing/fencing/security; marketing site +
+  admin dashboard + teams/roles on Clerk Organizations + Supabase RLS + custom design
+  system; customer-discovery interviews). Tags swapped from generic
+  (`JavaScript`/`Auth`/…) to the real stack (`Next.js`, `TypeScript`, `Clerk`,
+  `Supabase`, `Design Systems`, `Customer Discovery`).
+- [x] **Content Creator & Builder** description reconciled with Stage 1: the "300k"
+  work is architecture content **on Roblox (Bloxburg)** — named the platform so the
+  bio and timeline agree (was two separate "300k" facts).
+- [x] Liberty Puzzles left as-is (already accurate). Verified **newest-first**
+  (2026 · 2026 · 2025), string `dates`, numeric `start`/`end` (Ostiara 2026/null,
+  Liberty 2026/null, Content 2025/null) intact.
+
+**`data/projects-web.ts`** — went from 1 Ostiara stub → **6 real projects**:
+- [x] Added a `spotlight?: boolean` field to the `WebProject` type (supports the
+  "highlights" surface Charlie wants — see decision below) and screenshots stay `image`
+  (empty; V4).
+- [x] Entries, each with `title` / `date` / what-it-is + **the hard part** / `href` /
+  `tags`: **Ostiara** (expanded, `spotlight`), **MyLifeInARepo** (`spotlight`),
+  **Querryn**, **VaultDNA**, **charlieramus.com** (this site), **Browser-automation
+  experiments**.
+- [x] **Order** reflects Charlie's call: flagship **Ostiara** → spotlight
+  **MyLifeInARepo** → long tail (Querryn → VaultDNA → portfolio → browser-automation,
+  most-shipped-first, experiment last).
+- [x] `href`s: real where public (Ostiara repo, `charlieramus.com`), `""` for the
+  unpublished/unlinked ones (MyLifeInARepo, VaultDNA, Querryn, browser-automation).
+
+**Data flow (for V3):** `webProjects.filter(p => p.spotlight)` → the featured
+"highlights" tier; the rest → "Tiny fraction of my work" bands. `experience.entries`
+(newest-first, `start`/`end`) → the timeline/bento.
+
+**DECISION captured → Charlie's "highlights right now" idea:** he wants to rebrand the
+featured section into a rotating "what's fresh" surface — recent-trip photos + active
+project (Ostiara) + open-source journal (MyLifeInARepo) + latest article. That's a
+**V3 homepage-composition** decision (out of this content-only stage). Groundwork laid:
+`spotlight` flag on `projects-web`; V3 will also pull from `data/photos.ts` (V4) and the
+writing manifest (Stage 4). Noted here so V3 designs that section deliberately.
+
+Issues: **Dates are approximate** for the side projects — VaultDNA/MyLifeInARepo dated
+2026 ("alongside Ostiara" per the dump); Querryn/browser-automation guessed **2025**;
+portfolio "2025 — Present". Charlie should confirm/correct. Also **Querryn** was
+"submitted to the Chrome Web Store" with no confirmed public URL, so `href: ""` — add
+the store link once live. The `charlieramus.com` entry's description is design-neutral
+on purpose: the dump described the *current* site (Cloudflare Pages, monochrome+orange),
+but this v2 rebuild is Vercel + the paper palette, so I didn't bake in either look.
 
 ---
 
