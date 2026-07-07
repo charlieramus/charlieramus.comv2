@@ -185,15 +185,15 @@ so the only code change was finalizing the `Photo` type.
 the gear list (V4 route); `socials` + `contactEmail` → footer/contact card;
 `photos.filter(p => p.featured)` → the "highlights" photo slot (empty until V4).
 
-**DECISIONS → Charlie (surfaced, not blocking):**
-1. **Newer design work?** The brain-dump's "Anything newer?" prompt is blank — if
-   there's design work past 2025, send it and I'll add entries.
+**DECISIONS → Charlie (resolved):**
+1. **Newer design work?** — Charlie will add any post-2025 design entries himself.
+   The existing 3 stand as-is; no action needed here.
 2. **Gear bags/accessories** (Kiboko V1 30L+, Thule Aspect V2, carbon-fiber tripod,
-   Deity V-Mic D4 Mini) came from the current site, not `ABOUT-CHARLIE.md §6` —
-   confirm they're current or correct them.
+   Deity V-Mic D4 Mini) — **confirmed 100% accurate** by Charlie. The old site is the
+   most-current source generally; kept unchanged.
 
-Issues: None blocking. Two confirmations above are cosmetic and can land anytime.
-`photos` stays intentionally empty (V4). Verified: `tsc` / `eslint` / `build` all clean.
+Issues: None. `photos` stays intentionally empty (V4). Verified: `tsc` / `eslint` /
+`build` all clean.
 
 ---
 
@@ -213,7 +213,46 @@ Issues: None blocking. Two confirmations above are cosmetic and can land anytime
   now, or defer until it's drafted?
 
 # Stage 4 Report
-_TBD._
+
+- [x] **Verified all 4 essays are Charlie's real pieces** (not placeholder text):
+  - `architecture-of-self-justification.mdx` — "The Architecture of Self-Justification:
+    How Pride Disguises Moral Failure" (Dec 2025) — §7 pride/self-justification.
+  - `when-bigger-means-more-biased.mdx` — "When Bigger Means More Biased…" (May 15th,
+    2026) — §7 LLM bias & scale; full footnote apparatus + acknowledgments intact.
+  - `the-third-rotation.mdx` — "The Third Rotation" (May 3rd 2026) — §7.
+  - `the-hobby-hexagon-is-a-trap.mdx` — "The Hobby Hexagon Is a Trap (And I Built One
+    Anyway)" (July 2026) — the §"Currently Writing" hexagon essay. **Already fully
+    drafted** (confessional open · *Satisfactory* case study · unresolved ending).
+- [x] **Renamed files → clean, stable slugs** (was `article-one…four`). Used
+  `git mv`, so the filename now equals the `/writing/[slug]` route slug.
+- [x] **`headerImage`: blanked all four to `""`.** They pointed at
+  `/images/artical-N-header_webp.webp` — the `artical` **typo**, no `/images` assets
+  exist yet, and `article-four` wrongly reused article-one's path. `"" ` = "no header
+  image" per the frontmatter contract, so the build references no missing asset.
+  **Header images are a V4 task** (author real paths via the asset pipeline then).
+- [x] **Locked the frontmatter contract** (fields V4's route + V3's list read):
+  `title` · `date` · `author` · `headerImage` · `externalLink` · `externalLinkLabel`.
+  All 4 files already carry the full set with `// CUSTOMIZE` markers preserved;
+  `externalLink`/`externalLinkLabel` are `""` (no external repost) across the board.
+- [x] **Added `data/writing.ts` manifest** (`WritingEntry`: `slug` · `title` · `date`
+  · `order`) so V3's "Latest writing" list orders without parsing MDX. Newest-first
+  `order` 1–4: hexagon → bigger-means-biased → third-rotation → self-justification.
+  `slug` matches each file exactly; `title`/`date` mirror the frontmatter (noted in
+  the file that they must stay in sync).
+
+**Data flow (for V3/V4):** V3 reads `data/writing.ts` (sorted by `order`) → "Latest
+writing" list + links to `/writing/[slug]`. V4's `/writing/[slug]` route reads the
+matching MDX's frontmatter + body.
+
+**DECISION → Charlie (resolved):** the hexagon essay is already drafted and reads
+finished, so — per Charlie — it's **published**: included as the newest entry (`order:
+1`), not held as a draft.
+
+Issues: None blocking. **Header images deferred to V4** (all `headerImage: ""` for now).
+One consistency note for V3/V4: `date` strings are human display formats ("December
+2025", "May 15th, 2026", "May 3rd 2026", "July 2026") — fine for display + the `order`
+field drives sorting, so no date parsing is needed. Verified: `tsc` / `eslint` /
+`build` all clean.
 
 ---
 
