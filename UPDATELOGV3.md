@@ -123,7 +123,64 @@ The densest wiring. The bento's cards each map to a data source:
 - Keep the accent `.ptile` flowers + `.p-play` playground as-is (decorative).
 
 # Stage 2 Report
-_TBD._
+
+All wiring is in **`components/personal-bento.tsx`**; the only CSS touched is in
+**`app/globals.css`** (bento grid + two clamps, all justified by real string lengths).
+
+- [x] **Career-journey timeline ← `experience.entries`.** Drives the `.role` cards from
+  each entry's `title`/`org`/`dates` and the chip `.lg` from `logo`/`logoBg`/`logoFg`
+  (already `var(--color-*)` tokens). Newest entry (Ostiara) = the `.big` featured card.
+  **Axis decision:** the mockup's 2020→2027 8-year axis was a fake résumé; Charlie's real
+  range is **2025–2026 and every role is ongoing ("Present")**, so two roles share 2026. A
+  strict year→pixel map collides, so cards are placed **ordinally** (newest at top) while
+  the year ticks (2026 top → 2025 bottom, derived from `min/max start`) act as the honest
+  axis behind them — same visual intent as the mockup, which also placed cards for rhythm.
+  Band relabeled "Freelance & Side Projects" → **"Solo builds & side work"** to fit Charlie.
+- [x] **Writing card (`.p-writing`) ← `writing`.** Top 2 by `order` (newest first) →
+  `yr` (year parsed from the `date` string) + clamped `title`; card links `/writing`.
+- [x] **Blog card folded into writing (V2 addendum: no separate blog).** Kept the `.p-blog`
+  grid slot so the bento layout is intact, but repurposed it as **"More essays"** — renders
+  the *remaining* `writing` entries (order 3–4) as `title` + `date`, links `/writing`. No
+  `data/blog.ts` added.
+- [x] **Photography (`.p-photo`) & Graphic design (`.p-graphic`).** `photos` is empty until
+  V4, so the halftone placeholder tiles stay; the graphic grid is now **count-driven off
+  `designProjects`** (3 → 3 tiles) with placeholder gradients. Titles/CTAs made honest:
+  graphic card `h3` → "Brand & layout" (Charlie does pitches/IMC/UI, not "posters & type").
+  Gallery/portfolio links point at `/photography` and `/design`.
+- [x] **Accent `.ptile` flowers + `.p-play` playground kept decorative** (per stage). Only
+  de-placeholdered the playground blurb (dropped the literal "Placeholder —") and pointed
+  "Poke around" at `/web-projects`, where Charlie's smaller builds live.
+- [x] **CSS (all in `@layer components`, `app/globals.css`):**
+  - `.pbento` columns → `minmax(0, …)`. **Bug found during render:** a real long essay
+    title (`white-space:nowrap`) in `.p-blog` floored its grid column at max-content and
+    blew the whole grid out (career squished 290→201px, `.p-photo`/`.p-blog` ballooned to
+    463px). `minmax(0,…)` caps the columns so the ellipsis engages. Applied to the mobile
+    `1fr 1fr` too. The mockup's short blog titles never hit this.
+  - `.wlist .wt` → 2-line clamp (real essay titles run long; the mockup's were one line).
+  - `.blist li .bt` → single-line ellipsis (+ restated ink/size, since `.blist li span`
+    also matches the title span) so the nowrap date always keeps its line.
+
+**Data flow:** `experience.entries` → career timeline (chip tokens + ordinal placement,
+`start` drives the year axis); `writing` (order-sorted) → `.p-writing` top-2 +
+`.p-blog` "more essays"; `designProjects` → graphic-grid tile count. `photos` stays empty
+(V4). No content re-typed inline.
+
+**Verify:** `npx tsc --noEmit`, `npx eslint .`, `npm run build` clean. Rendered on the prod
+server at 1440 / 768 / 375: no console errors; grid columns even (career 290 / others 232
+at 1440); career reads 2026→2025 with three real roles, Ostiara featured; essay titles
+clamp/ellipsize instead of overflowing; on 768 the full-width career card puts every role
+title on one line. No new horizontal overflow (the 783/768 · 511/375 doc overflow is the
+Stage-3 carousel, unchanged).
+
+**Dead links (V4 targets) added this stage:** `/photography`, `/design`, `/writing`
+(×2 cards), `/web-projects`. All are homepage-bento CTAs pointing at inner routes that
+don't exist until V4.
+
+**Issues:** (1) Role cards with long titles ("TA & Media Manager (Seasonal) · Liberty
+Puzzles") still wrap to 3–4 lines inside the narrow desktop career column — readable and
+contained, but tighter than the mockup's short-title chips; the full-width mobile/tablet
+layout is roomier. (2) The `photos`/`designProjects` grids are still decorative gradients
+until the V4 image sync populates real thumbnails.
 
 ---
 
