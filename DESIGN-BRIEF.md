@@ -108,7 +108,8 @@ Seeded this session from the old repo as raw material; refined in V2.
 | Gear | `data/gear.ts` | Camera kit (bodies/lenses/bags/accessories). |
 | Socials | `data/socials.ts` | LinkedIn, GitHub, 2× Instagram, Letterboxd. |
 | Photos | `data/photos.ts` | Gallery; author via a sync step (V4). |
-| Writing | `content/writing/*.mdx` | Essays; route `/writing/[slug]`. |
+| Services | `data/services.ts` | Capabilities list for the "services" section. |
+| Writing | `content/writing/*.mdx` | Essays; route `/writing/[slug]`. Manifest: `data/writing.ts`. |
 
 ## Constraints & gotchas
 - **Verify** with `npm run build`, `npx tsc --noEmit`, `npx eslint .`. View
