@@ -1,5 +1,7 @@
 import Flower from "@/components/flower";
 import Reveal from "@/components/reveal";
+import { snapshot } from "@/data/about";
+import { contactEmail } from "@/data/socials";
 
 // Nav sits at the top of the hero; nothing is sticky (it scrolls away).
 export default function Hero() {
@@ -13,10 +15,10 @@ export default function Hero() {
       </div>
 
       <nav>
-        {/* CUSTOMIZE: nav labels */}
-        <a href="#work">works</a>
-        <span className="logo">studio</span>
-        <a href="#garden">garden</a>
+        {/* CUSTOMIZE: nav labels + hrefs (homepage anchors; V4 adds inner routes) */}
+        <a href="#work">work</a>
+        <span className="logo">charlie ramus</span>
+        <a href="#about">about</a>
       </nav>
 
       <Reveal className="inner">
@@ -27,15 +29,13 @@ export default function Hero() {
             <path d="M28 52 A22 22 0 0 1 72 52" stroke="#0015D4" />
           </g>
         </svg>
-        {/* CUSTOMIZE: hero copy (placeholder from mockup) */}
-        <div className="hi">Hi, I&apos;m [ your name ]</div>
-        <h1>Visual and Product designer you can count on</h1>
-        <p className="lede">
-          Placeholder tagline goes here — one or two lines on how you simplify
-          complex ideas into products people love. Swap this copy for your own.
-        </p>
+        {/* Hero: greeting + name as headline. Charlie's V2 call — the name is
+            the hero, `tagline` is <meta>-only, and no lede line under it. */}
+        <div className="hi">Hi, I&apos;m</div>
+        {/* CUSTOMIZE: headline is snapshot.name (data/about.ts) */}
+        <h1>{snapshot.name}</h1>
         <div className="rule" />
-        <a className="btn" href="#">
+        <a className="btn" href={`mailto:${contactEmail}`}>
           Chat with me
         </a>
       </Reveal>

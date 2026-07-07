@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Libre_Baskerville, Inter, Caveat } from "next/font/google";
+import { snapshot, tagline } from "@/data/about";
 import "./globals.css";
 
 // Serif — headings / quotes. Libre Baskerville is NOT a variable font, so weights
@@ -25,10 +26,16 @@ const caveat = Caveat({
   display: "swap",
 });
 
+// Title = Charlie's name; description = `tagline` (the <meta>-only one-liner,
+// per the V2 hero decision — the name, not the tagline, is the hero headline).
 export const metadata: Metadata = {
-  title: "Charlie Ramus",
-  description:
-    "Charlie Ramus — builder, designer, and photographer based in Boulder, Colorado.",
+  title: `${snapshot.name} — Developer, Designer, Photographer`,
+  description: tagline,
+  openGraph: {
+    title: snapshot.name,
+    description: tagline,
+    type: "website",
+  },
 };
 
 export default function RootLayout({

@@ -52,9 +52,15 @@ body {
   overflow-x: hidden;
 }
 
-a {
-  color: inherit;
-  text-decoration: none;
+/* Kept in @layer base so the section component classes (nav links, .btn, pills —
+   all in @layer components) win their colors. Unlayered, this reset would beat
+   every layer and force those links to inherit ink (invisible .btn text, black
+   nav instead of red) — a regression vs the mockup's layer-free CSS. */
+@layer base {
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
 }
 
 /* ---------------------------------------------------------------------------

@@ -48,7 +48,57 @@ Push the branch for a Vercel preview. Don't commit/push unless Charlie asks.
   nothing. (b) Final **nav** items + order (they double as the inner-route map for V4).
 
 # Stage 1 Report
-_TBD._
+
+**Decisions (Charlie, this session):** (a) hero **lede = nothing** — the name stands
+alone under the "Hi, I'm" greeting, no role line. (b) nav = **`work · charlie ramus ·
+about`** (Charlie: "whatever you recommend") — all homepage anchors, so V3 ships with
+**zero dead links**; the center wordmark is the Caveat script logo.
+
+- [x] **`app/layout.tsx`** — imports `snapshot`, `tagline` from `data/about`.
+  `metadata.title` = `` `${snapshot.name} — Developer, Designer, Photographer` ``;
+  `metadata.description` = `tagline`; added `openGraph` (title = `snapshot.name`, description
+  = `tagline`, `type: "website"`). Per the V2 decision the visible hero is the name, and
+  `tagline` stays `<meta>`-only.
+- [x] **`components/hero.tsx`** — headline `<h1>` now renders `snapshot.name`
+  (`data/about`). `.hi` = "Hi, I'm" (greeting kept; name carries the line). **`.lede`
+  removed** (lede decision = nothing). Nav rewired: `<a href="#work">work</a>` ·
+  `<span class="logo">charlie ramus</span>` · `<a href="#about">about</a>`. Hero `.btn`
+  "Chat with me" → `mailto:${contactEmail}` (`data/socials`).
+- [x] **`components/about.tsx`** — `<section id="about">` (new anchor for the nav).
+  `.bio` maps `aboutParagraphs` (4 `<p>`) instead of the 2 placeholder paragraphs. The
+  2→4 stack flows fine at 1440/768/375; collage stays placeholder (real photos = V4).
+- [x] **`components/contact.tsx`** — `.pills` now derived from `socials`
+  (LinkedIn · GitHub · Instagram (photography) · Instagram (personal) · Letterboxd; the
+  two Instagrams disambiguated by their `note`), all `target="_blank"` external. The red
+  `.box` is now `Reveal as="a"` → `mailto:${contactEmail}` (whole card is the CTA). Peace
+  SVG + "Think we vibe?" + "Get in touch" kept verbatim.
+- [x] **`app/globals.css`** — moved the base `a { color: inherit; text-decoration: none }`
+  reset into `@layer base`. **Bug found during render:** unlayered, that reset beat every
+  `@layer components` rule, so `.btn` computed `color: ink` on `ink` (invisible "Chat with
+  me" / "Get in touch" text) and `nav a` rendered black instead of red — a regression vs
+  the mockup's layer-free CSS. Base-layering it restores mockup colors (verified in a
+  production build: `.btn` = `#fff`, `nav a` = `#f32317`). This was the only CSS change.
+
+**Data flow:** `data/about` → `snapshot.name` (hero `<h1>` + layout title/OG),
+`aboutParagraphs` (about `.bio`), `tagline` (`<meta>` description + OG only).
+`data/socials` → `socials` (contact `.pills`), `contactEmail` (hero + contact `mailto`).
+
+**Verify:** `npx tsc --noEmit`, `npx eslint .`, `npm run build` all clean. Rendered on the
+production server (dev HMR left a stale duplicate stylesheet that masked the CSS fix — prod
+is the source of truth) at 1440 / 768 / 375: no console errors; hero/nav/about/contact all
+within viewport; nav links red, wordmark script, CTA white-on-ink, pills wrap cleanly on
+mobile; about's 4 paragraphs sit correctly beside the collage.
+
+**Dead links (V4 targets):** none introduced this stage — nav is homepage anchors
+(`#work`, `#about`), CTAs are `mailto:`, pills are external social URLs. (Inner routes like
+`/photography`, `/writing/[slug]` still arrive in Stage 2+.)
+
+**Issues:** (1) Page still has a small document-level horizontal overflow at 375/768,
+caused entirely by the **digital-home carousel** `.shot`s (Stage 3 component, pre-existing
+mockup behavior), not any stage-1 section — flagged for Stage 3/5. (2) The contact `.box`
+runs ~8px past its `.wrap` on mobile because the mockup hardcodes `width: 90vw` inside a
+`--edge`-padded wrap; clipped by `overflow-x: hidden`, no visible scrollbar, pre-existing
+(unchanged by the `<div>`→`<a>` swap) — leave for a Stage 5 polish pass.
 
 ---
 

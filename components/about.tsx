@@ -1,4 +1,5 @@
 import Reveal from "@/components/reveal";
+import { aboutParagraphs } from "@/data/about";
 
 // Collage photo positions (classes p1–p4 carry the rotation/placement).
 const COLLAGE = [
@@ -10,7 +11,7 @@ const COLLAGE = [
 
 export default function About() {
   return (
-    <section>
+    <section id="about">
       <div className="wrap">
         <Reveal className="head">
           <h2>Behind the pixels</h2>
@@ -30,17 +31,13 @@ export default function About() {
               />
             ))}
           </div>
-          {/* CUSTOMIZE: about copy (placeholder from mockup) */}
+          {/* CUSTOMIZE: about copy lives in data/about.ts (aboutParagraphs).
+              V2 wrote 4 paragraphs; the mockup's .bio was a 2× <p> stack — it
+              flows the same with 4. */}
           <div className="bio">
-            <p>
-              This is placeholder copy for the about section. A couple of short
-              sentences go here — where you&apos;re based, what you care about,
-              how you like to work.
-            </p>
-            <p>
-              Keep it warm and human, but this is just filler text for the
-              layout. Replace it whenever you&apos;re ready.
-            </p>
+            {aboutParagraphs.map((para, i) => (
+              <p key={i}>{para}</p>
+            ))}
           </div>
         </Reveal>
       </div>

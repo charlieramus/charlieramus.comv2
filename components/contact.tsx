@@ -1,19 +1,19 @@
 import Reveal from "@/components/reveal";
+import { socials, contactEmail } from "@/data/socials";
 
-// CUSTOMIZE: real links land in data/socials.ts in a later stage.
-const PILLS = [
-  { label: "works", href: "#work" },
-  { label: "garden", href: "#garden" },
-  { label: "x (twitter)", href: "#" },
-  { label: "linkedIn", href: "#" },
-  { label: "dribbble", href: "#" },
-];
+// Pills = the real social links (data/socials.ts). The two Instagrams are
+// disambiguated by their `note` so the row doesn't read "Instagram" twice.
+const PILLS = socials.map((s) => ({
+  label: s.note ? `${s.label} (${s.note})` : s.label,
+  href: s.href,
+}));
 
 export default function Contact() {
   return (
     <section className="contact">
       <div className="wrap">
-        <Reveal className="box">
+        {/* The whole red card is the "Get in touch" CTA → mailto:contactEmail */}
+        <Reveal as="a" className="box" href={`mailto:${contactEmail}`}>
           <div className="peace">
             <svg
               viewBox="0 0 40 48"
@@ -35,7 +35,12 @@ export default function Contact() {
 
         <Reveal className="pills">
           {PILLS.map((pill) => (
-            <a key={pill.label} href={pill.href}>
+            <a
+              key={pill.label}
+              href={pill.href}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               {pill.label}
             </a>
           ))}
