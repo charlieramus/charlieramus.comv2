@@ -21,9 +21,9 @@ Tailwind v4** — no forks, no scoped-CSS dumps.
    (its own `<style>` + JS). We rebuild FROM it, cleanly.
 
 ## Hard constraints
-- **Do NOT run a dev server or browser automation** — both crash this machine.
-  Verify statically: `npm run build`, `npx tsc --noEmit`, `npx eslint .`. To view,
-  push a branch → Vercel builds a preview URL (never touches prod).
+- **Verify** with `npm run build`, `npx tsc --noEmit`, `npx eslint .`. You may
+  also run the dev server (`npm run dev`) to view locally, and/or push a branch →
+  Vercel builds a preview URL (never touches prod).
 - **Tailwind v4 is CSS-first**: design tokens live in `app/globals.css` via
   `@theme` — there is no `tailwind.config.js`. Put the mockup's palette / fonts /
   radii there.

@@ -28,6 +28,13 @@
   --font-script: var(--font-caveat), cursive;
 }
 
+/* Layout scale — kept as CSS vars (not theme utilities) since they're only
+   referenced by the component classes below. Values verbatim from the mockup. */
+:root {
+  --edge: clamp(20px, 6vw, 90px);
+  --maxw: 1200px;
+}
+
 /* ---------------------------------------------------------------------------
    Base — the mockup's <body> defaults.
 --------------------------------------------------------------------------- */
@@ -108,5 +115,1038 @@ a {
     opacity: 1;
     transform: none;
     transition: none;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Section component classes — the homepage design system, ported 1:1 from
+   mockups/hellodani-mockup.html. Kept in @layer components so Tailwind
+   utilities in JSX can override per-instance. clamp()/vw preserved as-is.
+--------------------------------------------------------------------------- */
+@layer components {
+  .wrap {
+    max-width: var(--maxw);
+    margin: 0 auto;
+    padding: 0 var(--edge);
+  }
+
+  section {
+    padding: clamp(46px, 6vw, 80px) 0;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    background: var(--color-ink);
+    color: #fff;
+    font-weight: 500;
+    font-size: 15px;
+    padding: 13px 26px;
+    border-radius: 40px;
+    transition:
+      transform 0.18s ease,
+      background 0.18s ease;
+    white-space: nowrap;
+  }
+  .btn:hover {
+    transform: translateY(-2px);
+    background: var(--color-red);
+  }
+
+  .head h2 {
+    font-family: var(--font-serif);
+    font-weight: 700;
+    font-size: clamp(28px, 4vw, 46px);
+    letter-spacing: -0.01em;
+  }
+  .head p {
+    margin-top: 12px;
+    color: var(--color-ink-soft);
+    font-family: var(--font-serif);
+    font-size: 15px;
+    max-width: 46ch;
+  }
+
+  /* ---------- NAV (static, scrolls away) ---------- */
+  nav {
+    position: relative;
+    z-index: 3;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: clamp(28px, 4vw, 56px);
+    padding: 24px var(--edge);
+  }
+  nav a {
+    color: var(--color-red);
+    font-weight: 500;
+    font-size: 15px;
+  }
+  nav a:hover {
+    opacity: 0.6;
+  }
+  nav .logo {
+    font-family: var(--font-script);
+    font-size: 30px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    color: var(--color-ink);
+  }
+
+  /* ---------- HERO ---------- */
+  .hero {
+    position: relative;
+    text-align: center;
+    min-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    padding-bottom: 40px;
+    overflow: hidden;
+  }
+  /* Positioning wrapper — the spinning <Flower> lives inside it. The wrapper
+     owns transform (translateY centering); the flower owns its own (rotate),
+     so the two never collide. */
+  .hero .bloom {
+    position: absolute;
+    z-index: 0;
+    pointer-events: none;
+    top: 50%;
+    transform: translateY(-50%);
+    width: clamp(320px, 37vw, 720px);
+  }
+  .hero .bloom .flower {
+    width: 100%;
+  }
+  .hero .bloom.left {
+    left: -9vw;
+  }
+  .hero .bloom.right {
+    right: -9vw;
+  }
+  .hero .inner {
+    position: relative;
+    z-index: 2;
+    width: min(90vw, 560px);
+    margin: auto;
+  }
+  .hero .rule {
+    height: 0;
+    border-top: 1px dashed var(--color-line);
+    max-width: 470px;
+    margin: 30px auto 0;
+  }
+  .rainbow {
+    width: 54px;
+    margin: 0 auto 18px;
+    display: block;
+  }
+  .hi {
+    font-size: 15px;
+    color: var(--color-ink);
+    margin-bottom: 10px;
+  }
+  .hero h1 {
+    font-family: var(--font-serif);
+    font-weight: 400;
+    font-size: clamp(26px, 4vw, 52px);
+    line-height: 1.14;
+    letter-spacing: -0.005em;
+  }
+  .hero p.lede {
+    margin: 22px auto 0;
+    max-width: 42ch;
+    font-size: 15px;
+    color: var(--color-ink-soft);
+  }
+  .hero .btn {
+    margin-top: 30px;
+  }
+
+  /* ---------- STEP + CAROUSEL ---------- */
+  .step {
+    text-align: center;
+    padding: 18px 0 30px;
+  }
+  .step .bm {
+    font-size: 22px;
+    display: block;
+    margin-bottom: 8px;
+    color: var(--color-red);
+  }
+  .step .t {
+    font-family: var(--font-serif);
+    font-size: 17px;
+  }
+
+  .carousel {
+    display: flex;
+    gap: 20px;
+    overflow-x: auto;
+    padding: 6px var(--edge) 30px;
+    scroll-snap-type: x mandatory;
+  }
+  .carousel::-webkit-scrollbar {
+    height: 0;
+  }
+  .shot {
+    scroll-snap-align: center;
+    flex: 0 0 auto;
+    width: 330px;
+    height: 210px;
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.1);
+    background: #fff;
+  }
+  .bbar {
+    height: 26px;
+    background: #f0efe9;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 0 10px;
+    border-bottom: 1px solid #e6e4db;
+  }
+  .bbar i {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #d9d7cd;
+    display: inline-block;
+  }
+  .shot .body {
+    height: calc(100% - 26px);
+    display: grid;
+    place-items: center;
+    color: #fff;
+    font-family: var(--font-serif);
+    font-size: 18px;
+    text-align: center;
+    padding: 12px;
+  }
+  .s-acie .body {
+    background: #fbfbf8;
+    color: #888;
+    font-size: 13px;
+  }
+  .s-dark .body {
+    background: radial-gradient(circle at 50% 45%, #2c2c2c, #111);
+  }
+  .s-warm .body {
+    background: linear-gradient(120deg, #f6b24a, #e8743b);
+  }
+  .s-mint .body {
+    background: linear-gradient(120deg, #dff5e1, #bfe9c8);
+    color: #2f6b3d;
+  }
+  .s-lav .body {
+    background: linear-gradient(120deg, #e7d9ff, #c7b3f0);
+    color: #4a3b6b;
+  }
+
+  /* ---------- PERSONAL / EXPLORE BENTO ---------- */
+  .pbento {
+    display: grid;
+    grid-template-columns: 1.25fr 1fr 1fr 1fr;
+    grid-template-rows: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+    margin-top: 34px;
+  }
+  .p-career {
+    grid-column: 1;
+    grid-row: 1 / span 2;
+  }
+  .p-photo {
+    grid-column: 2;
+    grid-row: 1;
+  }
+  .p-graphic {
+    grid-column: 3;
+    grid-row: 1;
+  }
+  .p-writing {
+    grid-column: 4;
+    grid-row: 1;
+  }
+  .p-blog {
+    grid-column: 2;
+    grid-row: 2;
+  }
+  .p-tiles {
+    grid-column: 3;
+    grid-row: 2;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  .p-play {
+    grid-column: 4;
+    grid-row: 2;
+  }
+
+  .pcard {
+    background: #efeee7;
+    border: 1px solid var(--color-line);
+    border-radius: 16px;
+    padding: 14px;
+    display: flex;
+    flex-direction: column;
+    color: var(--color-ink);
+    transition:
+      transform 0.25s ease,
+      box-shadow 0.25s ease;
+  }
+  .pcard:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 14px 32px rgba(0, 0, 0, 0.08);
+  }
+  .kick {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 8.5px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-ink-soft);
+    margin-bottom: 8px;
+  }
+  .kick .fdot {
+    width: 11px;
+    height: 11px;
+    border-radius: 4px;
+    display: inline-block;
+  }
+  .pcard h3 {
+    font-family: var(--font-serif);
+    font-weight: 700;
+    font-size: 14px;
+    letter-spacing: -0.01em;
+    margin-bottom: 5px;
+  }
+  .pcard .sub {
+    color: var(--color-ink-soft);
+    font-size: 10.5px;
+    line-height: 1.45;
+    margin-bottom: 10px;
+  }
+  .pcard .go {
+    margin-top: auto;
+    font-size: 8.5px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-blue);
+  }
+  .pcard:hover .go {
+    color: var(--color-red);
+  }
+
+  .pgrid {
+    flex: 1;
+    display: grid;
+    grid-auto-rows: 1fr;
+    gap: 6px;
+    margin-bottom: 10px;
+    min-height: 0;
+  }
+  .p-photo .pgrid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+  .p-graphic .pgrid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .pgrid i {
+    position: relative;
+    border-radius: 7px;
+    overflow: hidden;
+  }
+  .pgrid i::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(
+      rgba(22, 22, 18, 0.3) 1px,
+      transparent 1.2px
+    );
+    background-size: 5px 5px;
+    mix-blend-mode: multiply;
+  }
+
+  .wlist {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 10px;
+  }
+  .wlist li {
+    display: flex;
+    gap: 9px;
+    align-items: center;
+    padding: 7px 0;
+    border-top: 1px solid var(--color-line);
+  }
+  .wlist li:first-child {
+    border-top: 0;
+    padding-top: 0;
+  }
+  .wlist .thumb {
+    width: 32px;
+    height: 28px;
+    border-radius: 6px;
+    flex: none;
+  }
+  .wlist .yr {
+    font-size: 8.5px;
+    color: var(--color-ink-soft);
+    letter-spacing: 0.06em;
+    margin-bottom: 1px;
+  }
+  .wlist .wt {
+    font-family: var(--font-serif);
+    font-weight: 700;
+    font-size: 11.5px;
+    line-height: 1.18;
+  }
+
+  .blist {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 10px;
+  }
+  .blist li {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    font-size: 10.5px;
+    padding: 6px 0;
+    border-top: 1px solid var(--color-line);
+  }
+  .blist li:first-child {
+    border-top: 0;
+    padding-top: 0;
+  }
+  .blist li span {
+    color: var(--color-ink-soft);
+    font-size: 8.5px;
+    white-space: nowrap;
+  }
+
+  .ptile {
+    border-radius: 14px;
+    display: grid;
+    place-items: center;
+    padding: 10px;
+    min-height: 0;
+  }
+  .ptile.white {
+    background: #fff;
+    border: 1px solid var(--color-line);
+  }
+  .ptile .flower {
+    width: 62%;
+  }
+
+  /* Career Journey (dark timeline card) */
+  .cj {
+    background: #efeee7;
+    border: 1px solid var(--color-line);
+    border-radius: 16px;
+    padding: 14px 14px 12px;
+    color: var(--color-ink);
+    position: relative;
+    overflow: hidden;
+  }
+  .cj-title {
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--color-ink-soft);
+  }
+  .cj-timeline {
+    position: relative;
+    margin-top: 14px;
+    height: 308px;
+  }
+  .cj-year {
+    position: absolute;
+    left: 0;
+    width: 32px;
+    font-size: 9.5px;
+    color: var(--color-ink-soft);
+    transform: translateY(-50%);
+  }
+  .cj-line {
+    position: absolute;
+    left: 42px;
+    right: 0;
+    height: 1px;
+    background: rgba(20, 20, 15, 0.09);
+  }
+  .cj-band {
+    position: absolute;
+    left: 48px;
+    top: 0;
+    bottom: 0;
+    width: 30px;
+    border-radius: 6px;
+    background: repeating-linear-gradient(
+      45deg,
+      #c7d19a 0 6px,
+      #dbe4b8 6px 12px
+    );
+  }
+  .cj-band span {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    writing-mode: vertical-rl;
+    rotate: 180deg;
+    font-size: 9px;
+    color: #5a6b34;
+    white-space: nowrap;
+    letter-spacing: 0.02em;
+  }
+  .role {
+    position: absolute;
+    background: #fff;
+    border: 1px solid var(--color-line);
+    border-radius: 9px;
+    padding: 7px 9px;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    box-shadow: 0 6px 16px rgba(20, 20, 15, 0.08);
+  }
+  .role .lg {
+    width: 19px;
+    height: 19px;
+    border-radius: 5px;
+    flex: none;
+    display: grid;
+    place-items: center;
+    font-size: 9.5px;
+    font-weight: 800;
+  }
+  .role .rt {
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--color-ink);
+    line-height: 1.18;
+  }
+  .role .rt span {
+    color: var(--color-ink-soft);
+    font-weight: 400;
+  }
+  .role .dt {
+    font-size: 8.5px;
+    color: var(--color-ink-soft);
+    margin-left: auto;
+    padding-left: 9px;
+    white-space: nowrap;
+    letter-spacing: 0.04em;
+  }
+  .role.big {
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: space-between;
+    padding: 11px;
+  }
+  .role.big .lg {
+    width: 24px;
+    height: 24px;
+  }
+  .role.big .rt {
+    font-size: 12px;
+    margin-top: auto;
+  }
+  .role.big .dt {
+    margin-left: 0;
+    margin-top: 5px;
+    padding-left: 0;
+  }
+
+  /* ---------- WORK BANDS ---------- */
+  .proj {
+    display: flex;
+    flex-direction: column;
+    gap: 26px;
+    margin-top: 42px;
+  }
+  .band {
+    display: grid;
+    grid-template-columns: 1fr 190px;
+    gap: 26px;
+    align-items: stretch;
+  }
+  .band.flip {
+    grid-template-columns: 190px 1fr;
+  }
+  .band.flip .panel {
+    order: 2;
+  }
+  .band.flip .stack {
+    order: 1;
+  }
+  .panel {
+    background: var(--color-panel);
+    border-radius: 22px;
+    padding: 30px 30px 46px;
+    position: relative;
+    min-height: 300px;
+    overflow: hidden;
+  }
+  .panel .stage {
+    position: relative;
+    height: 100%;
+    min-height: 210px;
+  }
+  .panel .label {
+    position: absolute;
+    left: 0;
+    bottom: -18px;
+    font-size: 15px;
+  }
+  .panel .label b {
+    font-weight: 600;
+  }
+  .panel .label span {
+    color: var(--color-ink-soft);
+    margin-left: 8px;
+  }
+  .stack {
+    display: grid;
+    grid-template-rows: 1fr 1fr;
+    gap: 22px;
+  }
+  .tile {
+    border-radius: 26px;
+    display: grid;
+    place-items: center;
+  }
+  .tile.white {
+    background: #fff;
+  }
+  .tile .flower {
+    width: 46%;
+  }
+  .card {
+    position: absolute;
+    border-radius: 12px;
+    box-shadow: 0 14px 34px rgba(0, 0, 0, 0.16);
+    background: #fff;
+    overflow: hidden;
+    transition: transform 0.35s cubic-bezier(0.2, 0.7, 0.3, 1);
+  }
+  .band:hover .card {
+    transform: translateY(-4px);
+  }
+
+  .ui {
+    padding: 14px;
+    background: #e9e8e2;
+    width: 66%;
+    left: 0;
+    top: 8%;
+    height: 210px;
+    transform: rotate(-4deg);
+  }
+  .ui .pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: #f4f3ef;
+    border-radius: 20px;
+    padding: 6px 12px;
+    font-size: 10px;
+    color: #333;
+  }
+  .ui .thumb {
+    position: absolute;
+    right: 14px;
+    top: 12px;
+    width: 42px;
+    height: 34px;
+    border-radius: 8px;
+    background: linear-gradient(135deg, #caa24a, #7a5a1e);
+  }
+  .ui .big {
+    background: #fff;
+    border-radius: 14px;
+    margin-top: 12px;
+    padding: 16px 14px;
+    font-family: var(--font-serif);
+    font-size: 15px;
+    line-height: 1.2;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  }
+  .ui .srch {
+    position: absolute;
+    left: 22px;
+    top: 118px;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: #111;
+    display: grid;
+    place-items: center;
+    color: #fff;
+    font-size: 13px;
+  }
+  .ui .statrow {
+    position: absolute;
+    left: 52px;
+    bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11px;
+  }
+  .ui .statrow .av {
+    width: 26px;
+    height: 26px;
+    border-radius: 7px;
+    background: linear-gradient(135deg, #6b8cae, #2b3d55);
+  }
+  .ui .statrow .plus {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--color-red);
+    color: #fff;
+    display: grid;
+    place-items: center;
+    font-size: 11px;
+  }
+  .ui .statrow b {
+    font-size: 15px;
+  }
+  .ui .statrow small {
+    color: #888;
+    font-size: 9px;
+    max-width: 70px;
+    line-height: 1.1;
+  }
+  .ui .wave {
+    position: absolute;
+    right: 14px;
+    bottom: 16px;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: #eceae2;
+    display: grid;
+    place-items: center;
+    font-size: 12px;
+    color: #555;
+  }
+  .photo {
+    width: 40%;
+    right: 2%;
+    bottom: 6%;
+    height: 150px;
+  }
+  .mini {
+    width: 60%;
+    height: 150px;
+  }
+  .mini .cap {
+    height: 18px;
+    background: #f1f0ea;
+    display: flex;
+    gap: 4px;
+    align-items: center;
+    padding: 0 8px;
+  }
+  .mini .cap i {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #dcdad0;
+  }
+  .mini .scr {
+    height: calc(100% - 18px);
+  }
+  .boxrow {
+    display: flex;
+    gap: 6px;
+    padding: 8px;
+  }
+  .boxrow .b {
+    flex: 1;
+    height: 100%;
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.6);
+  }
+
+  .touch {
+    background: var(--color-panel);
+    border-radius: 22px;
+    padding: 26px 26px 26px 34px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+  }
+  .touch p {
+    font-size: 17px;
+    max-width: 60ch;
+  }
+
+  /* ---------- SERVICES ---------- */
+  .fan {
+    position: relative;
+    height: 150px;
+    margin: 40px 0;
+  }
+  .fan .fc {
+    position: absolute;
+    width: 90px;
+    height: 122px;
+    border-radius: 10px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.14);
+    overflow: hidden;
+    transform-origin: bottom center;
+  }
+  .svc-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0 40px;
+    max-width: 880px;
+  }
+  .svc-grid div {
+    padding: 16px 0;
+    border-bottom: 1px dashed var(--color-line);
+    font-size: 16px;
+  }
+
+  /* ---------- ABOUT ---------- */
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1.05fr 1fr;
+    gap: 50px;
+    align-items: center;
+    margin-top: 40px;
+  }
+  .collage {
+    position: relative;
+    height: 300px;
+  }
+  .collage .ph {
+    position: absolute;
+    width: 130px;
+    height: 150px;
+    border-radius: 8px;
+    box-shadow: 0 10px 26px rgba(0, 0, 0, 0.18);
+    border: 5px solid #fff;
+    overflow: hidden;
+  }
+  .ph.p1 {
+    left: 2%;
+    bottom: 8%;
+    transform: rotate(-8deg);
+  }
+  .ph.p2 {
+    left: 26%;
+    top: 0;
+    transform: rotate(4deg);
+  }
+  .ph.p3 {
+    right: 18%;
+    bottom: 2%;
+    transform: rotate(-3deg);
+    width: 150px;
+  }
+  .ph.p4 {
+    right: 0;
+    top: 18%;
+    transform: rotate(7deg);
+    width: 110px;
+    height: 120px;
+  }
+  .about-grid .bio p {
+    font-size: 17px;
+    color: var(--color-ink);
+    max-width: 42ch;
+  }
+  .about-grid .bio p + p {
+    margin-top: 18px;
+  }
+
+  /* ---------- CONTACT ---------- */
+  .contact {
+    padding: clamp(50px, 6vw, 80px) var(--edge) 0;
+  }
+  .contact .box {
+    background: var(--color-red);
+    color: #fff;
+    border-radius: 40px;
+    width: clamp(340px, 53vw, 1060px);
+    margin: 0 auto;
+    padding: clamp(28px, 2.6vw, 42px) 34px clamp(14px, 1.8vw, 26px);
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 390px;
+    position: relative;
+    z-index: 2;
+  }
+  .contact .peace {
+    width: 46px;
+    margin-bottom: clamp(18px, 2.5vw, 30px);
+  }
+  .contact .peace svg {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+  .contact .vibe {
+    font-family: var(--font-serif);
+    font-weight: 700;
+    font-size: clamp(18px, 1.5vw, 24px);
+  }
+  .contact .huge {
+    margin-top: auto;
+    font-weight: 400;
+    font-size: clamp(40px, 7vw, 140px);
+    line-height: 0.9;
+    letter-spacing: -0.02em;
+    white-space: nowrap;
+  }
+  .pills {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: -26px;
+    position: relative;
+    z-index: 1;
+  }
+  .pills a {
+    background: var(--color-panel);
+    color: var(--color-ink);
+    padding: 24px 24px 14px;
+    border-radius: 16px;
+    font-size: 15px;
+  }
+  .pills a:hover {
+    background: #dbdad0;
+  }
+  .legal-min {
+    text-align: center;
+    color: var(--color-ink-soft);
+    font-size: 13px;
+    padding: 30px var(--edge) 40px;
+  }
+
+  /* ---------- FLOWER GRID FINALE ---------- */
+  .finale {
+    position: relative;
+    padding: 56px 0;
+  }
+  .grid-flowers {
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    gap: 12px 6px;
+    align-items: center;
+    justify-items: center;
+  }
+  /* Cap to the grid cell so the field never overflows a narrow viewport (the
+     mockup's fixed 92px overflowed at 375). Desktop cells are wider than 92px,
+     so this is pixel-identical there. */
+  .grid-flowers .flower {
+    width: min(92px, 100%);
+    height: auto;
+    aspect-ratio: 1;
+  }
+  .finale .center-text {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    background: var(--color-paper);
+    padding: 18px 32px;
+    text-align: center;
+    font-family: var(--font-serif);
+    font-size: clamp(18px, 2.2vw, 24px);
+    line-height: 1.35;
+    z-index: 3;
+  }
+
+  /* ---------- RESPONSIVE ---------- */
+  @media (max-width: 1200px) {
+    .hero .bloom {
+      width: 30vw;
+    }
+    .hero .inner {
+      width: min(86vw, 500px);
+    }
+  }
+  @media (max-width: 880px) {
+    .band,
+    .band.flip {
+      grid-template-columns: 1fr;
+    }
+    .band.flip .panel {
+      order: 1;
+    }
+    .band.flip .stack {
+      order: 2;
+    }
+    .stack {
+      grid-template-rows: none;
+      grid-template-columns: 1fr 1fr;
+      height: 150px;
+    }
+    .about-grid {
+      grid-template-columns: 1fr;
+    }
+    .svc-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+    .grid-flowers {
+      grid-template-columns: repeat(5, 1fr);
+    }
+    .touch {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    .hero .bloom {
+      opacity: 0.3;
+      width: 30vw;
+    }
+    .contact .box {
+      width: 90vw;
+      min-height: 400px;
+    }
+    .contact .huge {
+      white-space: normal;
+      font-size: clamp(40px, 13vw, 74px);
+    }
+    .pbento {
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: auto;
+    }
+    .p-career {
+      grid-column: 1 / -1;
+      grid-row: auto;
+    }
+    /* All non-career cards flow into the 2-col grid. The mockup omitted
+       .p-graphic and .p-play here, which left them pinned to columns 3/4 and
+       forced the grid wider than the viewport at 375. */
+    .p-photo,
+    .p-graphic,
+    .p-writing,
+    .p-blog,
+    .p-tiles,
+    .p-play {
+      grid-column: auto;
+      grid-row: auto;
+    }
   }
 }

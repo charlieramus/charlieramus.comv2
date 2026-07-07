@@ -7,8 +7,7 @@ stack, and lock the design system + motion primitives. Content is placeholder he
 "execution" that was wrong last time gets done right.
 
 Verify everything with `npm run build` + `npx tsc --noEmit` + `npx eslint .`.
-**No dev server / browser** (crashes this machine) — view via a Vercel branch
-preview.
+View locally via `npm run dev` and/or a Vercel branch preview.
 
 ---
 
@@ -130,7 +129,74 @@ itself. Workspace-root lockfile warning persists (pre-existing, harmless).
   1440 / 768 / 375.
 
 # Stage 3 Report
-_TBD._
+
+- [x] `app/page.tsx` — assembles the eight section components in the final order
+  (hero+nav → digital-home carousel → personal bento → work bands → services →
+  about collage → contact → finale) + the `.legal-min` line. No inline
+  `<script>` anywhere — every mockup generator became React.
+- [x] `components/hero.tsx` — `<header class="hero">` with nav (works · studio ·
+  garden), two `Flower` blooms, the 3-arc rainbow SVG, heading/lede/rule/btn.
+  Blooms are positioning wrappers with a `<Flower>` child so the windspin
+  `transform` doesn't fight the `translateY(-50%)` centering (globals.css
+  `.hero .bloom .flower { width:100% }`).
+- [x] `components/digital-home.tsx` — the "Step into my digital home" heading +
+  horizontal `.carousel`; six `.shot`s driven by a typed `SHOTS[]` array.
+- [x] `components/personal-bento.tsx` — the `.pbento` grid. Career-journey
+  timeline built from `YEARS[]` (gridlines/labels) + a typed `ROLES[]` array
+  (absolute-positioned `.role` cards, `.big` variant); photography/graphic
+  halftone `.pgrid`s, `.wlist`/`.blist`, two accent `.ptile`s (each a container
+  with a `<Flower>` child, sized 62% per the CSS), and the playground card.
+- [x] `components/work.tsx` — "Tiny fraction of my work": four alternating
+  `.band`/`.band.flip` rows + the `.touch` case-study bar. A local `Stack`
+  helper renders the [colored flower tile + white tile] pair; the bespoke
+  device cards (`.ui`, `.mini`, `.photo`) use inline style objects for their
+  exact positions/rotations/gradients, verbatim from the mockup.
+- [x] `components/services.tsx` — "I've got your back with…": the fanned card
+  stack (`FAN_COLORS[]` → `left:i*44`, `rotate((i−n/2)*7)`, `z-index:i`) and the
+  3-col `.svc-grid` from a `SERVICES[]` array.
+- [x] `components/about.tsx` — "Behind the pixels": the four-photo `.collage`
+  (p1–p4 rotations) + two-paragraph bio.
+- [x] `components/contact.tsx` — red `.box` with the peace-hand SVG, "Think we
+  vibe?" / "Get in touch", and the `.pills` link row from a `PILLS[]` array.
+- [x] `components/finale.tsx` — full-bleed `.grid-flowers`: 40 `Flower`s built
+  from the mockup's exact `PET`/`COR` index formula (deterministic, so
+  server/client match), plus the centered serif quote.
+- [x] `app/globals.css` — added `:root { --edge; --maxw }` and a `@layer
+  components` block porting the mockup's section CSS 1:1 (nav, hero, carousel,
+  bento + pcard/cj/role, work bands + panel/cards, services, about, contact,
+  finale, legal) — all `var(--color-*)`/`var(--font-*)` tokenized, `clamp()`/`vw`
+  preserved, plus the `@media (max-width: 1200px / 880px)` responsive rules. In
+  `@layer components` so JSX utilities can still override per-instance.
+- [x] Verified: `npx tsc --noEmit`, `npx eslint .`, `npm run build` all clean;
+  `/` prerenders as static.
+- [x] **Browser-verified** (dev server + gstack `/browse`, after the "no dev
+  server" rule was lifted): homepage renders faithfully to the mockup at 1440
+  and 375, zero console errors, `<body>` bg = `#f4f3ee`, 48 flower SVGs in the
+  DOM. Screenshots in scratchpad (`home-revealed.png`, `home-mobile-fixed.png`).
+- [x] Fixed two mobile bugs found only by actually rendering at 375 (both
+  inherited from the mockup, both clipped-but-present): (a) the `.pbento` mobile
+  reset omitted `.p-graphic`/`.p-play`, leaving them pinned to columns 3/4 and
+  forcing the grid wider than the viewport — added them to the reset; (b)
+  `.grid-flowers .flower` was a fixed `92px`, overflowing the 5-col mobile grid —
+  changed to `min(92px, 100%)` + `aspect-ratio: 1` (desktop cells are wider, so
+  pixel-identical there). No horizontal scroll at 375 now (`overflow-x: hidden`
+  holds; `scrollX` stays 0). Remaining sub-viewport extent is decorative and
+  clipped (services fan stack, `90vw` contact box) — faithful to the mockup.
+
+Issues: (1) **CSS strategy** — pixel-fidelity required porting most of the
+mockup's bespoke card CSS, so globals.css is sizable (~one @layer components
+block). It's organized-by-section, fully tokenized, and paired with real
+components + typed data arrays, so it's the design-system component layer rather
+than the old scoped-dump-in-an-awkward-setup — but if we want it smaller, the
+device-card/collage one-offs are the best candidates to move to per-section CSS
+Modules later. (2) The mockup's finale `.flower:hover { rotate+scale }` was
+dropped — windspin owns `transform` now (flowers spin continuously by design);
+re-add on an inner element if a hover accent is wanted. (3) Copy is the mockup's
+placeholder text (per Stage 3), with `// CUSTOMIZE` markers where Charlie's real
+content/data lands in V2. (4) Rendered output was browser-verified via the dev
+server + gstack `/browse` at 1440 and 375 (see the checklist above) — the "no
+dev server/browser" rule was lifted, and running one does not crash this
+machine. (5) Pre-existing workspace-root lockfile warning persists (harmless).
 
 ---
 

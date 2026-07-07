@@ -14,10 +14,10 @@ current site.
 - **`AGENTS.md`** — rules for AI coding sessions.
 
 ## Dev
-This machine can't run a dev server or browser automation (both crash it). Verify
-statically and preview via Vercel:
+Run locally or verify statically, and preview via Vercel:
 
 ```bash
+npm run dev        # local dev server
 npm run build      # production build
 npx tsc --noEmit   # typecheck
 npx eslint .       # lint

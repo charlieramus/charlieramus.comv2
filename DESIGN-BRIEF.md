@@ -111,9 +111,8 @@ Seeded this session from the old repo as raw material; refined in V2.
 | Writing | `content/writing/*.mdx` | Essays; route `/writing/[slug]`. |
 
 ## Constraints & gotchas
-- **No dev server / browser automation** — crashes this machine. Verify with
-  `npm run build`, `npx tsc --noEmit`, `npx eslint .`; view via Vercel branch
-  preview.
+- **Verify** with `npm run build`, `npx tsc --noEmit`, `npx eslint .`. View
+  locally via the dev server (`npm run dev`) and/or a Vercel branch preview.
 - **Tailwind v4 = CSS-first** (`@theme` in globals.css; no config file).
 - Read `node_modules/next/dist/docs/` before Next code. Heed deprecations.
 - All motion respects `prefers-reduced-motion`.
