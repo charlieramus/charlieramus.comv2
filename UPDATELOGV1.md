@@ -208,4 +208,44 @@ machine. (5) Pre-existing workspace-root lockfile warning persists (harmless).
 - Note anything that differs from the mockup for follow-up.
 
 # Stage 4 Report
-_TBD._
+
+- [x] Static checks clean: `npx tsc --noEmit`, `npx eslint .`, `npm run build`
+  (`/` prerenders static; only the pre-existing workspace-root lockfile warning).
+- [x] Responsive verified in a real headless browser (gstack `/browse`) at all
+  three brief breakpoints — **1440**, **768**, **375** — with `overflow-x: hidden`
+  holding: `window.scrollX` stays `0` after a scroll-right at every width, i.e.
+  **no horizontal scroll anywhere**. Remaining sub-viewport extent is decorative
+  and clipped (services `.fan` card stack, the `90vw` `.contact .box`), matching
+  the mockup. Zero console errors; `<body>` bg `#f4f3ee`; 48 flower SVGs.
+- [x] Branch pushed for a **Vercel preview** (does not touch the production
+  branch): `v1-homepage-preview` → `origin`. The finished V1 homepage (incl. the
+  Stage-3 browse fixes) was already on `origin/main`; this branch carries the
+  same tree + this report so Vercel builds a preview deployment for it.
+- [x] Preview URL: Vercel builds it on push and posts it to the branch's
+  GitHub commit status / PR checks. I can't fetch it from here — the Vercel MCP
+  connector needs interactive auth (unavailable in this session) and I can't
+  reach an unknown external URL. Local `/browse` verification (above) is the
+  visual confirmation in the meantime.
+
+**Differences from the mockup (for follow-up):**
+1. **Wind-spin on all flowers** — the mockup's flowers were static (only a
+   finale hover-rotate). Per `DESIGN-BRIEF.md`, blooms/tiles/finale now spin
+   (deterministic per-index timing). The mockup's finale `:hover` rotate+scale
+   was dropped (windspin owns `transform`).
+2. **Two mobile CSS deviations** (deliberate, to satisfy "no horizontal overflow
+   at 375"): `.pbento` mobile reset now includes `.p-graphic`/`.p-play` (the
+   mockup pinned them to cols 3/4 → overflow); `.grid-flowers .flower` is
+   `min(92px,100%)`+`aspect-ratio:1` instead of a fixed `92px`. Desktop is
+   pixel-identical.
+3. **Structure-only:** hero blooms are a positioning wrapper + child `<Flower>`
+   (so windspin's transform doesn't fight centering) — visually identical.
+4. **Dropped mockup artifacts:** the `.ribbon` "MOCKUP" tag and the unused
+   `footer` CSS block.
+5. **Copy is still the mockup's placeholder** (per Stage 3), with `// CUSTOMIZE`
+   markers; Charlie's real content + `data/*.ts` land in V2.
+
+Issues: Cannot self-confirm the live Vercel URL from this session (see above) —
+Charlie grabs it from the Vercel dashboard / GitHub checks on the pushed branch.
+Note: the V1 code is already on `origin/main`, so if Vercel tracks `main` as
+production it may deploy there too; use the branch preview to eyeball before
+treating `main` as the real cutover.
