@@ -46,7 +46,68 @@ writing is unified under `/writing`.)
 - Keep the manifest and the MDX frontmatter in sync (V2 locked that contract).
 
 # Stage 1 Report
-_TBD._
+
+**Approach:** `@next/mdx` (not plain remark — the bodies carry inline JSX: footnote
+`<ul className="…">`, an acknowledgments `<div>`, and `<sup><a>` refs in
+`when-bigger`) with **dynamic `import()`** in `/writing/[slug]` + `generateStaticParams`
+from the manifest — the documented Next-16 dynamic-route pattern. `@next/mdx` doesn't
+parse YAML frontmatter, so I added **`remark-frontmatter`** (strips the leading `---`
+block from the render) + **`remark-mdx-frontmatter`** (re-exposes it as a named
+`frontmatter` export the route reads). Plugins are passed as **strings** because Next 16
+builds with **Turbopack**, which only accepts serializable plugin refs.
+
+- [x] **`next.config.ts`** — wrapped with `createMDX`; `pageExtensions` adds `md`/`mdx`;
+  `remarkPlugins: ["remark-frontmatter", ["remark-mdx-frontmatter", { name: "frontmatter" }]]`.
+- [x] **`mdx-components.tsx`** (root) — required by `@next/mdx`; kept the documented empty
+  map (prose is styled globally via `.writing-prose`, so no element overrides needed).
+- [x] **`types/mdx.d.ts`** — ambient `declare module "*.mdx"` typing the default component
+  **and** the injected `frontmatter` object (`title`/`date`/`author`/`headerImage`/
+  `externalLink`/`externalLinkLabel`), so `/writing/[slug]` reads a typed frontmatter.
+- [x] **`app/writing/page.tsx`** — index. Imports `writing` (`data/writing.ts`), sorts by
+  `order` asc (1 = newest first), renders each as serif `title` + muted `date` linking to
+  `/writing/[slug]`. `metadata` set. Uses `Reveal` for the fade-up (reduced-motion safe).
+- [x] **`app/writing/[slug]/page.tsx`** — article. `generateStaticParams()` from the
+  manifest + `dynamicParams = false` (unknown slugs 404). Renders the frontmatter contract:
+  `title` (serif `<h1>`), `author · date` byline. **`headerImage` is `""` for all 4 essays**,
+  so the `next/image` header is guarded and renders nothing now (real path branch is
+  Stage-4-ready: `fill` in a 16/9 frame). **`externalLink`/`externalLinkLabel` all `""`**,
+  so the `.btn` external-link button is likewise guarded off. `generateMetadata` reads the
+  frontmatter (falls back to the manifest title so the two can't drift silently).
+- [x] **Content fix — `content/writing/the-third-rotation.mdx`:** its opening line was
+  indented 4 spaces, which Markdown renders as a **code block**. Dedented it so the line
+  reads as prose (verified: `.writing-prose pre` count = 0 in the built page).
+- [x] **`app/globals.css`** — one `@layer components` block (`.writing-*`): a 760px reading
+  column (narrower than the homepage `--maxw` for a ~68ch measure), the index header/list,
+  the article header, and `.writing-prose` (serif `h2`/`h3`, Inter body at 18px/1.75, dashed
+  `hr` section breaks, blue→red links, `<sup>` refs, and the footnote `<ul>` +
+  acknowledgment `<div>` — those carry old-repo utility classes that don't resolve in this
+  theme, so they're styled here by element). Reuses `--edge`/`--color-*` tokens throughout.
+  A `.writing-nav` back-link (left-aligned, shares the 760 box) is a **placeholder until
+  Stage 4** wires the shared inner-page nav/header/footer.
+
+**Data flow:** `data/writing.ts` (manifest) → index list order + `generateStaticParams` +
+metadata-title fallback. `content/writing/<slug>.mdx` frontmatter (via
+remark-mdx-frontmatter) → article `<h1>`/byline/header-image/external-link + metadata.
+Manifest `title`/`date` mirror each MDX's frontmatter (the V2-locked contract); verified in
+sync this stage.
+
+**Verify:** `npx tsc --noEmit`, `npx eslint .`, `npm run build` all clean. Build prerenders
+`/writing` (static) + all 4 `/writing/[slug]` (SSG via `generateStaticParams`). Rendered on
+the prod server (`npm run start`) and eyeballed: `/writing` at **1440 / 768 / 375**, articles
+at 1440 / 768 / 375. **No horizontal overflow** (`scrollWidth == clientWidth` at every
+width), **zero console errors**. Footnote `[n]` `<sup>` refs render inline and link to the
+footnote list; `---` renders as centered dashed dividers; the dedented third-rotation opener
+reads as prose.
+
+**Dead links resolved:** the homepage `/writing` targets (bento Writing/"More essays" +
+Right Now essay card) now resolve to the index; the index links to each `/writing/[slug]`.
+
+**Issues:** (1) `headerImage` renders nothing on all 4 essays (all `""`) — real header
+images + paths are **Stage 4**; the render branch is already wired. (2) The `.writing-nav`
+back-link is a minimal placeholder; the consistent inner-page **nav/header/footer** is
+**Stage 4**. (3) Pre-existing Turbopack warning: two lockfiles (one at `C:\Users\jason`)
+make Next infer the workspace root — not introduced here; silence later via `turbopack.root`
+if desired.
 
 ---
 

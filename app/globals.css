@@ -1254,4 +1254,197 @@ body {
       grid-template-columns: 1fr;
     }
   }
+
+  /* ---------- WRITING (/writing + /writing/[slug]) ---------- */
+  /* Reading column narrower than the homepage --maxw so prose keeps a ~68ch
+     measure; the back-nav shares the same 760px box so it aligns to the column. */
+  .writing {
+    padding-bottom: clamp(60px, 8vw, 110px);
+  }
+  .writing-nav {
+    max-width: 760px;
+    margin: 0 auto;
+    justify-content: flex-start;
+  }
+  .writing-wrap {
+    max-width: 760px;
+  }
+
+  /* Index header + list */
+  .writing-head {
+    padding: clamp(24px, 5vw, 56px) 0 clamp(20px, 3vw, 30px);
+    border-bottom: 1px dashed var(--color-line);
+  }
+  .writing-kicker {
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--color-ink-soft);
+    margin-bottom: 14px;
+  }
+  .writing-head h1 {
+    font-family: var(--font-serif);
+    font-weight: 700;
+    font-size: clamp(32px, 5vw, 52px);
+    line-height: 1.08;
+    letter-spacing: -0.01em;
+  }
+  .writing-lede {
+    margin-top: 16px;
+    color: var(--color-ink-soft);
+    font-family: var(--font-serif);
+    font-size: 16px;
+    max-width: 46ch;
+  }
+  .writing-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .writing-item {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: clamp(20px, 3vw, 30px) 0;
+    border-bottom: 1px dashed var(--color-line);
+    color: var(--color-ink);
+    transition:
+      color 0.18s ease,
+      transform 0.18s ease;
+  }
+  .writing-item:hover {
+    color: var(--color-red);
+    transform: translateX(4px);
+  }
+  .writing-item-title {
+    font-family: var(--font-serif);
+    font-weight: 700;
+    font-size: clamp(19px, 2.4vw, 26px);
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+  }
+  .writing-item-date {
+    font-size: 13px;
+    letter-spacing: 0.04em;
+    color: var(--color-ink-soft);
+  }
+
+  /* Article header */
+  .writing-article-head {
+    padding: clamp(24px, 5vw, 56px) 0 clamp(20px, 3vw, 34px);
+    border-bottom: 1px solid var(--color-line);
+    margin-bottom: clamp(28px, 4vw, 46px);
+  }
+  .writing-article-head h1 {
+    font-family: var(--font-serif);
+    font-weight: 700;
+    font-size: clamp(28px, 4.4vw, 46px);
+    line-height: 1.12;
+    letter-spacing: -0.015em;
+  }
+  .writing-byline {
+    margin-top: 16px;
+    color: var(--color-ink-soft);
+    font-size: 14px;
+    letter-spacing: 0.03em;
+  }
+  .writing-hero {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    border-radius: 16px;
+    overflow: hidden;
+    margin-top: clamp(20px, 3vw, 32px);
+  }
+  .writing-external {
+    margin-top: 24px;
+  }
+
+  /* Article prose — MDX body maps to semantic HTML; styled to the design system
+     (serif headings, Inter body at reading size, dashed section breaks). The
+     footnote <ul> + acknowledgment <div> carry utility classes from the old repo
+     that don't resolve in this theme, so they're styled here by element. */
+  .writing-prose {
+    font-size: 18px;
+    line-height: 1.75;
+    color: var(--color-ink);
+  }
+  .writing-prose > p {
+    margin: 0 0 1.35em;
+  }
+  .writing-prose h2 {
+    font-family: var(--font-serif);
+    font-weight: 700;
+    font-size: clamp(22px, 3vw, 30px);
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+    margin: 1.8em 0 0.6em;
+  }
+  .writing-prose h3 {
+    font-family: var(--font-serif);
+    font-weight: 700;
+    font-size: 20px;
+    margin: 1.6em 0 0.5em;
+  }
+  .writing-prose a {
+    color: var(--color-blue);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+  .writing-prose a:hover {
+    color: var(--color-red);
+  }
+  .writing-prose sup {
+    font-size: 0.72em;
+    line-height: 0;
+  }
+  .writing-prose sup a {
+    text-decoration: none;
+    font-weight: 600;
+  }
+  .writing-prose hr {
+    border: 0;
+    height: 0;
+    border-top: 1px dashed var(--color-line);
+    max-width: 120px;
+    margin: 2.4em auto;
+  }
+  /* Footnotes: an hr already precedes them in the body, so no extra top rule. */
+  .writing-prose ul {
+    list-style: none;
+    margin: 2.2em 0 0;
+    padding: 0;
+  }
+  .writing-prose ul li {
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--color-ink-soft);
+    margin-bottom: 0.7em;
+  }
+  .writing-prose ul li a {
+    font-weight: 600;
+  }
+  /* Acknowledgments block. */
+  .writing-prose > div {
+    font-size: 14px;
+    color: var(--color-ink-soft);
+    margin-top: 2.4em;
+    padding-top: 1.4em;
+    border-top: 1px solid var(--color-line);
+  }
+  .writing-prose > div p {
+    margin: 0 0 0.5em;
+  }
+  .writing-prose > div p:first-child {
+    font-weight: 600;
+    color: var(--color-ink);
+  }
+
+  @media (max-width: 760px) {
+    .writing-prose {
+      font-size: 17px;
+      line-height: 1.72;
+    }
+  }
 }
