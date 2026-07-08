@@ -130,7 +130,73 @@ The big one. `data/photos.ts` is an **empty stub** with a finalized `Photo` type
   trip/`location`? And which photos are `featured` for the homepage.
 
 # Stage 2 Report
-_TBD._
+
+**Decisions (Charlie, this session):** (a) gallery layout = **one masonry stream**
+(all 61 photos in a single ratio-driven grid — matches the old site, fits the design
+system with no grouping UI). (b) featured = **recent trips, newest on homepage** — I
+flagged 8 standouts (5 Iceland `2026-04` + 3 Longs Peak `2026-06`) with `location`+`date`;
+the homepage will pick the newest (Longs Peak). Re-curate anytime in `gallery.json`.
+
+**Source:** the old `CharlieRamus.com` repo (sibling folder) already had the finished
+gallery — a hand-authored `gallery.json`, a `sync-gallery.mjs` pipeline, and 61 processed
+`.webp`s. I **ported the 61 full-res images + the manifest** and rebuilt the pipeline for
+this repo's V4 `Photo` type; the page + lightbox are a clean rebuild to this design system
+(not a copy of the old component, which carried old-repo tokens + a Mother's-Day/Inquire
+modal that don't belong here).
+
+- [x] **The sync step — `scripts/sync-gallery.mjs`** (+ `npm run sync-gallery`, added to
+  `package.json`; dev deps `image-size`, `plaiceholder`, `sharp` installed). For every
+  `gallery.json` entry it: downscales the full image to ≤2048px long-edge in place (mobile
+  Safari guard), writes a ≤600px grid thumbnail to `public/photos/thumbs/`, computes the
+  intrinsic `ratio`, generates a base64 `blurDataURL` (plaiceholder), **derives `date`
+  ("YYYY-MM")** from the filename date stamp (`20260412-…` or `Frame1-2026-06-20`), passes
+  through authored `location`/`featured`, and writes the typed `data/photos.ts`. Reproducible:
+  drop a `.webp` in `public/photos/`, add a line to `gallery.json`, re-run. Verified run:
+  **61 photos → 61 thumbnails, 0 downscaled** (already ≤2048 from the old export).
+- [x] **`public/photos/gallery.json`** (the hand-authored source, extended schema
+  `{ file, caption, location?, featured? }`) — 61 entries in curation order, `location` set
+  on the locatable trips (Iceland / Boulder+Colorado / BVI / Longs Peak / Kauai / Mexico /
+  Portland / Boston) and `featured: true` on the 8 curated standouts.
+- [x] **`data/photos.ts`** — now AUTO-GENERATED (61 `Photo`s) with the V4 type (`src`,
+  `thumb`, `alt`, `ratio`, `caption`, `code`, `blurDataURL`, `featured`, `location`, `date`).
+  Dropped the V3 `placeholder` field (not in the V4 contract). No prior code imported it, so
+  the shape change is safe. Assets tracked (not gitignored); `public/photos` ≈ 16 MB.
+- [x] **`components/photography-gallery.tsx`** (client) — masonry grid (CSS columns 2/3/4 by
+  width; each tile sized by its `ratio` so nothing crops in layout; thumbnails carry the blur
+  placeholder, first 4 `priority`) + a **fullscreen lightbox**. Lightbox a11y (an upgrade over
+  the old Escape-only one): `role="dialog"` + `aria-modal`, **Escape** closes, **← / →** step
+  with wraparound, a **Tab focus-trap** inside the dialog, **body-scroll lock** while open, and
+  **focus returned** to the thumbnail that opened it. `next/image` with `blurDataURL`; the
+  full-res image is sized from the real `ratio` (1600×round(1600/ratio)) then capped to
+  90vw/80vh. Shows the `#code` badge + caption.
+- [x] **`app/photography/page.tsx`** (server) — metadata (title/description), a minimal
+  back-to-home nav (placeholder until Stage 4's shared inner-page nav), a serif header
+  (kicker + `Through the lens` + lede), then `<PhotographyGallery />`. Prerenders **static**.
+- [x] **`app/globals.css`** — one `@layer components` block (`.gallery-*` / `.lightbox-*`):
+  masonry columns, ratio tiles with hover-scale + focus ring, the dark overlay, edge
+  prev/next + corner close buttons, the code badge (cyan) + caption. `prefers-reduced-motion`
+  disables the tile hover-scale + lightbox fade (same guard pattern as flower/reveal). Reuses
+  `--edge`/`--color-*` tokens; back-nav reuses the writing `.writing-nav`.
+
+**Data flow:** `public/photos/*.webp` + `gallery.json` → `sync-gallery.mjs` → `data/photos.ts`
+→ `photography-gallery.tsx` (grid + lightbox). `featured`/`location`/`date` are set on the 8
+standouts so the homepage "Right now" photo highlight can pull the newest featured — the
+actual homepage card wiring is **Stage 4** (cross-links), matching V3 Stage 4's "add the 4th
+photo card in V4" note.
+
+**Verify:** `npx tsc --noEmit`, `npx eslint .`, `npm run build` all clean; `/photography`
+prerenders static. Rendered on the prod server and eyeballed at **1440 / 768 / 375**: 61 tiles
+in a 4/3/2-col masonry, **no horizontal overflow** (`scrollWidth == clientWidth` at every
+width), **zero console errors**. Lightbox exercised via the headless browser: opens with
+`role=dialog`/`aria-modal`, focus lands on close, body scroll locks, **← / →** change the
+photo (code/caption update, wraps 0001↔0061), **Tab stays trapped** inside the dialog,
+**Escape** closes and **returns focus** to the opening tile.
+
+**Issues:** (1) The Longs Peak `Frame1–7` photos have a film-strip border baked into the
+source image — that's Charlie's intended aesthetic, not a render bug. (2) Homepage "Right now"
+photo card + the bento photography grid still use placeholders — the data is now ready;
+wiring them is **Stage 4**. (3) `data/photos.ts` is generated — edit `gallery.json` +
+`npm run sync-gallery`, never the `.ts` directly.
 
 ---
 
