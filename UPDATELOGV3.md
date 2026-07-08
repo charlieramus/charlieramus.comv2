@@ -338,4 +338,59 @@ Stage 5 except the final full-page sweep + Vercel preview.
 - Push the branch → Vercel preview; share the URL.
 
 # Stage 5 Report
-_TBD._
+
+- [x] **`npx tsc --noEmit`, `npx eslint .`, `npm run build` all clean** (final run after
+  the placeholder sweep below).
+- [x] **Rendered + eyeballed at 1440 / 768 / 375** on the prod server (`npm run start`):
+  **`no-hscroll` and `scrollX==0` at every width**, **zero console errors**, real copy
+  doesn't overflow (essay titles clamp, band captions wrap, Right Now descs clamp), and the
+  **career timeline places correctly** (2026 top → 2025 bottom, three real roles newest-
+  first, Ostiara featured as `.big`). Full-page screenshots captured for Charlie.
+- [x] **Placeholder sweep — found + fixed two visible leftovers:**
+  - `components/about.tsx` subline was still the mockup's "…swap this for a short, friendly
+    intro." → rewritten to a real `// CUSTOMIZE` lead-in.
+  - `app/page.tsx` legal line was "© 2026 — placeholder content · homepage rebuilt from the
+    mockup" → now `© {year} {snapshot.name} · {snapshot.location}` from `data/about`.
+  - Remaining "placeholder" strings are **comments only** (explaining the V4 device/photo
+    visuals), not shipped copy.
+- [x] **Every content section reads from `data/`** (no re-typed content): `hero` +
+  `page` (legal) ← `about`/`socials`; `about` ← `about`; `contact` ← `socials`;
+  `right-now` ← `projects-web`/`writing`; `personal-bento` ← `experience`/`writing`/
+  `projects-design`; `work` + `digital-home` ← `projects-web`; `services` ← `services`;
+  `finale` ← `about`. Only `flower`/`reveal`/`Stack` (visual primitives) carry no content.
+- [x] **Design still pixel-faithful** to `mockups/hellodani-mockup.html` — same layout,
+  palette, fonts, motion; wiring added only justified CSS (layer/overflow fixes, clamps,
+  `.proj-all`/`.now-*`, all in `@layer components`).
+
+**V4 dead-link list (homepage links to inner routes that don't exist yet):**
+| Route | Where it's linked from |
+|---|---|
+| `/photography` | bento Photography card ("View the gallery") |
+| `/design` | bento Graphic-design card ("See the work") |
+| `/writing` | bento Writing ("Read all essays") + "More essays" ("Browse the archive") + Right Now essay card ("Read it") |
+| `/web-projects` | bento Playground ("Poke around") + Work "See all my work" + Right Now journal card (MyLifeInARepo fallback) |
+
+Not dead (real/external/anchors): hero nav `#work`/`#about`; hero + contact `mailto:`;
+contact pills → external socials; Work touch bar + Right Now Ostiara card → Ostiara GitHub.
+
+**Content-model gaps (for V4):**
+- **`photos` is empty** — the biggest gap. Bento Photography grid + Graphic grid use
+  placeholder gradient tiles; the Right Now photo highlight is deferred until the gallery
+  sync exists. Also `webProjects.image` / `designProjects.images` / essay header images are
+  all empty, so work bands, the carousel, and writing thumbnails use placeholder visuals.
+- **Blog: resolved** — folded into `writing` (no separate `data/blog.ts`), per V2 addendum.
+- **Services: resolved** — `data/services.ts` now backs the section.
+- **Inner routes** (`/photography`, `/design`, `/writing/[slug]`, `/web-projects`) are the
+  V4 build target (the dead-link table above is their homepage entry points).
+
+**Preview / push:** the branch `v1-homepage-preview` tracks
+`origin/charlieramus.comv2` and Stages 1–4 are already committed + pushed
+(`stage1v3`…`stage4v3`), so Vercel has a running preview. The Stage-5 changes (this report,
+`about.tsx`, `page.tsx`) are **staged in the working tree, not committed** — left for
+Charlie to commit as `stage5v3` and push (his per-stage pattern; the repo rule is no
+commit/push without his ask). The Vercel preview URL lives in Charlie's Vercel dashboard
+(the Vercel MCP connector isn't authorized in this session, so I can't fetch it here).
+
+**Issues:** None blocking. The homepage is fully wired to `data/`, pixel-faithful, clean on
+all three checks, and free of horizontal scroll + console errors at 1440/768/375. Remaining
+work is all **V4** (real photos + screenshots + the inner routes above).

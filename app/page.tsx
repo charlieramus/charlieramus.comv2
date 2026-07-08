@@ -7,6 +7,7 @@ import Services from "@/components/services";
 import About from "@/components/about";
 import Contact from "@/components/contact";
 import Finale from "@/components/finale";
+import { snapshot } from "@/data/about";
 
 export default function Home() {
   return (
@@ -22,7 +23,7 @@ export default function Home() {
       <Finale />
       {/* CUSTOMIZE: legal line */}
       <div className="legal-min">
-        © 2026 — placeholder content · homepage rebuilt from the mockup
+        © {new Date().getFullYear()} {snapshot.name} · {snapshot.location}
       </div>
     </>
   );

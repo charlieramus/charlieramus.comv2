@@ -15,9 +15,10 @@ export default function About() {
       <div className="wrap">
         <Reveal className="head">
           <h2>Behind the pixels</h2>
+          {/* CUSTOMIZE: about subline */}
           <p>
-            Finally, a quick peek behind the work — swap this for a short,
-            friendly intro.
+            The person behind the builds — where I&apos;m based, what I care
+            about, and how I like to work.
           </p>
         </Reveal>
 
