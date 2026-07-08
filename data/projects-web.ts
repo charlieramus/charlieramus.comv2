@@ -39,6 +39,7 @@ export const webProjects: WebProject[] = [
     href: "",
     tags: ["Next.js", "TypeScript", "Markdown", "Personal Finance"],
     spotlight: true,
+    image: "/images/web/mylifeinarepo.webp",
   },
   {
     title: "Querryn",
@@ -63,6 +64,7 @@ export const webProjects: WebProject[] = [
       "This site — a personal portfolio in Next.js, TypeScript, and Tailwind, with MDX for writing and a masonry photography grid backed by a fullscreen lightbox.",
     href: "https://charlieramus.com",
     tags: ["Next.js", "TypeScript", "Tailwind", "MDX"],
+    image: "/images/web/charlieramus-com.webp",
   },
   {
     title: "Browser-automation experiments",

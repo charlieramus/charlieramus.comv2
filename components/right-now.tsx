@@ -61,7 +61,7 @@ export default function RightNow() {
           {/* CUSTOMIZE: section copy */}
           <h2>Right now</h2>
           <p>
-            A quick pulse on what&apos;s fresh — the active build, the open
+            A quick pulse on what&apos;s fresh, the active build, the open
             journal, and the latest essay.
           </p>
         </Reveal>

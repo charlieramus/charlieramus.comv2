@@ -233,40 +233,20 @@ body {
   .hero .inner {
     position: relative;
     z-index: 2;
-    width: min(90vw, 560px);
+    width: min(92vw, 860px);
     margin: auto;
   }
-  .hero .rule {
-    height: 0;
-    border-top: 1px dashed var(--color-line);
-    max-width: 470px;
-    margin: 30px auto 0;
-  }
-  .rainbow {
-    width: 54px;
-    margin: 0 auto 18px;
-    display: block;
-  }
-  .hi {
-    font-size: 15px;
-    color: var(--color-ink);
-    margin-bottom: 10px;
-  }
+  /* The name is the whole hero: big, bold serif, one word per line so
+     "Charlie" and "Ramus" always stack. */
   .hero h1 {
     font-family: var(--font-serif);
-    font-weight: 400;
-    font-size: clamp(26px, 4vw, 52px);
-    line-height: 1.14;
-    letter-spacing: -0.005em;
+    font-weight: 700;
+    font-size: clamp(56px, 13vw, 168px);
+    line-height: 0.95;
+    letter-spacing: -0.02em;
   }
-  .hero p.lede {
-    margin: 22px auto 0;
-    max-width: 42ch;
-    font-size: 15px;
-    color: var(--color-ink-soft);
-  }
-  .hero .btn {
-    margin-top: 30px;
+  .hero h1 .name-line {
+    display: block;
   }
 
   /* ---------- STEP + CAROUSEL ---------- */
@@ -1081,7 +1061,7 @@ body {
     background: var(--color-red);
     color: #fff;
     border-radius: 40px;
-    width: clamp(340px, 53vw, 1060px);
+    width: clamp(340px, 70vw, 1120px);
     /* Cap to the wrap so the 53vw/90vw width can't overflow past the --edge
        gutter on tablet/mobile (was pushing ~8-15px of horizontal scroll). */
     max-width: 100%;
@@ -1122,7 +1102,9 @@ body {
     gap: 12px;
     justify-content: center;
     flex-wrap: wrap;
-    margin-top: -26px;
+    /* Match the red card's width so the row of links stays within its edges. */
+    max-width: clamp(340px, 70vw, 1120px);
+    margin: -26px auto 0;
     position: relative;
     z-index: 1;
   }
@@ -1172,7 +1154,10 @@ body {
     top: 50%;
     transform: translate(-50%, -50%);
     background: var(--color-paper);
-    padding: 18px 32px;
+    /* Wide enough to fully mask the flowers behind the text — the extra
+       horizontal padding + min-width stop stray petals peeking at the edges. */
+    padding: clamp(22px, 3vw, 34px) clamp(56px, 9vw, 120px);
+    min-width: min(92vw, 760px);
     text-align: center;
     font-family: var(--font-serif);
     font-size: clamp(18px, 2.2vw, 24px);
@@ -1186,7 +1171,7 @@ body {
       width: 30vw;
     }
     .hero .inner {
-      width: min(86vw, 500px);
+      width: min(90vw, 720px);
     }
   }
   @media (max-width: 880px) {
@@ -1630,6 +1615,249 @@ body {
     }
     .lightbox-btn {
       transition: none;
+    }
+  }
+
+  /* ---------- INNER CONTENT PAGES (/web-projects · /design · /gear) ---------- */
+  /* Shared chrome: back-nav aligned to the --maxw content column, eyebrow +
+     serif h1 + lede header. (Stage 4 unifies this with a real header/footer.) */
+  .inner {
+    padding-bottom: clamp(60px, 8vw, 110px);
+  }
+  .inner-nav {
+    max-width: var(--maxw);
+    margin: 0 auto;
+    justify-content: flex-start;
+  }
+  .inner-head {
+    padding: clamp(24px, 5vw, 56px) 0 clamp(22px, 4vw, 38px);
+    border-bottom: 1px dashed var(--color-line);
+  }
+  .inner-head h1 {
+    font-family: var(--font-serif);
+    font-weight: 700;
+    font-size: clamp(32px, 5vw, 52px);
+    line-height: 1.08;
+    letter-spacing: -0.01em;
+  }
+  .inner-lede {
+    margin-top: 16px;
+    color: var(--color-ink-soft);
+    font-family: var(--font-serif);
+    font-size: 16px;
+    max-width: 52ch;
+  }
+  .tag {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    padding: 5px 11px;
+    border-radius: 999px;
+    background: var(--color-panel);
+    color: var(--color-ink-soft);
+  }
+  .proj-meta {
+    margin-top: 6px;
+    font-size: 13px;
+    color: var(--color-ink-soft);
+    letter-spacing: 0.03em;
+  }
+  .proj-desc {
+    margin-top: 14px;
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--color-ink);
+    max-width: 60ch;
+  }
+
+  /* Web projects — text/visual rows */
+  .proj-list {
+    display: flex;
+    flex-direction: column;
+  }
+  .proj-row {
+    display: grid;
+    grid-template-columns: 1fr 440px;
+    gap: clamp(24px, 4vw, 56px);
+    align-items: center;
+    padding: clamp(28px, 4vw, 48px) 0;
+    border-top: 1px dashed var(--color-line);
+  }
+  .proj-row:first-child {
+    border-top: 0;
+  }
+  .proj-kick {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-red);
+    margin-bottom: 12px;
+  }
+  .proj-kick .fdot {
+    width: 9px;
+    height: 9px;
+    border-radius: 3px;
+    display: inline-block;
+  }
+  .proj-row h2 {
+    font-family: var(--font-serif);
+    font-weight: 700;
+    font-size: clamp(22px, 3vw, 30px);
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+  }
+  .proj-tags {
+    margin-top: 16px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .proj-link {
+    margin-top: 18px;
+    display: inline-block;
+    font-weight: 600;
+    font-size: 13px;
+    letter-spacing: 0.04em;
+    color: var(--color-blue);
+  }
+  .proj-link:hover {
+    color: var(--color-red);
+  }
+  .proj-visual {
+    position: relative;
+    aspect-ratio: 16 / 10;
+    border-radius: 16px;
+    overflow: hidden;
+    background: var(--color-panel);
+    border: 1px solid var(--color-line);
+  }
+  .proj-img {
+    object-fit: cover;
+  }
+  .proj-placeholder {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+  }
+  .proj-placeholder .flower {
+    width: 38%;
+  }
+
+  /* Design — per-project slide galleries */
+  .design-project {
+    padding: clamp(30px, 5vw, 58px) 0;
+    border-top: 1px dashed var(--color-line);
+  }
+  .design-project:first-of-type {
+    border-top: 0;
+  }
+  .design-head h2 {
+    font-family: var(--font-serif);
+    font-weight: 700;
+    font-size: clamp(24px, 3.4vw, 34px);
+    line-height: 1.12;
+    letter-spacing: -0.01em;
+  }
+  .design-head .proj-desc {
+    max-width: 62ch;
+  }
+  .design-grid {
+    margin-top: 24px;
+    display: grid;
+    gap: 14px;
+  }
+  .design-grid[data-shape="landscape"] {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .design-grid[data-shape="portrait"] {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+  .design-slide {
+    position: relative;
+    display: block;
+    border-radius: 12px;
+    overflow: hidden;
+    background: var(--color-panel);
+    border: 1px solid var(--color-line);
+  }
+  .design-slide:focus-visible {
+    outline: 2px solid var(--color-blue);
+    outline-offset: 2px;
+  }
+  .design-img {
+    object-fit: cover;
+    transition: transform 0.4s ease;
+  }
+  .design-slide:hover .design-img {
+    transform: scale(1.03);
+  }
+
+  /* Gear — sectioned lists */
+  .gear-sections {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(24px, 4vw, 56px);
+    margin-top: clamp(28px, 4vw, 44px);
+  }
+  .gear-section h2 {
+    font-family: var(--font-serif);
+    font-weight: 700;
+    font-size: 20px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--color-line);
+  }
+  .gear-list {
+    list-style: none;
+  }
+  .gear-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 16px;
+    padding: 13px 0;
+    border-bottom: 1px dashed var(--color-line);
+  }
+  .gear-name {
+    font-size: 15px;
+    color: var(--color-ink);
+  }
+  .gear-name a {
+    color: var(--color-blue);
+  }
+  .gear-name a:hover {
+    color: var(--color-red);
+  }
+  .gear-note {
+    font-size: 12px;
+    color: var(--color-ink-soft);
+    text-align: right;
+  }
+
+  @media (max-width: 880px) {
+    .proj-row {
+      grid-template-columns: 1fr;
+    }
+    .gear-sections {
+      grid-template-columns: 1fr;
+    }
+    .design-grid[data-shape="landscape"] {
+      grid-template-columns: 1fr;
+    }
+    .design-grid[data-shape="portrait"] {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .design-img,
+    .design-slide:hover .design-img {
+      transition: none;
+      transform: none;
     }
   }
 }

@@ -217,7 +217,68 @@ Reskin each to the system, driven by data:
   V4 TODOs since V2) and confirm no route points at a missing `/public` file.
 
 # Stage 3 Report
-_TBD._
+
+Four routes reskinned to the design system, all data-driven, with real image assets
+ported from the old `CharlieRamus.com` repo. `/blog` stays dropped (redirected).
+
+- [x] **`/web-projects` ← `webProjects` (all 6, curation order).** `app/web-projects/page.tsx`
+  renders each project as a text/visual row: `Featured` kick on the two `spotlight` builds
+  (Ostiara, MyLifeInARepo — array order already gives them top billing), `title`/`date`/
+  `description`/`tags`, and an external link (`View on GitHub` for GitHub hrefs, the bare
+  domain otherwise; hidden when `href` is `""`). **Real screenshots** wired to the two that
+  have them — `MyLifeInARepo` (`/images/web/mylifeinarepo.webp`) and `charlieramus.com`
+  (`/images/web/charlieramus-com.webp`); the other 4 (Ostiara is stealth, Querryn/VaultDNA/
+  Browser-automation had none) render a **design-system `<Flower>` placeholder** (petal color
+  cycled by index), consistent with the homepage bands' honest-placeholder approach.
+- [x] **`/design` ← `designProjects` (all 3).** `app/design/page.tsx` renders each project as a
+  header (`title`/`date`/`description`) + a slide gallery. Wired the `images[]` arrays to real
+  decks: **Notion** (10 slides), **Spotify IMC** (6 panels), **Photography Presentation UI**
+  (4 slides). Added an optional **`ratio`** to the `DesignProject` type (slides are uniform
+  within a project) so each grid frame matches the slides' aspect exactly — landscape decks
+  (16:9, 3:2) render 2-up, the portrait deck (9:16) 4-up, and `object-fit: cover` on a matched
+  frame means **no crop/distortion**. Each slide is a focusable link that opens the full-size
+  image. 20 slides total, **0 broken images**.
+- [x] **`/gear` ← `gear` + `gearSections`.** `app/gear/page.tsx` renders the four sections
+  (Camera Bodies / Lenses / Bags / Accessories) as a 2-column set of name→note lists; per-item
+  `href` becomes a link when set (all `""` now, so none render). Straightforward, in-system.
+- [x] **`/blog` — dropped, redirected.** No in-app link points at `/blog` (V3's dead-link table
+  never had it), but `next.config.ts` now `redirects()` `/blog → /writing` (permanent 308) so
+  any external/bookmarked link resolves. Verified: `curl /blog` → `308 → /writing`.
+- [x] **Assets ported into `public/images/`** (~2.3 MB): `web/` (2 screenshots),
+  `design/notion/` (10), `design/spotify/` (6), `design/photography-ui/` (4). All tracked.
+- [x] **Data edits:** `projects-web.ts` — added `image` to MyLifeInARepo + charlieramus.com.
+  `projects-design.ts` — added `images[]` + `ratio` to all 3 (+ the `ratio` type field). No
+  content re-typed; `personal-bento` (the only `designProjects` consumer) still count-drives
+  fine.
+- [x] **`app/globals.css`** — one `@layer components` block: shared inner-page chrome
+  (`.inner`, `.inner-nav` aligned to `--maxw`, `.inner-head`, `.inner-lede`, `.tag`), the
+  web-projects rows (`.proj-*`), the design galleries (`.design-*`, ratio-framed slides), and
+  the gear lists (`.gear-*`). Responsive stacks at ≤880px; `prefers-reduced-motion` disables
+  the slide hover-scale. Reuses `--edge`/`--color-*` + the `.writing-kicker` eyebrow.
+
+**Data flow:** `projects-web` → `/web-projects` rows (+ `image`/placeholder visual);
+`projects-design` → `/design` galleries (`images[]` framed by `ratio`); `gear`/`gearSections`
+→ `/gear` sections. Assets live in `public/images/{web,design/*}`.
+
+**Verify:** `npx tsc --noEmit`, `npx eslint .`, `npm run build` all clean; `/web-projects`,
+`/design`, `/gear` all prerender **static**. Rendered on the prod server and eyeballed at
+**1440 / 768 / 375**: **no horizontal overflow** at any width, **zero console errors**, **no
+broken images** on any route. Confirmed all 6 web projects render (2 real screenshots + 4
+flower placeholders), all 20 design slides load, gear lists read cleanly, and rows stack to a
+single column on mobile. (Below-fold rows are `Reveal` fade-ups — verified they reveal on
+scroll; `prefers-reduced-motion` shows them immediately.)
+
+**Dead links resolved:** the homepage `/web-projects` (bento Playground, Work "See all",
+Right Now journal fallback) and `/design` (bento Graphic-design card) targets now resolve.
+
+**Issues:** (1) Only 2 of 6 web projects have real screenshots — Ostiara is stealth (no
+shots), and Querryn/VaultDNA/Browser-automation had none in the old repo; they use flower
+placeholders until Charlie supplies images (swap into `webProjects[].image`). (2) Design
+slides open the full image in a new tab (no dedicated lightbox) — a deliberate keep-it-simple
+call for Stage 3; a shared gallery lightbox could be a V5 polish. (3) The back-nav is still
+the minimal placeholder; the consistent inner-page header/footer is **Stage 4** (note:
+`/web-projects`·`/design`·`/gear` use a wider `.inner-nav` aligned to `--maxw`, while
+`/writing`·`/photography` use the 760px `.writing-nav` — Stage 4 unifies these).
 
 ---
 

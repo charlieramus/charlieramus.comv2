@@ -4,6 +4,11 @@ import createMDX from "@next/mdx";
 const nextConfig: NextConfig = {
   // Let .md / .mdx files act as pages/imports alongside the TS/JS routes.
   pageExtensions: ["ts", "tsx", "js", "jsx", "md", "mdx"],
+  // /blog was dropped (V2 addendum): writing is unified under /writing. Nothing
+  // in-app links to /blog, but redirect any external/bookmarked link so it resolves.
+  async redirects() {
+    return [{ source: "/blog", destination: "/writing", permanent: true }];
+  },
 };
 
 // @next/mdx doesn't parse YAML frontmatter on its own. remark-frontmatter strips

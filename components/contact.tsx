@@ -29,7 +29,7 @@ export default function Contact() {
               <path d="M13 27 c-4.2 2 -5.2 6.2 -3.2 11 2 4.8 6 7.6 11.7 7.6 6.7 0 10.5 -4.6 10.5 -11.4" />
             </svg>
           </div>
-          <div className="vibe">Think we vibe?</div>
+          <div className="vibe">Looking to reach me?</div>
           <div className="huge">Get in touch</div>
         </Reveal>
 

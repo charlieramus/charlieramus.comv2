@@ -89,6 +89,21 @@ export default function Work() {
             <Stack bg="var(--color-blue)" petal="yellow" core="#FFCB41" index={10} />
           </Reveal>
 
+          {/* Full-width case-study bar → the flagship (Ostiara) blurb. Sits
+              directly under the Ostiara band so its description reads with it. */}
+          <Reveal className="touch">
+            <p>{flagship.description}</p>
+            <a
+              className="btn"
+              href={flagship.href || "/web-projects"}
+              {...(flagship.href
+                ? { target: "_blank", rel: "noopener noreferrer" }
+                : {})}
+            >
+              View {flagship.title} ↗
+            </a>
+          </Reveal>
+
           {/* Band 2 — stack LEFT + gallery panel RIGHT */}
           <Reveal className="band flip">
             <div className="panel">
@@ -130,20 +145,6 @@ export default function Work() {
               </div>
             </div>
             <Stack bg="var(--color-pink)" petal="blue" core="#0015D4" index={11} />
-          </Reveal>
-
-          {/* Full-width case-study bar → the flagship (Ostiara) blurb */}
-          <Reveal className="touch">
-            <p>{flagship.description}</p>
-            <a
-              className="btn"
-              href={flagship.href || "/web-projects"}
-              {...(flagship.href
-                ? { target: "_blank", rel: "noopener noreferrer" }
-                : {})}
-            >
-              View {flagship.title} ↗
-            </a>
           </Reveal>
 
           {/* Band 3 — panel LEFT + stack RIGHT */}
