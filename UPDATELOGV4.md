@@ -293,7 +293,55 @@ the minimal placeholder; the consistent inner-page header/footer is **Stage 4** 
 - Per-route `metadata` (title/description) for SEO; OG images where it matters.
 
 # Stage 4 Report
-_TBD._
+
+Wired the essay header images, and replaced the per-page placeholder back-links with a
+**shared inner-page header + footer** (resolving the two-nav inconsistency flagged in
+Stages 1/3). Homepage → inner-route links already resolved once Stages 1–3 built the routes.
+
+- [x] **Essay header images.** Ported the 3 real headers from the old repo into
+  `public/images/writing/<slug>.webp` and set the typo-free path in each MDX frontmatter:
+  `architecture-of-self-justification`, `when-bigger-means-more-biased`, `the-third-rotation`.
+  The article page's guarded `next/image` hero (built Stage 1) now renders them (verified the
+  banner loads, no layout shift). **The 4th essay (`the-hobby-hexagon-is-a-trap`) stays
+  headerless** — the old repo only reused article-1's image there as a placeholder, so rather
+  than ship a visible duplicate I left it `""` (it's the newest essay; Charlie can add a real
+  one, and the render branch already handles it).
+- [x] **Shared header — `components/site-header.tsx`** (client, for active-route highlight).
+  The script wordmark links home (back-to-home), and a cross-nav (`Work · Design · Photography
+  · Writing · Gear`) links the inner routes; `usePathname` marks the current one
+  (`aria-current="page"` + underline). Mounted on all 6 content routes.
+- [x] **Shared footer — `components/site-footer.tsx`** (server). A compact "Think we vibe?" +
+  "Get in touch" (`mailto:${contactEmail}`, reusing the `.btn`), the `socials` row (the two
+  Instagrams disambiguated by their `note`), and `© {year} {snapshot.name} · {snapshot.location}`.
+  Reuses `data/socials` + `data/about` — no content re-typed.
+- [x] **Wired into all 6 inner pages** (`/writing`, `/writing/[slug]`, `/photography`,
+  `/web-projects`, `/design`, `/gear`): replaced the minimal `.writing-nav`/`.inner-nav`
+  back-links with `<SiteHeader />` at the top and `<SiteFooter />` at the bottom. Removed the
+  now-dead `.writing-nav` / `.inner-nav` CSS rules — the nav is unified.
+- [x] **`app/globals.css`** — `.site-header`/`.site-nav`/`.site-logo` + `.site-footer*` in
+  `@layer components`. The inner `<nav>`s override the global `nav` element rule's
+  `padding`/`gap` (they inherit its centered flex, which is what we want). Header + footer wrap
+  cleanly to a second row on mobile; the wordmark uses `--font-script`, links use `--color-red`
+  with an ink active state.
+- [x] **Homepage → inner links resolve.** V3's dead-link targets (`/photography`, `/design`,
+  `/writing`, `/web-projects` from the bento / work / Right Now) now all point at live routes;
+  the shared header adds `/gear` reachability too. Verified every internal `href` maps to a real
+  route (no `/blog`, no missing paths).
+- [x] **Per-route metadata.** All 6 routes carry a route-specific `title` + `description`
+  (Stages 1–3). Per-route OG **images** are deferred to V5 (the essays can use their
+  `headerImage`, the gallery a featured photo) — noted below.
+
+**Data flow:** `site-header` (static links + `usePathname`); `site-footer` ← `socials` +
+`contactEmail` + `snapshot`. Essay `headerImage` frontmatter → the article hero (`next/image`).
+
+**Verify:** `tsc` / `eslint` / `build` clean. Rendered every route at 1440 / 768 / 375: header
++ footer present on all 6 inner routes (absent on the homepage, which keeps its hero chrome),
+active-nav highlights the current route, the 3 essay header banners load, header/footer wrap
+cleanly on mobile.
+
+**Issues:** (1) One essay (hobby hexagon) is intentionally headerless (see above). (2) Per-route
+OG images deferred to V5. (3) The cosmetic Turbopack workspace-root warning (two lockfiles)
+persists — left as-is to avoid config churn before the preview.
 
 ---
 
@@ -312,4 +360,59 @@ _TBD._
 - Push the branch → Vercel preview; share the URL.
 
 # Stage 5 Report
-_TBD._
+
+Full verification sweep of the V4 build. Everything passes; the site is feature-complete
+ahead of V5.
+
+- [x] **`npx tsc --noEmit`, `npx eslint .`, `npm run build` all clean.** Route prerender map:
+  `/`, `/writing`, `/photography`, `/web-projects`, `/design`, `/gear`, `/_not-found` →
+  **static (`○`)**; `/writing/[slug]` → **SSG (`●`)**, all 4 essays prerendered via
+  `generateStaticParams` (`dynamicParams=false`). No intentionally-dynamic routes. (One
+  cosmetic `next build` warning remains: Next infers the workspace root from two lockfiles —
+  one at `C:\Users\jason` — not from this repo; silence via `turbopack.root` if desired.)
+- [x] **Rendered + eyeballed every route at 1440 / 768 / 375.** **No horizontal overflow**
+  (`scrollWidth ≤ clientWidth`) at any width on any route. **Zero console errors** in a clean
+  browser (an earlier `webpack-hmr` WebSocket error was stale browser state from a prior
+  localhost:3000 dev session — the prod HTML contains no HMR refs; confirmed gone on reload).
+- [x] **Images lazy-load with blur; no broken images.** `brokenImgs=0` on every route. Gallery
+  thumbnails + essay headers + design slides + web screenshots all load; `next/image` +
+  `blurDataURL` on the photography grid/lightbox.
+- [x] **Lightbox a11y** (re-verified at 768 with the new header/footer in place): opens as
+  `role="dialog"`/`aria-modal`, focus lands on Close, **body scroll locks**, **← / →** step
+  with wraparound, **Tab is trapped** inside the dialog, **Esc closes** and **returns focus**
+  to the opening tile.
+- [x] **MDX prose reads cleanly**; the 3 essay header banners render; footnote `[n]` refs +
+  acknowledgment blocks styled; `---` → centered dividers.
+- [x] **No dead links.** Enumerated every internal `href` across all routes — all resolve to
+  live routes (`/`, `/writing`, `/writing/<slug>`, `/photography`, `/web-projects`, `/design`,
+  `/gear`) or real `/images/**` assets. `/blog` 308-redirects to `/writing`. No route points
+  at a missing `/public` file (`brokenImgs=0` confirms).
+- [x] **Design tokens used throughout** — every inner page + the shared header/footer read
+  `--color-*` / `--edge` / `--maxw` / `--font-*`; no hard-coded palette. **`prefers-reduced-
+  motion`** honored on the lightbox fade + transitions, the gallery/design hover-scales, and
+  the `Reveal`/`Flower` primitives (shown immediately, animations disabled).
+
+**Feature-complete for V4.** Every homepage link resolves; the two stubbed pipelines are live
+(MDX writing + the photography downscale/thumb/blur sync); all six inner routes are built,
+data-driven, and reskinned to the design system with a consistent header/footer.
+
+**Deferred to V5** (polish / a11y / responsive / deploy + cutover):
+- Real screenshots for the 4 imageless web projects (Ostiara stealth; Querryn/VaultDNA/
+  Browser-automation) — they use `<Flower>` placeholders; swap into `webProjects[].image`.
+- A header image for the 4th essay (hobby hexagon) — currently headerless by choice.
+- Per-route **OG images** (essays → `headerImage`; gallery → a featured photo); a shared
+  **lightbox for the design slide galleries** (they currently open full-size in a new tab).
+- Silence the cosmetic Turbopack workspace-root warning (`turbopack.root`, or drop the stray
+  `C:\Users\jason` lockfile).
+- Final deploy + cutover to replace the live charlieramus.com.
+
+**Preview / push:** all V4 work is committed per-stage by Charlie (`stage1v4`…`stage3v4`
+pattern). Stage 4 + Stage 5 changes (shared header/footer, essay header images, `/blog`
+redirect, this report) are **staged in the working tree, not committed** — left for Charlie to
+commit as `stage4v4` / `stage5v4` and push; Vercel builds the branch preview on push. The
+preview URL lives in Charlie's Vercel dashboard (the Vercel MCP connector isn't authorized in
+this session, so I can't fetch it here).
+
+**Issues:** None blocking. The site is clean on all three checks, free of horizontal scroll +
+console errors + broken images + dead links at 1440 / 768 / 375, with a consistent header/
+footer and a working, accessible lightbox. Remaining items are the V5 polish list above.

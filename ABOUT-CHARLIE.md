@@ -161,7 +161,7 @@ Next.js, TypeScript, Tailwind and Cloudflare Pages. Fixed left sidebar with cont
 
 ## Currently Writing
 
-An opinion piece pushing back on the six hobbies hexagon framework that circulates online, arguing that trying to instrumentalize leisure destroys what makes it worthwhile in the first place. Four beat structure, confessional opening, a deliberately unresolved ending, and Satisfactory as the case study for where play tips into work.
+An opinion piece pushing back on the six hobbies hexagon framework that circulates online, arguing that trying to instrumentalize leisure destroys what makes it worthwhile in the first place. Four beat structure, confessional opening, a deliberately unresolved ending, and Satisfactory as the case study for where play tips into work. (Finished now, not currently writing)
 
 ## How I Work
 

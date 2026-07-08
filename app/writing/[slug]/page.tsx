@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import Image from "next/image";
+import SiteHeader from "@/components/site-header";
+import SiteFooter from "@/components/site-footer";
 import { writing } from "@/data/writing";
 import { snapshot } from "@/data/about";
 
@@ -34,10 +35,7 @@ export default async function WritingArticle({ params }: Params) {
 
   return (
     <main className="writing">
-      {/* Minimal back link until Stage 4 wires the shared inner-page nav. */}
-      <nav className="writing-nav">
-        <Link href="/writing">← all writing</Link>
-      </nav>
+      <SiteHeader />
 
       <article className="wrap writing-wrap">
         <header className="writing-article-head">
@@ -80,6 +78,8 @@ export default async function WritingArticle({ params }: Params) {
           <Post />
         </div>
       </article>
+
+      <SiteFooter />
     </main>
   );
 }

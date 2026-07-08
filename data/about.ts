@@ -37,4 +37,4 @@ export const tagline =
 // system, and the marketing copy in between"). `\n` marks the line break.
 // CUSTOMIZE: swap for any closing line you like; the flowers stay decorative.
 export const finaleQuote =
-  "Still just getting started.\nThanks for scrolling this far.";
+  "A portfolio is not proof of what you built. It is proof you noticed.";

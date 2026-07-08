@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import Reveal from "@/components/reveal";
+import SiteHeader from "@/components/site-header";
+import SiteFooter from "@/components/site-footer";
 import { writing } from "@/data/writing";
 import { snapshot } from "@/data/about";
 
@@ -17,10 +19,7 @@ const essays = [...writing].sort((a, b) => a.order - b.order);
 export default function WritingIndex() {
   return (
     <main className="writing">
-      {/* Minimal back-to-home until Stage 4 wires the shared inner-page nav. */}
-      <nav className="writing-nav">
-        <Link href="/">← charlie ramus</Link>
-      </nav>
+      <SiteHeader />
 
       <div className="wrap writing-wrap">
         <Reveal as="header" className="writing-head">
@@ -45,6 +44,8 @@ export default function WritingIndex() {
           ))}
         </ol>
       </div>
+
+      <SiteFooter />
     </main>
   );
 }

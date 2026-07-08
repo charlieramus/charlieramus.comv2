@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import Reveal from "@/components/reveal";
+import SiteHeader from "@/components/site-header";
+import SiteFooter from "@/components/site-footer";
 import PhotographyGallery from "@/components/photography-gallery";
 import { photos } from "@/data/photos";
 import { snapshot } from "@/data/about";
@@ -14,10 +15,7 @@ export const metadata: Metadata = {
 export default function PhotographyPage() {
   return (
     <main className="gallery-page">
-      {/* Minimal back-to-home until Stage 4 wires the shared inner-page nav. */}
-      <nav className="writing-nav">
-        <Link href="/">← charlie ramus</Link>
-      </nav>
+      <SiteHeader />
 
       <div className="wrap">
         <Reveal as="header" className="gallery-head">
@@ -31,6 +29,8 @@ export default function PhotographyPage() {
 
         <PhotographyGallery />
       </div>
+
+      <SiteFooter />
     </main>
   );
 }

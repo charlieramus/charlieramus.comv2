@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import Reveal from "@/components/reveal";
+import SiteHeader from "@/components/site-header";
+import SiteFooter from "@/components/site-footer";
 import { gear, gearSections } from "@/data/gear";
 import { snapshot } from "@/data/about";
 
@@ -13,10 +14,7 @@ export const metadata: Metadata = {
 export default function GearPage() {
   return (
     <main className="inner">
-      {/* Minimal back-to-home until Stage 4 wires the shared inner-page nav. */}
-      <nav className="inner-nav">
-        <Link href="/">← charlie ramus</Link>
-      </nav>
+      <SiteHeader />
 
       <div className="wrap">
         <Reveal as="header" className="inner-head">
@@ -53,6 +51,8 @@ export default function GearPage() {
           ))}
         </div>
       </div>
+
+      <SiteFooter />
     </main>
   );
 }
