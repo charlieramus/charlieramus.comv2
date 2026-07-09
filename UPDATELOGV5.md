@@ -46,7 +46,51 @@ The V4 placeholders that need real content before polish.
   placeholder, and whether the hobby-hexagon essay gets a header.
 
 # Stage 1 Report
-_TBD._
+
+Stage 1 is the "fill real-asset gaps" stage, and by design its work is **gated on Charlie
+supplying assets/decisions** (`don't invent — Charlie supplies`). I surveyed every gap,
+got Charlie's decisions, and — at Charlie's request — consolidated everything he still has
+to hand-provide (across the **whole project**, not just this stage) into a single running
+checklist. No invented assets; no data fabricated.
+
+**Decisions (Charlie, this session):**
+- **Web screenshots** — Charlie *will supply* real shots for the 3 imageless non-stealth
+  projects (Querryn / VaultDNA / Browser-automation); **Ostiara stays a Flower placeholder**
+  (stealth, no shot). He'll drop the files in a follow-up, so the wiring is **deferred until
+  they land** (target paths + format documented).
+- **Hobby-Hexagon essay** — **ships headerless** (confirmed intentional). No change; the
+  render branch already handles empty `headerImage`.
+- **Gear links/notes** — Charlie will provide later.
+- **New projects** — **none to add**; the current 6 web + 3 design projects are complete.
+
+- [x] **Surveyed all real-asset gaps.** Confirmed via a project-wide sweep: the 4 imageless
+  web projects (`webProjects[].image` unset), the headerless essay, all 8 `gear[].href` empty
+  + 4 empty `note`s, all 4 essays' `externalLink` empty, 2 `experience[].href` empty. Searched
+  every sibling project folder for portable screenshots — **none exist** (only icons/logos/
+  branding for Querryn & Axiom), so nothing could be ported without Charlie.
+- [x] **Created `MANUAL-TODO.md`** (repo root) — the deliverable Charlie asked for: a single
+  checklist of everything he must supply by hand, grouped by consuming stage, with exact
+  target file paths, formats, drop locations, and fill-in tables. Covers §1 web screenshots,
+  §2 gear links/notes, §3 writing/content confirmations, §4 SEO/OG/icons (Stage 4), §5 deploy
+  + cutover incl. the **legacy article-slug → new-slug redirect map** (recovered from the old
+  repo: `article-one…four` → `architecture-of-self-justification` / `when-bigger-means-more-
+  biased` / `the-third-rotation` / `the-hobby-hexagon-is-a-trap`), and §6 connector auth
+  (Vercel/Intercom MCP unauthorized in-session).
+- [x] **No code/data changes** this stage — every actionable item is blocked on Charlie's
+  assets (screenshots to be dropped, gear links to be provided). The one settled decision
+  (hobby-hexagon headerless) needs no change since V4 already ships it that way.
+
+**Data flow:** none changed. `MANUAL-TODO.md` is the hand-off surface; as assets land they
+flow into `data/projects-web.ts` (`image`/`href`), `data/gear.ts` (`note`/`href`), MDX
+frontmatter (`externalLink`), and `next.config.ts` (legacy redirects).
+
+**Verify:** no source touched, so `build`/`tsc`/`eslint` are unchanged from the clean V4
+baseline (nothing to regress). `MANUAL-TODO.md` is documentation only.
+
+**Issues:** (1) Real blockers are external — Querryn/VaultDNA/Browser-automation screenshots
+and gear links are pending Charlie; the wiring is a fast follow once files land. (2) Deploy/
+cutover (Stage 5) additionally needs the **Vercel connector authorized** — can't be done
+from a headless session. All tracked in `MANUAL-TODO.md`.
 
 ---
 
