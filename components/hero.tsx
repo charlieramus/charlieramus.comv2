@@ -13,7 +13,7 @@ export default function Hero() {
         <Flower petal="#F32317" core="#F4F3EE" petals={8} index={2} />
       </div>
 
-      <nav>
+      <nav aria-label="Primary">
         {/* CUSTOMIZE: nav labels + hrefs (homepage anchors; V4 adds inner routes) */}
         <a href="#work">work</a>
         <a href="/photography">photography</a>

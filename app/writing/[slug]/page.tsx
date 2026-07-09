@@ -34,8 +34,10 @@ export default async function WritingArticle({ params }: Params) {
   );
 
   return (
-    <main className="writing">
+    <>
       <SiteHeader />
+
+      <main id="main-content" tabIndex={-1} className="writing">
 
       <article className="wrap writing-wrap">
         <header className="writing-article-head">
@@ -79,7 +81,9 @@ export default async function WritingArticle({ params }: Params) {
         </div>
       </article>
 
+      </main>
+
       <SiteFooter />
-    </main>
+    </>
   );
 }

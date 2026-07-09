@@ -24,8 +24,10 @@ function linkLabel(href: string): string {
 
 export default function WebProjectsPage() {
   return (
-    <main className="inner">
+    <>
       <SiteHeader />
+
+      <main id="main-content" tabIndex={-1} className="inner">
 
       <div className="wrap">
         <Reveal as="header" className="inner-head">
@@ -93,7 +95,9 @@ export default function WebProjectsPage() {
         </div>
       </div>
 
+      </main>
+
       <SiteFooter />
-    </main>
+    </>
   );
 }

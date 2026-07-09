@@ -13,6 +13,10 @@
   --color-ink: #14140f;
   --color-ink-soft: #55554d;
   --color-red: #f32317;
+  /* Accessible red for TEXT/links only (V5 Stage 3): #f32317 on paper is 3.73:1
+     (fails AA-normal); this darker red is 4.84:1. Decorative reds (flowers, dots,
+     contact card, active-nav underline) stay on --color-red. */
+  --color-red-ink: #d21a0f;
   --color-blue: #0015d4;
   --color-yellow: #ffcb41;
   --color-pink: #ff8fca;
@@ -122,6 +126,62 @@ body {
     transform: none;
     transition: none;
   }
+  .skip-link {
+    transition: none;
+  }
+  /* Hover lifts are motion too — hold the cards still under reduce. */
+  .now-card,
+  .pcard {
+    transition: none;
+  }
+  .now-card:hover,
+  .pcard:hover {
+    transform: none;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Accessibility — skip-to-content link + a consistent keyboard focus ring
+   (V5 Stage 3). In @layer components so the few bespoke rings
+   (gallery/design/lightbox) and utilities still win.
+--------------------------------------------------------------------------- */
+@layer components {
+  .skip-link {
+    position: fixed;
+    top: 0;
+    left: 8px;
+    z-index: 200;
+    transform: translateY(-120%);
+    background: var(--color-ink);
+    color: var(--color-paper);
+    padding: 10px 16px;
+    border-radius: 0 0 8px 8px;
+    font-size: 14px;
+    font-weight: 600;
+    transition: transform 0.15s ease;
+  }
+  .skip-link:focus {
+    transform: translateY(0);
+  }
+
+  /* Keyboard focus ring on links + buttons; mouse clicks stay clean via
+     :focus-visible. Card links, nav, pills, .btn and the contact box inherit it. */
+  a:focus-visible,
+  button:focus-visible {
+    outline: 2px solid var(--color-blue);
+    outline-offset: 2px;
+    border-radius: 3px;
+  }
+  /* The skip target is focused programmatically — no ring needed there. */
+  #main-content:focus,
+  #main-content:focus-visible {
+    outline: none;
+  }
+  /* The horizontally-scrollable carousel is keyboard-focusable (arrow-scroll). */
+  .carousel:focus-visible {
+    outline: 2px solid var(--color-blue);
+    outline-offset: 4px;
+  }
 }
 
 /* ---------------------------------------------------------------------------
@@ -185,7 +245,7 @@ body {
     padding: 24px var(--edge);
   }
   nav a {
-    color: var(--color-red);
+    color: var(--color-red-ink);
     font-weight: 500;
     font-size: 15px;
   }
@@ -269,7 +329,7 @@ body {
     font-size: 22px;
     display: block;
     margin-bottom: 8px;
-    color: var(--color-red);
+    color: var(--color-red-ink);
   }
   .step .t {
     font-family: var(--font-serif);
@@ -324,7 +384,7 @@ body {
   }
   .s-acie .body {
     background: #fbfbf8;
-    color: #888;
+    color: var(--color-ink-soft); /* was #888 (3.4:1); ink-soft is ~7:1 on the light shot */
     font-size: 13px;
   }
   .s-dark .body {
@@ -440,7 +500,7 @@ body {
     color: var(--color-blue);
   }
   .pcard:hover .go {
-    color: var(--color-red);
+    color: var(--color-red-ink);
   }
 
   .pgrid {
@@ -856,7 +916,7 @@ body {
     font-size: 15px;
   }
   .ui .statrow small {
-    color: #888;
+    color: var(--color-ink-soft); /* was #888 (2.9:1 on the panel) */
     font-size: 9px;
     max-width: 70px;
     line-height: 1.1;
@@ -938,7 +998,7 @@ body {
     color: var(--color-blue);
   }
   .proj-all:hover {
-    color: var(--color-red);
+    color: var(--color-red-ink);
   }
 
   /* ---------- SERVICES ---------- */
@@ -1021,7 +1081,7 @@ body {
     color: var(--color-blue);
   }
   .now-card:hover .go {
-    color: var(--color-red);
+    color: var(--color-red-ink);
   }
 
   /* Recent-trip photo card (V5 Stage 2): a real featured photo with a legibility
@@ -1154,7 +1214,9 @@ body {
   .contact .vibe {
     font-family: var(--font-serif);
     font-weight: 700;
-    font-size: clamp(18px, 1.5vw, 24px);
+    /* min 19px keeps white-on-brand-red (4.14:1) above the WCAG large-text
+       threshold (≥18.66px bold → 3:1 bar) so the decorative red card can stay. */
+    font-size: clamp(19px, 1.5vw, 24px);
   }
   .contact .huge {
     margin-top: auto;
@@ -1369,7 +1431,7 @@ body {
       transform 0.18s ease;
   }
   .writing-item:hover {
-    color: var(--color-red);
+    color: var(--color-red-ink);
     transform: translateX(4px);
   }
   .writing-item-title {
@@ -1448,7 +1510,7 @@ body {
     text-underline-offset: 2px;
   }
   .writing-prose a:hover {
-    color: var(--color-red);
+    color: var(--color-red-ink);
   }
   .writing-prose sup {
     font-size: 0.72em;
@@ -1759,7 +1821,7 @@ body {
     font-weight: 600;
     letter-spacing: 0.14em;
     text-transform: uppercase;
-    color: var(--color-red);
+    color: var(--color-red-ink);
     margin-bottom: 12px;
   }
   .proj-kick .fdot {
@@ -1790,7 +1852,7 @@ body {
     color: var(--color-blue);
   }
   .proj-link:hover {
-    color: var(--color-red);
+    color: var(--color-red-ink);
   }
   .proj-visual {
     position: relative;
@@ -1901,7 +1963,7 @@ body {
     color: var(--color-blue);
   }
   .gear-name a:hover {
-    color: var(--color-red);
+    color: var(--color-red-ink);
   }
   .gear-note {
     font-size: 12px;
@@ -1954,7 +2016,7 @@ body {
     color: var(--color-ink);
   }
   .site-logo:hover {
-    color: var(--color-red);
+    color: var(--color-red-ink);
   }
   .site-nav {
     padding: 0;
@@ -1962,7 +2024,7 @@ body {
     flex-wrap: wrap;
   }
   .site-nav a {
-    color: var(--color-red);
+    color: var(--color-red-ink);
     font-weight: 500;
     font-size: 14px;
   }
@@ -2010,7 +2072,7 @@ body {
     font-size: 13px;
   }
   .site-footer-socials a:hover {
-    color: var(--color-red);
+    color: var(--color-red-ink);
   }
   .site-footer-legal {
     color: var(--color-ink-soft);

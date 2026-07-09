@@ -17,6 +17,7 @@ export default function Contact() {
           <div className="peace">
             <svg
               viewBox="0 0 40 48"
+              aria-hidden="true"
               fill="none"
               stroke="#fff"
               strokeWidth="2"

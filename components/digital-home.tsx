@@ -18,7 +18,12 @@ export default function DigitalHome() {
         <span className="t">Step into my digital home</span>
       </Reveal>
 
-      <Reveal className="carousel">
+      <Reveal
+        className="carousel"
+        role="group"
+        aria-label="Project previews — scroll horizontally"
+        tabIndex={0}
+      >
         {SHOTS.map((shot, i) => (
           <div key={i} className={`shot ${shot.variant}`}>
             <div className="bbar">

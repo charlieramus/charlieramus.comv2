@@ -13,18 +13,20 @@ export default function Home() {
   return (
     <>
       <Hero />
-      <DigitalHome />
-      <RightNow />
-      <PersonalBento />
-      <Work />
-      <Services />
-      <About />
-      <Contact />
-      <Finale />
+      <main id="main-content" tabIndex={-1}>
+        <DigitalHome />
+        <RightNow />
+        <PersonalBento />
+        <Work />
+        <Services />
+        <About />
+        <Contact />
+        <Finale />
+      </main>
       {/* CUSTOMIZE: legal line */}
-      <div className="legal-min">
+      <footer className="legal-min">
         © {new Date().getFullYear()} {snapshot.name} · {snapshot.location}
-      </div>
+      </footer>
     </>
   );
 }

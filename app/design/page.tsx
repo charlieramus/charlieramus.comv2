@@ -14,8 +14,10 @@ export const metadata: Metadata = {
 
 export default function DesignPage() {
   return (
-    <main className="inner">
+    <>
       <SiteHeader />
+
+      <main id="main-content" tabIndex={-1} className="inner">
 
       <div className="wrap">
         <Reveal as="header" className="inner-head">
@@ -31,7 +33,9 @@ export default function DesignPage() {
         <DesignGallery projects={designProjects} />
       </div>
 
+      </main>
+
       <SiteFooter />
-    </main>
+    </>
   );
 }

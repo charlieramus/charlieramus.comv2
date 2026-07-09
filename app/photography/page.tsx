@@ -14,8 +14,10 @@ export const metadata: Metadata = {
 
 export default function PhotographyPage() {
   return (
-    <main className="gallery-page">
+    <>
       <SiteHeader />
+
+      <main id="main-content" tabIndex={-1} className="gallery-page">
 
       <div className="wrap">
         <Reveal as="header" className="gallery-head">
@@ -30,7 +32,9 @@ export default function PhotographyPage() {
         <PhotographyGallery />
       </div>
 
+      </main>
+
       <SiteFooter />
-    </main>
+    </>
   );
 }

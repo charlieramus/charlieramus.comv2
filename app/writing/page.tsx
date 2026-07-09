@@ -18,8 +18,10 @@ const essays = [...writing].sort((a, b) => a.order - b.order);
 
 export default function WritingIndex() {
   return (
-    <main className="writing">
+    <>
       <SiteHeader />
+
+      <main id="main-content" tabIndex={-1} className="writing">
 
       <div className="wrap writing-wrap">
         <Reveal as="header" className="writing-head">
@@ -45,7 +47,9 @@ export default function WritingIndex() {
         </ol>
       </div>
 
+      </main>
+
       <SiteFooter />
-    </main>
+    </>
   );
 }
