@@ -1,9 +1,11 @@
 import type { CSSProperties } from "react";
+import Image from "next/image";
 import Flower from "@/components/flower";
 import Reveal from "@/components/reveal";
 import { entries } from "@/data/experience";
 import { writing } from "@/data/writing";
 import { designProjects } from "@/data/projects-design";
+import { photos, type Photo } from "@/data/photos";
 
 // --- Career-journey timeline -------------------------------------------------
 // Driven by experience.entries (newest-first). The mockup's 8-year 2020→2027 axis
@@ -35,23 +37,27 @@ const latestEssays = essays.slice(0, 2);
 const moreEssays = essays.slice(2, 4);
 const yearOf = (date: string) => date.match(/\d{4}/)?.[0] ?? "";
 
-// Decorative placeholder thumbnails (real essay header images + photo/design
-// galleries arrive in V4). Counts mirror the data so the grids stay honest.
+// Essay-card thumbnails stay decorative gradients (the newest essay is headerless
+// by design, so a real-thumbnail row would be uneven). Counts mirror the data.
 const ESSAY_THUMBS = [
   "linear-gradient(135deg,#2b3d55,#84def9)",
   "linear-gradient(135deg,#3a2a5a,#c7b3f0)",
 ];
-const PHOTO_TILES = [
-  "linear-gradient(150deg,#2f5c86,#c98a3a)",
-  "linear-gradient(150deg,#c9a24a,#7a5a1e)",
-  "linear-gradient(150deg,#2b5c7a,#173445)",
-  "linear-gradient(150deg,#5a6b52,#2c3a28)",
-];
-const GRAPHIC_TILES = [
-  "linear-gradient(150deg,#F32317,#FFCB41)",
-  "linear-gradient(150deg,#0015D4,#84DEF9)",
-  "linear-gradient(150deg,#14140f,#5a5a5a)",
-];
+
+// Photography bento tiles: 4 real featured photos (V5 Stage 2 — replaces the
+// halftone placeholder tiles). Curated for trip/format variety; the Longs Peak
+// film-strip Frames are excluded here since a square crop clips their baked
+// border (they read correctly in the full gallery/lightbox). Decorative inside
+// the described "Photography → View the gallery" link, so alt is empty.
+const BENTO_PHOTO_CODES = ["0001", "0013", "0030", "0004"];
+const BENTO_PHOTOS: Photo[] = BENTO_PHOTO_CODES.map((c) =>
+  photos.find((p) => p.code === c),
+).filter((p): p is Photo => Boolean(p));
+
+// Graphic-design bento tiles: first slide of each design project (real thumbnails).
+const GRAPHIC_THUMBS = designProjects
+  .map((p) => p.images?.[0])
+  .filter((src): src is string => Boolean(src));
 
 export default function PersonalBento() {
   return (
@@ -127,8 +133,19 @@ export default function PersonalBento() {
             </span>
             <h3>Through the viewfinder</h3>
             <div className="pgrid">
-              {PHOTO_TILES.map((bg, i) => (
-                <i key={i} style={{ background: bg }} />
+              {BENTO_PHOTOS.map((p) => (
+                <span key={p.src} className="ptile-img">
+                  <Image
+                    src={p.thumb}
+                    alt=""
+                    fill
+                    sizes="(max-width: 880px) 22vw, 120px"
+                    className="pgrid-img"
+                    {...(p.blurDataURL
+                      ? { placeholder: "blur" as const, blurDataURL: p.blurDataURL }
+                      : {})}
+                  />
+                </span>
               ))}
             </div>
             <span className="go">View the gallery ↗</span>
@@ -143,8 +160,16 @@ export default function PersonalBento() {
             {/* CUSTOMIZE: graphic-design card title */}
             <h3>Brand &amp; layout</h3>
             <div className="pgrid">
-              {designProjects.map((p, i) => (
-                <i key={p.title} style={{ background: GRAPHIC_TILES[i % GRAPHIC_TILES.length] }} />
+              {GRAPHIC_THUMBS.map((src) => (
+                <span key={src} className="ptile-img">
+                  <Image
+                    src={src}
+                    alt=""
+                    fill
+                    sizes="(max-width: 880px) 30vw, 120px"
+                    className="pgrid-img"
+                  />
+                </span>
               ))}
             </div>
             <span className="go">See the work ↗</span>

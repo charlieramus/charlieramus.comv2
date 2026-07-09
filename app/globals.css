@@ -446,7 +446,10 @@ body {
   .pgrid {
     flex: 1;
     display: grid;
-    grid-auto-rows: 1fr;
+    /* min 48px so the real-photo tiles never collapse to 0 height when the card
+       is content-sized (mobile 2-col bento); 1fr still stretches them on desktop
+       where the tall career-journey card drives the row height. */
+    grid-auto-rows: minmax(48px, 1fr);
     gap: 6px;
     margin-bottom: 10px;
     min-height: 0;
@@ -472,6 +475,16 @@ body {
     );
     background-size: 5px 5px;
     mix-blend-mode: multiply;
+  }
+  /* Real-photo / design bento tiles (V5 Stage 2): clean cover images, no halftone. */
+  .ptile-img {
+    position: relative;
+    border-radius: 7px;
+    overflow: hidden;
+    background: var(--color-panel);
+  }
+  .pgrid-img {
+    object-fit: cover;
   }
 
   .wlist {
@@ -961,7 +974,7 @@ body {
   /* ---------- RIGHT NOW (V3 "what's fresh" strip; photo slot added in V4) ---------- */
   .now-grid {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 16px;
     margin-top: 32px;
   }
@@ -1009,6 +1022,49 @@ body {
   }
   .now-card:hover .go {
     color: var(--color-red);
+  }
+
+  /* Recent-trip photo card (V5 Stage 2): a real featured photo with a legibility
+     veil + label pinned to the bottom. Reuses .now-card chrome (hover lift). */
+  .now-photo {
+    position: relative;
+    padding: 0;
+    overflow: hidden;
+    min-height: 220px;
+    color: #fff;
+  }
+  .now-photo-img {
+    object-fit: cover;
+    z-index: 0;
+  }
+  .now-photo-body {
+    position: relative;
+    z-index: 1;
+    margin-top: auto;
+    width: 100%;
+    padding: 16px 18px 18px;
+    display: flex;
+    flex-direction: column;
+    background: linear-gradient(
+      to top,
+      rgba(10, 10, 8, 0.85),
+      rgba(10, 10, 8, 0.4) 55%,
+      transparent
+    );
+  }
+  .now-photo .kick {
+    color: rgba(255, 255, 255, 0.85);
+    margin-bottom: 4px;
+  }
+  .now-photo h3 {
+    color: #fff;
+    margin: 0 0 6px;
+  }
+  .now-photo .go {
+    color: #fff;
+  }
+  .now-photo:hover .go {
+    color: var(--color-cyan);
   }
 
   /* ---------- ABOUT ---------- */
@@ -1183,6 +1239,14 @@ body {
     }
     .hero .inner {
       width: min(90vw, 720px);
+    }
+  }
+  /* Between the wide 4-up and the mobile stack, the "Right now" row goes 2×2 so
+     the 4 cards (incl. the new photo card) never cramp. Placed before the 880
+     block so the 1-col rule there still wins at ≤880. */
+  @media (max-width: 1100px) {
+    .now-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
     }
   }
   @media (max-width: 880px) {
@@ -1781,6 +1845,12 @@ body {
   .design-slide {
     position: relative;
     display: block;
+    width: 100%;
+    padding: 0;
+    margin: 0;
+    font: inherit;
+    color: inherit;
+    cursor: pointer;
     border-radius: 12px;
     overflow: hidden;
     background: var(--color-panel);

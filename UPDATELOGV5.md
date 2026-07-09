@@ -111,7 +111,71 @@ A designer's-eye pass now that every page holds real content.
 - Confirm the design stays pixel-faithful to the mockup; no new scoped CSS dumps.
 
 # Stage 2 Report
-_TBD._
+
+Wired the last homepage photo surfaces to real photos, generalized the photography
+lightbox into a shared primitive and gave the `/design` galleries the same
+focus-trapped lightbox, and ran a responsive sweep at 1440 / 768 / 375 (+ found and
+fixed a real mobile bug). Everything renders from real data now; no new scoped CSS.
+
+**Homepage photo surfaces → real content**
+- [x] **Bento Photography grid** (`components/personal-bento.tsx`) — the 4 halftone gradient
+  placeholder `<i>` tiles are now 4 real featured photos (`next/image` thumbnails with
+  `blurDataURL`). Curated for variety by `code` (`0001` Reykjavik / `0013` aurora / `0030`
+  Diamond Beach / `0004` Skógafoss); the Longs Peak film-strip Frames are **excluded here**
+  since a square crop clips their baked border (they read correctly in the full gallery).
+  Decorative inside the described "Photography → View the gallery" link, so `alt=""`.
+- [x] **Bento Graphic-design grid** — same halftone-placeholder pattern, so I also wired it to
+  real thumbnails: the first slide of each `designProject` (`images[0]`). The whole bento is
+  real content now instead of half-real. (Beyond the explicit photography ask, but the same
+  cleanup — noted for review.)
+- [x] **"Right now" 4th card** (`components/right-now.tsx`) — added the recent-trip photo card:
+  `photos.filter(p => p.featured)` sorted by `date` descending (stable), newest wins →
+  **Longs Peak, Colorado (2026-06)**. Renders as a `.now-photo` card — a cover `next/image`
+  under a bottom legibility veil with a `Recent trip` kick + `location` + "See the gallery"
+  linking to `/photography`. The strip is now **4 cards** (was 3).
+
+**Shared lightbox + `/design`**
+- [x] **New `components/lightbox.tsx`** — extracted the photography lightbox into a controlled,
+  reusable primitive (`LightboxItem[]` + `index`/`onIndex`/`onClose`). Carries all the a11y:
+  `role="dialog"`+`aria-modal`, Escape, ← / → with wraparound, Tab focus-trap, body-scroll
+  lock, and **focus-return to the opener** (captured from `document.activeElement` on open, so
+  no per-consumer trigger refs). Prev/next hidden when there's a single item.
+- [x] **`components/photography-gallery.tsx`** — refactored to render just the grid + `<Lightbox
+  items={photos}>`; dropped its inlined keyboard/scroll/focus logic (now in the primitive).
+- [x] **`components/design-gallery.tsx`** (new, client) + **`app/design/page.tsx`** — the design
+  slides were `<a target="_blank">` (raw image in a new tab). They're now `<button>`s that open
+  the shared `<Lightbox>`; slides across all 3 projects share one flat `items` list so ← / →
+  steps the whole board. Design page stays a server component (metadata/header/footer) and hands
+  `designProjects` to the client gallery. **Resolves V4 Stage 3 Issue #2.**
+- [x] **`app/globals.css`** — `@layer components` only, reusing tokens: `.now-grid` → 4 cols with
+  a `≤1100px` 2×2 step (placed before the existing `≤880px` 1-col rule so it still wins);
+  `.now-photo*` (veil + white-on-image label overrides); `.ptile-img`/`.pgrid-img` (clean cover
+  tiles, no halftone); a `<button>` reset on `.design-slide`. The existing `.lightbox*` block was
+  already generic, so the design lightbox reuses it as-is (0 new lightbox CSS).
+
+**Responsive sweep + bug fix**
+- [x] **Fixed a real mobile bug:** at 375 the bento photo tiles collapsed to **0 height**
+  (`grid-auto-rows: 1fr` gives no height when the card is content-sized, not stretched — only
+  the desktop career-journey card was making the row tall). Changed to `minmax(48px, 1fr)`, so
+  tiles hold height on mobile (28×48) while 1fr still stretches them on desktop. Verified tile
+  rects: photo 4×(28×48), graphic 3×(39×70) at 375.
+
+**Verify:** `tsc` / `eslint` / `build` all clean; `/design` still prerenders **static** (client
+gallery nested in a static server page). Drove the prod build headless (gstack browse):
+**no horizontal overflow on all 6 routes × 1440 / 768 / 375** (`scrollWidth ≤ clientWidth`
+everywhere), **zero console errors**. Exercised both lightboxes: design opens on a slide as
+`role=dialog`/`aria-modal`, focus lands on Close, body scroll locks, ← / → steps slides,
+**Escape closes + returns focus to the opening button** (keyboard-opened); photography lightbox
+re-verified working after the refactor (code badge, arrow-nav, focus-return). Eyeballed the
+bento (4 real photos + 3 real design thumbs) and the 4-card "Right now" strip (Longs Peak photo
+card) at desktop + mobile.
+
+**Issues:** (1) The recent-trip card uses a Longs Peak film-strip Frame (the only featured
+Longs Peak shots are Frames); cover-crop keeps its baked sprocket border partly visible — that's
+Charlie's intended aesthetic, reads fine over the veil. (2) Bento tiles are small decorative
+cover-crops (e.g. the Notion title slide crops mid-text); acceptable as previews — the real
+assets live full-size on `/photography` and `/design`. (3) Real web-project screenshots are
+still pending Charlie (Stage 1 / `MANUAL-TODO.md`) — unrelated to these surfaces.
 
 ---
 

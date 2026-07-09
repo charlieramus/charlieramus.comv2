@@ -1,14 +1,20 @@
+import Image from "next/image";
 import Reveal from "@/components/reveal";
 import { webProjects } from "@/data/projects-web";
 import { writing } from "@/data/writing";
+import { photos } from "@/data/photos";
 
 // "Right now" — Charlie's V2 "what's fresh" idea. Composed from the spotlight
-// builds + the latest essay. The recent-trip photo highlight is intentionally
-// deferred to V4 (photos is empty until the gallery sync), so V3 ships the three
-// real, text-backed items and adds the photo slot then.
+// builds, the latest essay, and (V5 Stage 2) a recent-trip photo card.
 const spotlight = webProjects.filter((p) => p.spotlight);
 const [building, journal] = spotlight; // Ostiara, MyLifeInARepo
 const latestEssay = [...writing].sort((a, b) => a.order - b.order)[0];
+
+// Recent-trip photo: the newest `featured` photo by capture month (newest wins;
+// currently Longs Peak, 2026-06). Sort is stable so ties keep curation order.
+const recentTrip = [...photos]
+  .filter((p) => p.featured)
+  .sort((a, b) => (b.date ?? "").localeCompare(a.date ?? ""))[0];
 
 // First sentence of a description — a compact teaser without re-typing copy.
 const firstSentence = (s: string) => s.split(". ")[0].replace(/\.$/, "") + ".";
@@ -85,6 +91,39 @@ export default function RightNow() {
               <span className="go">{it.cta}</span>
             </Reveal>
           ))}
+
+          {recentTrip && (
+            <Reveal
+              as="a"
+              className="now-card now-photo"
+              href="/photography"
+            >
+              <Image
+                src={recentTrip.thumb}
+                alt=""
+                fill
+                sizes="(max-width: 880px) 100vw, 25vw"
+                className="now-photo-img"
+                {...(recentTrip.blurDataURL
+                  ? {
+                      placeholder: "blur" as const,
+                      blurDataURL: recentTrip.blurDataURL,
+                    }
+                  : {})}
+              />
+              <span className="now-photo-body">
+                <span className="kick">
+                  <span
+                    className="fdot"
+                    style={{ background: "var(--color-cyan)" }}
+                  />{" "}
+                  Recent trip
+                </span>
+                <h3>{recentTrip.location ?? "Latest shot"}</h3>
+                <span className="go">See the gallery ↗</span>
+              </span>
+            </Reveal>
+          )}
         </div>
       </div>
     </section>
