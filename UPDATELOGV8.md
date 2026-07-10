@@ -287,4 +287,72 @@ The V8 gate. No deploy changes — this re-exports through V7.
   List anything deliberately left.
 
 # Stage 4 Report
-_TBD._
+
+Verification-only stage — no code changes. Built the export, served `out/` over a
+local static server, and drove it in a headless browser (axe-core injected from
+`node_modules`).
+
+**Static gate**
+- [x] `tsc --noEmit`, `eslint .`, `next build` (export) all clean.
+- [x] **All 18 routes still prerender** — every app route is `○ (Static)` except
+  `/writing/[slug]` which is `● (SSG)`; no route regressed to dynamic.
+- [x] **Static export smoke-tests clean** — served `out/` and hit `/`,
+  `/photography`, `/design`, `/web-projects`, `/writing`, and a nested
+  `/writing/<slug>`: all 200, **no failed requests** (all assets/fonts/chunks
+  200), **no console errors** on any route.
+
+**axe / overflow / console at 1440 · 768 · 375**
+- [x] **axe = 0 violations** on: home (all three viewports), `/photography`
+  (including with the **lightbox open**), `/design`, `/web-projects`, `/writing`.
+- [x] **No horizontal overflow** (`scrollWidth === clientWidth`) and **no console
+  errors** on every route × viewport tested.
+
+**V8 moves, end-to-end**
+- [x] **Preview layer** — the carousel renders the 6 curated projects in order
+  (Ostiara → MyLifeInARepo → Querryn → VaultDNA → charlieramus.com →
+  Browser-automation experiments); the photo bento shows the 4 curated codes; the
+  Right-now card shows the pinned `0055` (Longs Peak). **Graceful degradation
+  confirmed**: temporarily set a bad photo code (`9999`) and a bad work-band title
+  (`NoSuchProject`) → `next build` **stayed green, all 18 routes generated**, the
+  bad photo tile simply dropped (bento fell to 3 tiles), the bad band was skipped
+  and never leaked into the HTML. Reverted + rebuilt clean. **Content files were
+  never touched** — only `data/previews.ts`.
+- [x] **Petal Simon** — playable with **mouse and keyboard**: native Enter on a
+  focused pad cleared a round; the **number-key (1–4) path** confirmed by pressing
+  a deliberately wrong digit and getting the expected "Miss on … Press Play again."
+  The `aria-live` status announces each transition (Round N / Your turn / Miss);
+  **axe = 0**; fits the card at **375 with no overflow**.
+- [x] **Behind the pixels** — short by default (only the teaser renders; the
+  collapsed region measures a true `0px`); "Read more" expands **accessibly**
+  (`aria-expanded` flips, keyboard Enter **and** Space toggle it, verified live);
+  the collage stays aligned in both states; the expanded bio no longer echoes the
+  career timeline (paragraph 2 was tightened in Stage 3).
+
+**Export-wide behaviors (V7 pipeline unchanged)**
+- [x] **Lightbox** — opens as `role="dialog"` `aria-modal="true"`, moves focus to
+  the close button, locks body scroll, **Escape closes** and returns focus; axe = 0
+  with it open.
+- [x] **Finale fill** — the finale field renders 40 motif marks, all filled
+  (opacity 1) after scroll-in.
+- [x] **Motifs / images / blur** — bento + carousel + finale motifs render; no
+  broken images or failed prefetches in the network log.
+
+**Reduced-motion**
+- [x] Live `prefers-reduced-motion` media emulation was **blocked by browse's CDP
+  allowlist** (`Emulation.setEmulatedMedia` denied), so verified structurally
+  instead: both new reduced-motion rules are present in the exported CSS bundle
+  inside the `@media (prefers-reduced-motion: reduce)` block —
+  `.bio-rest,.bio-rest-inner{transition:none}` (instant expand) and
+  `.psimon-pad.is-lit,.psimon-pad.is-lit .motif{transform:none}` (no pad scale).
+  The game's JS timing gate (`prefersReduced()` slows the sequence) is code-level.
+
+**Deliberately left**
+- Live reduced-motion emulation not exercised end-to-end (tooling/CDP-allowlist
+  constraint) — covered via the compiled-CSS + code review above.
+- The pre-existing `MANUAL-TODO.md` 🔴 items (web-project screenshots, the
+  Cloudflare Pages cutover) are unrelated to V8 and unchanged.
+
+**Verdict:** V8 is visually consistent and **export-ready** — the V7 Cloudflare
+pipeline (`output: export`, `public/_redirects`, `public/_headers`) is untouched;
+V8 re-exports through it cleanly. axe 0 everywhere, no console errors, no
+horizontal scroll, reduced-motion honored.
