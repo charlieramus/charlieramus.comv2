@@ -1,8 +1,8 @@
 import { ImageResponse } from "next/og";
-import { flowerDataUri } from "@/lib/flower-svg";
+import { activeMotifs, motifDataUri } from "@/data/motifs";
 
-// Generated Apple touch icon: the brand daisy on paper. CUSTOMIZE: drop a real
-// apple-icon.png to replace this.
+// Generated Apple touch icon: the active brand motif (activeMotifs[0]) on paper.
+// CUSTOMIZE: drop a real apple-icon.png to replace this.
 export const size = { width: 180, height: 180 };
 export const contentType = "image/png";
 
@@ -20,7 +20,12 @@ export default function AppleIcon() {
         }}
       >
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img width={150} height={150} src={flowerDataUri("#F32317", "#FFCB41", 8)} alt="" />
+        <img
+          width={150}
+          height={150}
+          src={motifDataUri(activeMotifs[0], { fill: "#F32317", accent: "#FFCB41" })}
+          alt=""
+        />
       </div>
     ),
     { ...size },

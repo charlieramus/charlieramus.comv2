@@ -1,4 +1,4 @@
-import Flower from "@/components/flower";
+import Motif from "@/components/motif";
 import Reveal from "@/components/reveal";
 import { snapshot } from "@/data/about";
 
@@ -7,10 +7,10 @@ export default function Hero() {
   return (
     <header className="hero">
       <div className="bloom left" aria-hidden="true">
-        <Flower petal="#84DEF9" core="#0015D4" petals={7} index={1} />
+        <Motif fill="#84DEF9" accent="#0015D4" index={1} />
       </div>
       <div className="bloom right" aria-hidden="true">
-        <Flower petal="#F32317" core="#F4F3EE" petals={8} index={2} />
+        <Motif fill="#F32317" accent="#F4F3EE" index={2} />
       </div>
 
       <nav aria-label="Primary">

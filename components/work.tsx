@@ -1,23 +1,23 @@
-import Flower from "@/components/flower";
+import Motif from "@/components/motif";
 import Reveal from "@/components/reveal";
 import { webProjects, type WebProject } from "@/data/projects-web";
 
-// Reusable [colored flower tile + white tile] stack that flanks each band.
+// Reusable [colored motif tile + white tile] stack that flanks each band.
 function Stack({
   bg,
-  petal,
-  core,
+  fill,
+  accent,
   index,
 }: {
   bg: string;
-  petal: string;
-  core: string;
+  fill: string;
+  accent: string;
   index: number;
 }) {
   return (
     <div className="stack">
       <div className="tile" style={{ background: bg }}>
-        <Flower petal={petal} core={core} petals={6} index={index} />
+        <Motif fill={fill} accent={accent} index={index} />
       </div>
       <div className="tile white" />
     </div>
@@ -86,7 +86,7 @@ export default function Work() {
                 <Caption p={bands[0]} />
               </div>
             </div>
-            <Stack bg="var(--color-blue)" petal="yellow" core="#FFCB41" index={10} />
+            <Stack bg="var(--color-blue)" fill="yellow" accent="#FFCB41" index={10} />
           </Reveal>
 
           {/* Full-width case-study bar → the flagship (Ostiara) blurb. Sits
@@ -144,7 +144,7 @@ export default function Work() {
                 <Caption p={bands[1]} />
               </div>
             </div>
-            <Stack bg="var(--color-pink)" petal="blue" core="#0015D4" index={11} />
+            <Stack bg="var(--color-pink)" fill="blue" accent="#0015D4" index={11} />
           </Reveal>
 
           {/* Band 3 — panel LEFT + stack RIGHT */}
@@ -196,7 +196,7 @@ export default function Work() {
                 <Caption p={bands[2]} />
               </div>
             </div>
-            <Stack bg="var(--color-yellow)" petal="red" core="#F32317" index={12} />
+            <Stack bg="var(--color-yellow)" fill="red" accent="#F32317" index={12} />
           </Reveal>
 
           {/* Band 4 — stack LEFT + dark panel RIGHT */}
@@ -217,7 +217,7 @@ export default function Work() {
                 <Caption p={bands[3]} />
               </div>
             </div>
-            <Stack bg="var(--color-blue)" petal="yellow" core="#FFCB41" index={13} />
+            <Stack bg="var(--color-blue)" fill="yellow" accent="#FFCB41" index={13} />
           </Reveal>
 
           {/* Curation continues on the inner route (dead until V4) */}

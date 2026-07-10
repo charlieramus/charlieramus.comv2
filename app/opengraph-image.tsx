@@ -1,14 +1,22 @@
 import { ImageResponse } from "next/og";
-import { flowerDataUri } from "@/lib/flower-svg";
+import { activeMotifs, motifDataUri, type MotifColors } from "@/data/motifs";
 import { snapshot, tagline } from "@/data/about";
 
 // Default site share card (1200×630) — used for every route that doesn't set its
 // own openGraph.images (essays use their headerImage, /photography a featured
-// photo). Built from the brand daisies + wordmark. CUSTOMIZE: drop a real
+// photo). Built from the first three active brand motifs + wordmark; swapping
+// activeMotifs (data/motifs.ts) re-skins it. CUSTOMIZE: drop a real
 // opengraph-image.png here to replace it.
 export const alt = `${snapshot.name} — ${snapshot.roles.join(", ")}`;
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
+
+// The three header marks: first three active motifs, each with a brand color pair.
+const OG_MARKS: MotifColors[] = [
+  { fill: "#F32317", accent: "#FFFFFF" },
+  { fill: "#0015D4", accent: "#FFCB41" },
+  { fill: "#84DEF9", accent: "#0015D4" },
+];
 
 export default function OpengraphImage() {
   return new ImageResponse(
@@ -26,12 +34,16 @@ export default function OpengraphImage() {
         }}
       >
         <div style={{ display: "flex", gap: 22 }}>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img width={96} height={96} src={flowerDataUri("#F32317", "#FFFFFF", 8)} alt="" />
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img width={96} height={96} src={flowerDataUri("#0015D4", "#FFCB41", 7)} alt="" />
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img width={96} height={96} src={flowerDataUri("#84DEF9", "#0015D4", 6)} alt="" />
+          {OG_MARKS.map((c, i) => (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              key={i}
+              width={96}
+              height={96}
+              src={motifDataUri(activeMotifs[i % activeMotifs.length], c)}
+              alt=""
+            />
+          ))}
         </div>
 
         <div style={{ display: "flex", flexDirection: "column" }}>

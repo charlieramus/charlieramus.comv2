@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Reveal from "@/components/reveal";
-import Flower from "@/components/flower";
+import Motif from "@/components/motif";
 import SiteHeader from "@/components/site-header";
 import SiteFooter from "@/components/site-footer";
 import { webProjects } from "@/data/projects-web";
@@ -13,7 +13,8 @@ export const metadata: Metadata = {
     "Software Charlie Ramus has designed and shipped solo — Ostiara, MyLifeInARepo, Querryn, VaultDNA and more. Next.js, TypeScript, Tailwind.",
 };
 
-// Petal colors cycled through the imageless-project placeholders.
+// Fill colors cycled through the imageless-project placeholders (the motif shape
+// itself rotates via `activeMotifs`, keyed off the row index).
 const PETALS = ["red", "blue", "yellow", "pink", "cyan"];
 
 // Friendly label for the external link.
@@ -86,7 +87,7 @@ export default function WebProjectsPage() {
                   />
                 ) : (
                   <div className="proj-placeholder">
-                    <Flower petal={PETALS[i % PETALS.length]} index={i} />
+                    <Motif fill={PETALS[i % PETALS.length]} index={i} />
                   </div>
                 )}
               </div>

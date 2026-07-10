@@ -68,19 +68,23 @@ body {
 }
 
 /* ---------------------------------------------------------------------------
-   Motion primitives — consumed by components/flower.tsx + components/reveal.tsx.
+   Motion primitives — consumed by components/motif.tsx + components/reveal.tsx.
 --------------------------------------------------------------------------- */
 
-/* Flower — daisy SVG wrapper + wind-spin. A full 360° gust (slow build → fast
-   middle → ease out → rest → loop), per-flower timing fed via --spin-dur /
-   --spin-delay (see Flower). */
-.flower {
+/* Motif — SVG wrapper + wind-spin. A full 360° gust (slow build → fast middle →
+   ease out → rest → loop), per-mark timing fed via --spin-dur / --spin-delay
+   (see components/motif.tsx). Motifs flagged `spin: false` add `.no-spin`. */
+.motif {
   display: inline-block;
   line-height: 0;
   animation: windspin var(--spin-dur, 8s) ease-in-out var(--spin-delay, 0s)
     infinite;
 }
-.flower svg {
+/* Rotationally-symmetric motifs (data/motifs.ts `spin: false`) render static. */
+.motif.no-spin {
+  animation: none;
+}
+.motif svg {
   display: block;
   width: 100%;
   height: 100%;
@@ -118,7 +122,7 @@ body {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .flower {
+  .motif {
     animation: none;
   }
   .reveal {
@@ -289,7 +293,7 @@ body {
     transform: translateY(-50%);
     width: clamp(320px, 37vw, 720px);
   }
-  .hero .bloom .flower {
+  .hero .bloom .motif {
     width: 100%;
   }
   .hero .bloom.left {
@@ -635,7 +639,7 @@ body {
     background: #fff;
     border: 1px solid var(--color-line);
   }
-  .ptile .flower {
+  .ptile .motif {
     width: 62%;
   }
 
@@ -821,7 +825,7 @@ body {
   .tile.white {
     background: #fff;
   }
-  .tile .flower {
+  .tile .motif {
     width: 46%;
   }
   .card {
@@ -1277,7 +1281,7 @@ body {
   /* Cap to the grid cell so the field never overflows a narrow viewport (the
      mockup's fixed 92px overflowed at 375). Desktop cells are wider than 92px,
      so this is pixel-identical there. */
-  .grid-flowers .flower {
+  .grid-flowers .motif {
     width: min(92px, 100%);
     height: auto;
     aspect-ratio: 1;
@@ -1876,7 +1880,7 @@ body {
     display: grid;
     place-items: center;
   }
-  .proj-placeholder .flower {
+  .proj-placeholder .motif {
     width: 38%;
   }
 

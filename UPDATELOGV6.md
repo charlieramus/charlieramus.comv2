@@ -190,7 +190,63 @@ caching artifact). `curl` returned 200 throughout, the production `build` was cl
 - Keep it SSR-safe (no hydration drift) and reduced-motion-safe.
 
 # Stage 3 Report
-_TBD._
+
+The single hardcoded daisy is now a pluggable registry. **DECISION → Charlie:** he ran
+"finish stage 3" without supplying SVGs, so I took the documented draft default — **built
+the system + authored a 7-shape starter set**; Charlie swaps in his own via the paste-an-SVG
+workflow (`data/motifs.ts` header + `MANUAL-TODO.md §7`).
+
+- [x] **`data/motifs.ts` (new)** — the registry. Each `Motif` has `key`, `label`, `slots` (1
+  or 2 color slots), optional `spin`, and a pure **`render({fill, accent}) => string`** that
+  returns the inner markup of a `0 0 100 100` SVG. Because it's a plain string, the *identical*
+  shape+tint feeds both the DOM component and Satori (OG/icons) — one definition, no drift.
+  Starter set: **daisy** (the original, shipped first so nothing regresses), **bloom5, aster,
+  clover, burst, star5** (1-slot), **ring** (`spin:false`, rotationally symmetric). Plus the
+  `NAMED` palette + `resolveColor`, `getMotif`, `motifForIndex`, `renderMotif`, `motifSvg`,
+  `motifDataUri`, and **`activeMotifs`** (the in-rotation key list; `[0]` is the favicon mark,
+  first 3 seed the OG card). Deterministic geometry only — no `Math.random`, SSR-safe.
+- [x] **`components/motif.tsx` (new, generalizes `Flower`)** — renders a motif by `motif` key,
+  or **auto-picks from `activeMotifs` by `index`** when the key is omitted (so a field varies and
+  one `activeMotifs` edit re-skins the whole site). Keeps the deterministic index-seeded wind-spin
+  (`--spin-dur`/`--spin-delay`, Knuth hash), resolves named/hex colors, is `aria-hidden`, and adds
+  `.no-spin` for `spin:false` motifs. Inner SVG via `dangerouslySetInnerHTML` from the registry
+  string (deterministic → no hydration mismatch).
+- [x] **`app/globals.css`** — renamed the `.flower*` hooks to `.motif*` (base + `.motif svg` +
+  the reduced-motion rule + the 5 context sizers `.hero .bloom`, `.ptile`, `.tile`,
+  `.grid-flowers`, `.proj-placeholder`), added `.motif.no-spin { animation: none }`, and refreshed
+  the motion-primitives comment. `@keyframes windspin` unchanged; reduced-motion still disables all
+  spin.
+- [x] **Wired every render site to the registry** (all now `<Motif fill accent index>`, shape
+  auto-rotates by index): `components/hero.tsx` (2 blooms), `components/finale.tsx` (40-mark field —
+  dropped the now-unused per-flower `petals`), `components/personal-bento.tsx` (2 accent tiles),
+  `components/work.tsx` (`Stack` renamed props `petal/core → fill/accent`, 4 bands), and
+  `app/web-projects/page.tsx` (imageless-project placeholders).
+- [x] **OG + favicons wired** — `app/opengraph-image.tsx` (3 marks = first 3 `activeMotifs`),
+  `app/icon.tsx` + `app/apple-icon.tsx` (`activeMotifs[0]`), all via `motifDataUri` from the
+  registry. Changing `activeMotifs` now re-skins the share card + favicon too.
+- [x] **Deleted `components/flower.tsx` + `lib/flower-svg.ts`** — the registry (plain TS, no React)
+  is the single source; the OG/icon routes import `motifDataUri` from it directly, so the mirror lib
+  is gone. No remaining `Flower`/`flower-svg` imports (only docs/mockup mention the old name).
+- [x] **CUSTOMIZE workflow documented** — top of `data/motifs.ts` (add entry → add key to
+  `activeMotifs`, done) and `MANUAL-TODO.md §7` (with a paste-an-SVG offer + a status table).
+
+**Data flow:** motif *shape* now comes from `data/motifs.ts` (`activeMotifs`, indexed per render
+site); *colors* still come from each call site (finale's PET/COR arrays, the fixed brand pairs in
+hero/work/bento/OG). One edit to `activeMotifs` propagates to hero, finale, bento, work,
+web-projects, OG card, and favicon.
+
+**Verify:** `tsc` / `eslint` / `build` all clean (18 routes prerender; OG/icon routes build).
+Rendered `/` and `/web-projects` at 1440 + fetched the generated `/opengraph-image` and
+`/apple-icon`. Confirmed: the finale field cycles all 7 starter shapes in `activeMotifs` order,
+each palette-tinted; hero blooms are bloom5 + clover; the Ostiara placeholder is the daisy; the OG
+card shows daisy+bloom+clover and the favicon is the daisy — proving the Satori path renders the
+same registry SVGs. **No console/hydration errors** on fresh load (SSR-safe). Reduced-motion still
+disables the spin (renamed rule intact); `ring` is static via `no-spin`.
+
+**Issues:** None in shipped code. `DESIGN-BRIEF.md` still describes the old `components/flower.tsx`
+/ `lib/flower-svg.ts` as architecture prose — left as-is (historical north-star doc; Stage 5/6
+consistency pass can refresh it if wanted). Same Turbopack stale-`.next` dev flakiness after the
+multi-file edit — cleared `.next`, restarted, clean 200 with no errors.
 
 ---
 

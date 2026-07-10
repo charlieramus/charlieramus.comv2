@@ -1,8 +1,9 @@
 import { ImageResponse } from "next/og";
-import { flowerDataUri } from "@/lib/flower-svg";
+import { activeMotifs, motifDataUri } from "@/data/motifs";
 
-// Generated favicon: the brand daisy on paper. Overrides favicon.ico in modern
-// browsers. CUSTOMIZE: drop a real icon.png / favicon.ico to replace this.
+// Generated favicon: the active brand motif (activeMotifs[0]) on paper. Overrides
+// favicon.ico in modern browsers. Reordering activeMotifs (data/motifs.ts) swaps
+// this. CUSTOMIZE: drop a real icon.png / favicon.ico to replace it entirely.
 export const size = { width: 32, height: 32 };
 export const contentType = "image/png";
 
@@ -20,7 +21,12 @@ export default function Icon() {
         }}
       >
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img width={30} height={30} src={flowerDataUri("#F32317", "#FFCB41", 7)} alt="" />
+        <img
+          width={30}
+          height={30}
+          src={motifDataUri(activeMotifs[0], { fill: "#F32317", accent: "#FFCB41" })}
+          alt=""
+        />
       </div>
     ),
     { ...size },

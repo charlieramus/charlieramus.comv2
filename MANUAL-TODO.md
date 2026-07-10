@@ -143,4 +143,42 @@ interactive session). I can't run the OAuth flow from here.
 
 ---
 
+## 7 · Motif designs — swap in your own "flowers"  (V6 Stage 3)  🟡 ✅ built (swappable)
+
+**Stage 3 is done** — the one hardcoded daisy is now a registry (`data/motifs.ts`) of
+named SVG designs, shipped with a **starter set** I authored (daisy, five-petal bloom,
+aster, clover, sunburst, star, ring). One list, `activeMotifs`, controls which are in
+rotation across the **whole site** — hero blooms, the finale field, the bento accent
+tiles, the work-band stacks, the `/web-projects` placeholders — **and** the generated OG
+share card + favicon. Nothing here blocks shipping; swap whenever you want your own art.
+
+**To add your own motif** (no component edits):
+
+1. Open `data/motifs.ts`. Add an entry to `motifs`:
+   ```ts
+   { key: "my-shape", label: "My shape", slots: 2, render: ({ fill, accent }) =>
+     `<path d="…" fill="${fill}"/><circle cx="50" cy="50" r="10" fill="${accent}"/>` },
+   ```
+   - Author against the **`0 0 100 100`** viewBox. Return the SVG's **inner** markup only
+     (no `<svg>` wrapper).
+   - Use **`${fill}`** for the main color and **`${accent}`** for the center/secondary
+     (set `slots: 1` if the design only needs one). This is what lets every design tint
+     to the site's palette.
+   - Add **`spin: false`** for rotationally-symmetric shapes (a plain ring) so they don't
+     pointlessly animate.
+2. Add its `key` to **`activeMotifs`**. Order matters: `activeMotifs[0]` is the mark used
+   for the **favicon / apple-icon**, and the first three seed the **OG card**.
+3. That's it. To retire the starter shapes, just remove their keys from `activeMotifs`
+   (leave them in `motifs` or delete them).
+
+**Pasting a hand-drawn SVG?** Drop it in chat and tell me the fill/accent split — I'll
+convert it into a registry entry for you.
+
+| Motif slot | Status | You provide |
+|---|---|---|
+| Starter set (7 shapes) | ✅ shipped, swappable | nothing (works as-is) |
+| Your own SVG designs | ☐ optional | paste SVG(s) or add entries to `data/motifs.ts` |
+
+---
+
 _Ping me when any of the 🔴 items land and I'll wire them in immediately._

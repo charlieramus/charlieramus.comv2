@@ -1,6 +1,6 @@
 import type { CSSProperties } from "react";
 import Image from "next/image";
-import Flower from "@/components/flower";
+import Motif from "@/components/motif";
 import Reveal from "@/components/reveal";
 import { entries } from "@/data/experience";
 import { writing } from "@/data/writing";
@@ -220,10 +220,10 @@ export default function PersonalBento() {
           {/* Accent flower tiles (decorative) */}
           <div className="p-tiles">
             <Reveal className="ptile" style={{ background: "var(--color-pink)" }}>
-              <Flower petal="blue" core="#0015D4" petals={6} index={3} />
+              <Motif fill="blue" accent="#0015D4" index={3} />
             </Reveal>
             <Reveal className="ptile white">
-              <Flower petal="red" core="#F32317" petals={6} index={4} />
+              <Motif fill="red" accent="#F32317" index={4} />
             </Reveal>
           </div>
 
