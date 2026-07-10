@@ -407,55 +407,37 @@ body {
   }
 
   /* ---------- PERSONAL / EXPLORE BENTO ---------- */
-  .pbento {
+  /* Motif accents dividing the timeline from the explore cards. */
+  .mtc-accents {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: clamp(26px, 7vw, 68px);
+    margin-top: clamp(34px, 5vw, 60px);
+  }
+  .mtc-accents .motif {
+    width: clamp(40px, 6vw, 62px);
+  }
+  /* Explore bento — two big cards per row so they breathe (replaces the cramped
+     4×2 grid + per-card grid-placement; cards now auto-flow). */
+  .mtc-cards {
     display: grid;
-    /* minmax(0,…) so a card with a long nowrap string (e.g. a real essay title
-       in .p-blog) can't grow its column past its fr share — lets the .bt
-       ellipsis engage instead of blowing out the whole grid. */
-    grid-template-columns: minmax(0, 1.25fr) repeat(3, minmax(0, 1fr));
-    grid-template-rows: repeat(2, minmax(0, 1fr));
-    gap: 14px;
-    margin-top: 34px;
-  }
-  .p-career {
-    grid-column: 1;
-    grid-row: 1 / span 2;
-  }
-  .p-photo {
-    grid-column: 2;
-    grid-row: 1;
-  }
-  .p-graphic {
-    grid-column: 3;
-    grid-row: 1;
-  }
-  .p-writing {
-    grid-column: 4;
-    grid-row: 1;
-  }
-  .p-blog {
-    grid-column: 2;
-    grid-row: 2;
-  }
-  .p-tiles {
-    grid-column: 3;
-    grid-row: 2;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
-  }
-  .p-play {
-    grid-column: 4;
-    grid-row: 2;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: clamp(16px, 2.4vw, 28px);
+    margin-top: clamp(26px, 4vw, 44px);
   }
 
   .pcard {
     background: #efeee7;
     border: 1px solid var(--color-line);
-    border-radius: 16px;
-    padding: 14px;
+    border-radius: 22px;
+    padding: clamp(20px, 2.4vw, 30px);
     display: flex;
     flex-direction: column;
+    min-height: 300px;
+    /* Let the card shrink to its grid track so pgrid images can't blow out the
+       column width (min-width:auto would otherwise expand it to min-content). */
+    min-width: 0;
     color: var(--color-ink);
     transition:
       transform 0.25s ease,
@@ -463,43 +445,43 @@ body {
   }
   .pcard:hover {
     transform: translateY(-4px);
-    box-shadow: 0 14px 32px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 16px 36px rgba(0, 0, 0, 0.08);
   }
   .kick {
     display: inline-flex;
     align-items: center;
-    gap: 6px;
-    font-size: 8.5px;
+    gap: 8px;
+    font-size: 11px;
     font-weight: 600;
-    letter-spacing: 0.12em;
+    letter-spacing: 0.1em;
     text-transform: uppercase;
     color: var(--color-ink-soft);
-    margin-bottom: 8px;
+    margin-bottom: 14px;
   }
   .kick .fdot {
-    width: 11px;
-    height: 11px;
-    border-radius: 4px;
+    width: 13px;
+    height: 13px;
+    border-radius: 5px;
     display: inline-block;
   }
   .pcard h3 {
     font-family: var(--font-serif);
     font-weight: 700;
-    font-size: 14px;
+    font-size: clamp(18px, 2.2vw, 22px);
     letter-spacing: -0.01em;
-    margin-bottom: 5px;
+    margin-bottom: 12px;
   }
   .pcard .sub {
     color: var(--color-ink-soft);
-    font-size: 10.5px;
-    line-height: 1.45;
-    margin-bottom: 10px;
+    font-size: 14px;
+    line-height: 1.55;
+    margin-bottom: 16px;
   }
   .pcard .go {
     margin-top: auto;
-    font-size: 8.5px;
+    font-size: 12px;
     font-weight: 600;
-    letter-spacing: 0.1em;
+    letter-spacing: 0.08em;
     text-transform: uppercase;
     color: var(--color-blue);
   }
@@ -510,16 +492,16 @@ body {
   .pgrid {
     flex: 1;
     display: grid;
-    /* min 48px so the real-photo tiles never collapse to 0 height when the card
-       is content-sized (mobile 2-col bento); 1fr still stretches them on desktop
-       where the tall career-journey card drives the row height. */
-    grid-auto-rows: minmax(48px, 1fr);
-    gap: 6px;
-    margin-bottom: 10px;
+    /* min 78px so the real-photo tiles keep a comfortable height when the card
+       is content-sized; 1fr still stretches them to fill a taller card. */
+    grid-auto-rows: minmax(78px, 1fr);
+    gap: 10px;
+    margin-bottom: 16px;
     min-height: 0;
   }
+  /* Photography → 2×2 of larger tiles; graphic-design → a 3-up thumbnail row. */
   .p-photo .pgrid {
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(2, 1fr);
   }
   .p-graphic .pgrid {
     grid-template-columns: repeat(3, 1fr);
@@ -555,13 +537,13 @@ body {
     list-style: none;
     display: flex;
     flex-direction: column;
-    margin-bottom: 10px;
+    margin-bottom: 14px;
   }
   .wlist li {
     display: flex;
-    gap: 9px;
+    gap: 14px;
     align-items: center;
-    padding: 7px 0;
+    padding: 12px 0;
     border-top: 1px solid var(--color-line);
   }
   .wlist li:first-child {
@@ -569,22 +551,22 @@ body {
     padding-top: 0;
   }
   .wlist .thumb {
-    width: 32px;
-    height: 28px;
-    border-radius: 6px;
+    width: 52px;
+    height: 44px;
+    border-radius: 8px;
     flex: none;
   }
   .wlist .yr {
-    font-size: 8.5px;
+    font-size: 11px;
     color: var(--color-ink-soft);
     letter-spacing: 0.06em;
-    margin-bottom: 1px;
+    margin-bottom: 3px;
   }
   .wlist .wt {
     font-family: var(--font-serif);
     font-weight: 700;
-    font-size: 11.5px;
-    line-height: 1.18;
+    font-size: 15px;
+    line-height: 1.22;
     /* Real essay titles run long (mockup's were one line); clamp to two. */
     display: -webkit-box;
     -webkit-line-clamp: 2;
@@ -593,23 +575,26 @@ body {
     overflow: hidden;
   }
 
+  /* "More essays" — secondary list under the featured two; its top border
+     separates it from .wlist inside the merged writing card. */
   .blist {
     list-style: none;
     display: flex;
     flex-direction: column;
-    margin-bottom: 10px;
+    margin-bottom: 16px;
+    padding-top: 4px;
+    border-top: 1px solid var(--color-line);
   }
   .blist li {
     display: flex;
     justify-content: space-between;
-    gap: 10px;
-    font-size: 10.5px;
-    padding: 6px 0;
+    gap: 12px;
+    font-size: 12.5px;
+    padding: 9px 0;
     border-top: 1px solid var(--color-line);
   }
   .blist li:first-child {
     border-top: 0;
-    padding-top: 0;
   }
   /* Essay title truncates so the (nowrap) date always stays on its line.
      Restates ink/size because `.blist li span` below also matches this span. */
@@ -620,148 +605,145 @@ body {
     text-overflow: ellipsis;
     white-space: nowrap;
     color: var(--color-ink);
-    font-size: 10.5px;
+    font-size: 12.5px;
   }
   .blist li span {
     color: var(--color-ink-soft);
-    font-size: 8.5px;
+    font-size: 11px;
     white-space: nowrap;
   }
 
-  .ptile {
-    border-radius: 14px;
-    display: grid;
-    place-items: center;
-    padding: 10px;
+  /* Decorative motifs filling the Playground card (repurposed accent flowers). */
+  .p-play-art {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: clamp(20px, 4vw, 40px);
+    margin: 6px 0 18px;
     min-height: 0;
   }
-  .ptile.white {
-    background: #fff;
-    border: 1px solid var(--color-line);
-  }
-  .ptile .motif {
-    width: 62%;
+  .p-play-art .motif {
+    width: clamp(52px, 7vw, 76px);
   }
 
-  /* Career Journey (dark timeline card) */
+  /* Career journey — a flowing, legible vertical timeline (V6 rework: replaces
+     the old 308px fixed-height, absolutely-positioned axis). */
   .cj {
     background: #efeee7;
     border: 1px solid var(--color-line);
-    border-radius: 16px;
-    padding: 14px 14px 12px;
+    border-radius: 22px;
+    padding: clamp(20px, 3vw, 34px);
     color: var(--color-ink);
-    position: relative;
-    overflow: hidden;
+    margin-top: clamp(26px, 4vw, 44px);
+  }
+  .cj-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 14px;
+    flex-wrap: wrap;
+    margin-bottom: clamp(20px, 3vw, 30px);
   }
   .cj-title {
-    font-size: 9px;
+    font-size: 12px;
     font-weight: 600;
     letter-spacing: 0.2em;
     text-transform: uppercase;
     color: var(--color-ink-soft);
   }
-  .cj-timeline {
-    position: relative;
-    margin-top: 14px;
-    height: 308px;
-  }
-  .cj-year {
-    position: absolute;
-    left: 0;
-    width: 32px;
-    font-size: 9.5px;
-    color: var(--color-ink-soft);
-    transform: translateY(-50%);
-  }
-  .cj-line {
-    position: absolute;
-    left: 42px;
-    right: 0;
-    height: 1px;
-    background: rgba(20, 20, 15, 0.09);
-  }
-  .cj-band {
-    position: absolute;
-    left: 48px;
-    top: 0;
-    bottom: 0;
-    width: 30px;
-    border-radius: 6px;
-    background: repeating-linear-gradient(
-      45deg,
-      #c7d19a 0 6px,
-      #dbe4b8 6px 12px
-    );
-  }
-  .cj-band span {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    writing-mode: vertical-rl;
-    rotate: 180deg;
-    font-size: 9px;
-    color: #5a6b34;
-    white-space: nowrap;
+  .cj-note {
+    font-size: 12px;
+    color: #4c5a2b;
+    background: #e4ecc4;
+    padding: 5px 12px;
+    border-radius: 999px;
     letter-spacing: 0.02em;
   }
-  .role {
-    position: absolute;
-    background: #fff;
-    border: 1px solid var(--color-line);
-    border-radius: 9px;
-    padding: 7px 9px;
+  .tl {
+    list-style: none;
     display: flex;
-    align-items: center;
-    gap: 7px;
-    box-shadow: 0 6px 16px rgba(20, 20, 15, 0.08);
+    flex-direction: column;
+    gap: clamp(22px, 3.2vw, 36px);
   }
-  .role .lg {
-    width: 19px;
-    height: 19px;
-    border-radius: 5px;
-    flex: none;
+  .tl-row {
+    display: grid;
+    grid-template-columns: 46px minmax(0, 1fr);
+    gap: clamp(14px, 2vw, 22px);
+    position: relative;
+  }
+  .tl-rail {
+    position: relative;
+    display: flex;
+    justify-content: center;
+  }
+  /* Connector line running from each chip down to the next (never after the
+     last role). `bottom` reaches across the flex gap into the next chip. */
+  .tl-row:not(:last-child) .tl-rail::after {
+    content: "";
+    position: absolute;
+    top: 54px;
+    bottom: calc(clamp(22px, 3.2vw, 36px) * -1);
+    left: 50%;
+    width: 2px;
+    transform: translateX(-50%);
+    background: var(--color-line);
+  }
+  .tl-chip {
+    width: 46px;
+    height: 46px;
+    border-radius: 13px;
     display: grid;
     place-items: center;
-    font-size: 9.5px;
     font-weight: 800;
+    font-size: 18px;
+    flex: none;
+    box-shadow: 0 6px 16px rgba(20, 20, 15, 0.08);
   }
-  .role .rt {
-    font-size: 10px;
+  .tl-when {
+    display: inline-block;
+    font-size: 12px;
     font-weight: 600;
-    color: var(--color-ink);
-    line-height: 1.18;
+    letter-spacing: 0.05em;
+    color: var(--color-red-ink);
+    margin-bottom: 5px;
   }
-  .role .rt span {
+  .tl-role {
+    font-family: var(--font-serif);
+    font-weight: 700;
+    font-size: clamp(17px, 2.2vw, 22px);
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+  }
+  .tl-org {
     color: var(--color-ink-soft);
     font-weight: 400;
   }
-  .role .dt {
-    font-size: 8.5px;
+  .tl-desc {
+    margin-top: 9px;
+    max-width: 62ch;
     color: var(--color-ink-soft);
-    margin-left: auto;
-    padding-left: 9px;
-    white-space: nowrap;
-    letter-spacing: 0.04em;
+    font-size: 14px;
+    line-height: 1.55;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
   }
-  .role.big {
-    flex-direction: column;
-    align-items: flex-start;
-    justify-content: space-between;
-    padding: 11px;
+  .tl-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 13px;
   }
-  .role.big .lg {
-    width: 24px;
-    height: 24px;
-  }
-  .role.big .rt {
-    font-size: 12px;
-    margin-top: auto;
-  }
-  .role.big .dt {
-    margin-left: 0;
-    margin-top: 5px;
-    padding-left: 0;
+  .tl-tag {
+    font-size: 11px;
+    color: var(--color-ink-soft);
+    background: #fff;
+    border: 1px solid var(--color-line);
+    border-radius: 999px;
+    padding: 4px 11px;
   }
 
   /* ---------- WORK BANDS ---------- */
@@ -1361,25 +1343,11 @@ body {
       white-space: normal;
       font-size: clamp(40px, 13vw, 74px);
     }
-    .pbento {
-      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-      grid-template-rows: auto;
-    }
-    .p-career {
-      grid-column: 1 / -1;
-      grid-row: auto;
-    }
-    /* All non-career cards flow into the 2-col grid. The mockup omitted
-       .p-graphic and .p-play here, which left them pinned to columns 3/4 and
-       forced the grid wider than the viewport at 375. */
-    .p-photo,
-    .p-graphic,
-    .p-writing,
-    .p-blog,
-    .p-tiles,
-    .p-play {
-      grid-column: auto;
-      grid-row: auto;
+    /* The two-up explore cards stack below 880 so each keeps a comfortable
+       measure and the photo/thumbnail tiles never cramp at 375. minmax(0,…)
+       (not a bare 1fr) so the pgrid images can't push a card past the viewport. */
+    .mtc-cards {
+      grid-template-columns: minmax(0, 1fr);
     }
     .now-grid {
       grid-template-columns: 1fr;

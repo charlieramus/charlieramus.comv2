@@ -272,7 +272,53 @@ cramped and, per Charlie, **unviewable**. Re-lay the homepage so it breathes.
   the rework.
 
 # Stage 4 Report
-_TBD._
+
+The homepage's "personal" section is re-laid to breathe across ~two screens. **DECISION →
+Charlie:** section name → **"More than code"** (his pick; noted "may change later" — it's a
+`// CUSTOMIZE` heading, one-line swap).
+
+- [x] **Section renamed** (`components/personal-bento.tsx`) — `#personal` `<h2>` is now "More
+  than code" (was "A little more personal"), subline unchanged. `className="mtc"` added.
+- [x] **Career timeline rebuilt — no more fixed-pixel absolute positioning.** Deleted the
+  `startYears`/`maxYear`/`minYear`/`AXIS_BOTTOM`/`axisYears`/`yearTop`/`BIG_H`/`roleTop` math and
+  the `.cj-timeline`(308px)/`.cj-year`/`.cj-line`/`.cj-band`/`.role*` absolute CSS. Replaced with a
+  flowing `<ol class="tl">`: a **chip rail** (`.tl-chip` from `role.logoBg/logoFg/logo`) with a
+  CSS connector line (`.tl-rail::after`, skipped on the last row), and a content column with the
+  **dates** (`.tl-when`), **role · org** (larger serif `.tl-role`), a **3-line-clamped
+  description**, and **tag chips** (`.tl-tags`, first 4). Legible at 375 with no overlap. Honest
+  axis = the per-role date ranges, newest-first.
+- [x] **Bento re-laid to two big cards per row** (`.mtc-cards`, `repeat(2, minmax(0,1fr))` →
+  `minmax(0,1fr)` stacked ≤880). The cramped 4×2 grid + per-card `grid-column/row` placement is
+  gone; cards auto-flow. **Type scale ~doubled** (kickers 8.5→11px, h3 14→clamp 18–22, body
+  10.5→14, go 8.5→12), `.pcard` padding/radius up (14px→clamp 20–30 / 16→22px), `min-height:300px`.
+  Cards: **Photography** (now a 2×2 of larger real photos), **Graphic design** (3-up real thumbs),
+  **Writing** (merges the old `p-writing` + `p-blog`: 2 featured essays w/ thumbs + a "more essays"
+  list), **Playground** (blurb + the repurposed accent motifs `.p-play-art`).
+- [x] **More motif accents** — a centered `.mtc-accents` strip (3 `<Motif>`) divides the timeline
+  from the cards, and the two decorative flowers now live inside the Playground card. All via the
+  Stage-3 registry (auto-rotated shapes: aster/star in Playground, ring/daisy/bloom in the strip).
+- [x] **Same data, calmer layout** — still driven by `data/experience` (timeline),
+  `data/writing` (essays), `data/photos` (BENTO_PHOTOS — the V5 real-photo tiles **survive**),
+  `data/projects-design` (GRAPHIC_THUMBS). No new content; a re-layout.
+- [x] **`app/globals.css`** — rewrote the `PERSONAL / EXPLORE BENTO` block (`.mtc-accents`,
+  `.mtc-cards`, bigger `.pcard`/`.kick`/`.pgrid`/`.wlist`/`.blist`, `.p-play-art`, the new `.cj` +
+  `.tl*` timeline) and the ≤880 responsive rules (dropped the dead `.pbento`/`.p-career`/`.p-blog`/
+  `.p-tiles` rules → `.mtc-cards { grid-template-columns: minmax(0,1fr) }`).
+
+**Guardrails:** **axe = 0 violations** at 1440 **and** 375. **No horizontal overflow** at 375
+(`scrollWidth == innerWidth == 375`) — caught + fixed a regression where the mobile `1fr` track's
+`auto` min let the pgrid images push a card to 587px; fixed with `minmax(0,1fr)` + `.pcard {
+min-width:0 }`. Reduced-motion honored (new motifs/reveals inherit the existing guards). **No
+console errors** scrolling the full page. Real-photo bento tiles + the "Right now" photo card (a
+separate section, untouched) both survive.
+
+**Verify:** `tsc` / `eslint` / `build` all clean (18 routes prerender). Rendered `/` at **1440,
+768, 375**: the timeline is spacious + legible (chip rail, dates, roles, tags), the four cards are
+big and breathe, the section now spans ~two viewports.
+
+**Issues:** None outstanding. Same Turbopack stale-`.next` dev flakiness on the multi-file edit —
+cleared `.next`, restarted, clean. The one real bug (375 overflow) was found via a DOM width sweep
+and fixed before sign-off.
 
 ---
 
