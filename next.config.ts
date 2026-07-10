@@ -3,16 +3,24 @@ import createMDX from "@next/mdx";
 import path from "node:path";
 
 const nextConfig: NextConfig = {
+  // Static export → a plain out/ folder of HTML/CSS/JS for Cloudflare Pages
+  // (V7). Every route in this app is already static/SSG, so no server runtime is
+  // needed. See UPDATELOGV7 Stage 1.
+  output: "export",
+  images: {
+    // The default next/image optimizer needs a server and is unsupported under
+    // `output: export`. The gallery already ships pre-sized WebP + blurDataURL,
+    // so serve the files as-is (no on-the-fly optimization).
+    unoptimized: true,
+  },
   // Pin the workspace root to this project so Turbopack stops inferring it from
   // the stray C:\Users\jason lockfile (silences the multi-lockfile build warning).
   turbopack: { root: path.join(__dirname) },
   // Let .md / .mdx files act as pages/imports alongside the TS/JS routes.
   pageExtensions: ["ts", "tsx", "js", "jsx", "md", "mdx"],
-  // /blog was dropped (V2 addendum): writing is unified under /writing. Nothing
-  // in-app links to /blog, but redirect any external/bookmarked link so it resolves.
-  async redirects() {
-    return [{ source: "/blog", destination: "/writing", permanent: true }];
-  },
+  // NOTE: the /blog → /writing redirect moved to Cloudflare's `_redirects`
+  // (public/_redirects) in V7 Stage 2 — next.config `redirects()` is a no-op
+  // under `output: export`.
 };
 
 // @next/mdx doesn't parse YAML frontmatter on its own. remark-frontmatter strips

@@ -4,6 +4,8 @@ import { activeMotifs, motifDataUri } from "@/data/motifs";
 // Generated favicon: the active brand motif (activeMotifs[0]) on paper. Overrides
 // favicon.ico in modern browsers. Reordering activeMotifs (data/motifs.ts) swaps
 // this. CUSTOMIZE: drop a real icon.png / favicon.ico to replace it entirely.
+// Render at build time so the PNG exports as a static file under `output: export`.
+export const dynamic = "force-static";
 export const size = { width: 32, height: 32 };
 export const contentType = "image/png";
 

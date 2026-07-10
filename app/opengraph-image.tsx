@@ -7,6 +7,8 @@ import { snapshot, tagline } from "@/data/about";
 // photo). Built from the first three active brand motifs + wordmark; swapping
 // activeMotifs (data/motifs.ts) re-skins it. CUSTOMIZE: drop a real
 // opengraph-image.png here to replace it.
+// Render at build time so the PNG exports as a static file under `output: export`.
+export const dynamic = "force-static";
 export const alt = `${snapshot.name} — ${snapshot.roles.join(", ")}`;
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";

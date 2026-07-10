@@ -3,6 +3,8 @@ import { activeMotifs, motifDataUri } from "@/data/motifs";
 
 // Generated Apple touch icon: the active brand motif (activeMotifs[0]) on paper.
 // CUSTOMIZE: drop a real apple-icon.png to replace this.
+// Render at build time so the PNG exports as a static file under `output: export`.
+export const dynamic = "force-static";
 export const size = { width: 180, height: 180 };
 export const contentType = "image/png";
 

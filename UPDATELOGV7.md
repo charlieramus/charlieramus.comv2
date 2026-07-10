@@ -41,7 +41,50 @@ Cloudflare Pages** (pure static hosting). No SSR, no Workers runtime needed.
   `.../index.html`); test both link styles.
 
 # Stage 1 Report
-_TBD._
+
+Static export configured and verified locally — the app emits a plain `out/` folder ready for
+Cloudflare Pages.
+
+- [x] **`next.config.ts`** — added `output: "export"` + `images: { unoptimized: true }` (the
+  default `next/image` optimizer needs a server; the gallery ships pre-sized WebP + `blurDataURL`,
+  so unoptimized just serves the files). Also **removed the now-inert `redirects()`** (`/blog →
+  /writing`) — unsupported under export; it moves to Cloudflare `_redirects` in Stage 2. Left a
+  comment pointing there.
+- [x] **Metadata routes marked static** — `next build` under export **errored** until each
+  route-handler-style metadata file declared `export const dynamic = "force-static"`. Added it to
+  `app/icon.tsx`, `app/apple-icon.tsx`, `app/opengraph-image.tsx`, `app/sitemap.ts`,
+  `app/robots.ts`. (Page routes + `/writing/[slug]` needed nothing — already static/SSG.)
+- [x] **`next build` emits `out/`** — the **route map is unchanged** (all ○ Static + the `●` SSG
+  essays). Verified the emitted files:
+  - HTML per route: `index.html`, `design.html`, `gear.html`, `photography.html`,
+    `web-projects.html`, `writing.html`, `404.html`, and each essay `writing/<slug>.html`.
+  - **Metadata routes exported as real static files** (PNG magic `89504e47`, non-empty):
+    `out/icon` (674 B), `out/apple-icon` (3.7 KB), `out/opengraph-image` (57 KB); `out/sitemap.xml`
+    (1.8 KB, `application/xml`), `out/robots.txt` (`text/plain`). `og:image` + `canonical` are
+    **absolute** (`https://charlieramus.com/...`).
+- [x] **Served `out/` locally (`serve out`, no SPA flag) and smoke-tested** — **clean-URL routing
+  works** (`/design` → `design.html`, `/writing/the-third-rotation` → its own HTML, each with the
+  right `<title>`). Rendered the export at 1440: **identical to dev** (hero motifs, carousel with
+  the Stage-5 dark-text fix, "More than code" timeline + bento, finale field), **no console
+  errors**, **61/61 photography images load** (0 broken) under the unoptimized loader.
+- [x] **`trailingSlash`** — kept the default (`false`). `out/` contains both `writing/<slug>.html`
+  and a `writing/<slug>/` dir, and in-app links use the no-slash form; Cloudflare Pages serves
+  `/writing/<slug>` from the `.html` cleanly. No config needed.
+- [x] **Audited unsupported features** — the only `redirects()` was `/blog` (removed → Stage 2);
+  nothing in the app reads cookies/headers/request at runtime (all metadata routes are GET,
+  build-time). `out/` is already gitignored.
+
+**Watch-out carried to Stage 2:** the extensionless metadata files (`out/icon`, `out/apple-icon`,
+`out/opengraph-image`) serve with **no `Content-Type`** on a plain static host (empty via `serve`;
+Cloudflare would default to `application/octet-stream`). The favicon still works via the `<link
+type="image/png">` hint, but the **OG image needs a real `image/png` Content-Type** for scrapers —
+I'll add a Cloudflare **`_headers`** file alongside `_redirects` in Stage 2.
+
+**Verify:** `tsc` / `eslint` clean; `build` (export) succeeds; `out/` served + smoke-tested. No
+regressions.
+
+**Issues:** Only the metadata Content-Type note above (fixed in Stage 2). Cutover stays Charlie's
+call (Stage 4).
 
 ---
 

@@ -2,6 +2,9 @@ import type { MetadataRoute } from "next";
 import { SITE_URL } from "@/data/site";
 import { writing } from "@/data/writing";
 
+// Emit /sitemap.xml as a static file under `output: export`.
+export const dynamic = "force-static";
+
 // Static routes + every essay, driven by the writing manifest so new essays are
 // picked up automatically. `next build` emits /sitemap.xml from this.
 export default function sitemap(): MetadataRoute.Sitemap {
