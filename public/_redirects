@@ -1,0 +1,20 @@
+# Cloudflare Pages redirects. Copied verbatim into out/ on `next build` (public/
+# is the export root). Replaces the old next.config `redirects()` (unsupported
+# under `output: export`). One rule per line: <source> <destination> <status>.
+# First match wins, so specific article rules sit above the bare /blog rule.
+
+# Legacy article slugs → their new /writing homes (MANUAL-TODO §5).
+# The old public prefix isn't confirmed, so both /writing/* and /blog/* are
+# covered — an unused rule simply never fires. Trim whichever prefix the old
+# site never used once confirmed.
+/writing/article-one     /writing/architecture-of-self-justification   301
+/writing/article-two     /writing/when-bigger-means-more-biased        301
+/writing/article-three   /writing/the-third-rotation                   301
+/writing/article-four    /writing/the-hobby-hexagon-is-a-trap          301
+/blog/article-one        /writing/architecture-of-self-justification   301
+/blog/article-two        /writing/when-bigger-means-more-biased        301
+/blog/article-three      /writing/the-third-rotation                   301
+/blog/article-four       /writing/the-hobby-hexagon-is-a-trap          301
+
+# Section move: the old /blog is unified under /writing (was a next.config redirect).
+/blog                    /writing                                      301

@@ -106,7 +106,34 @@ Pages' native redirects file.
 - Verify each redirect resolves (301 → correct target) once on the Pages preview.
 
 # Stage 2 Report
-_TBD._
+
+Redirects moved off `next.config` onto Cloudflare's native files, plus the metadata
+Content-Type fix flagged in Stage 1.
+
+- [x] **`public/_redirects` (new)** — copied to `out/_redirects` on build (verified, 1339 B). Rules
+  (first-match-wins, specific above general):
+  - the **legacy article-slug map** (`MANUAL-TODO.md §5`): `article-one → architecture-of-self-
+    justification`, `article-two → when-bigger-means-more-biased`, `article-three → the-third-
+    rotation`, `article-four → the-hobby-hexagon-is-a-trap`, all **301**.
+  - `/blog → /writing` **301** (replaces the removed `next.config` redirect).
+  - **DECISION → Charlie (old URL prefix):** the old public path for the article slugs isn't
+    confirmed, so I covered **both** `/writing/<old>` and `/blog/<old>` — a superset. Unused rules
+    never fire, so nothing indexed can 404; Charlie can delete whichever prefix the old site never
+    used once he confirms.
+- [x] **`public/_headers` (new)** — copied to `out/_headers` (585 B). Sets `Content-Type:
+  image/png` on `/icon`, `/apple-icon`, `/opengraph-image` — the extensionless metadata files from
+  Stage 1 that a static host would otherwise serve as `application/octet-stream`. Path match
+  ignores the `?<hash>` query Next appends, so it still matches. (This closes the Stage 1
+  watch-out; the OG image will scrape as a real PNG.)
+- [x] **`next.config.ts` `redirects()` removed** — done in Stage 1; re-confirmed no functional
+  `redirects()` remains (only an explanatory comment). Build is clean under `output: export`.
+
+**Verify:** `next build` succeeds; both `_redirects` and `_headers` are present in `out/` with the
+expected content; `tsc` / `eslint` clean. The local `serve` static server does **not** interpret
+Cloudflare's `_redirects` / `_headers` (they're platform-specific), so the **301 resolution + the
+image/png Content-Type are verified on the Cloudflare Pages preview in Stage 3**, not locally.
+
+**Issues:** None. Open decision (prefix) is covered by the both-prefix superset above — no blocker.
 
 ---
 

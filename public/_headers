@@ -1,0 +1,14 @@
+# Cloudflare Pages response headers. Copied into out/ on build (public/ is the
+# export root). Path match ignores the query string, so the ?<hash> Next appends
+# to these URLs is fine.
+
+# The Next metadata image routes export as EXTENSIONLESS files (out/icon,
+# out/apple-icon, out/opengraph-image), which a static host would otherwise serve
+# as application/octet-stream. Force the real image/png type so browsers and —
+# critically — social/OG scrapers accept them.
+/icon
+  Content-Type: image/png
+/apple-icon
+  Content-Type: image/png
+/opengraph-image
+  Content-Type: image/png
