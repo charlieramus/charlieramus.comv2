@@ -78,19 +78,24 @@ Every item in `data/gear.ts` has an empty `href` (no link) and some have empty `
 
 ---
 
-## 4 · SEO, metadata, OG images, icons  (V5 Stage 4)  🟡
+## 4 · SEO, metadata, OG images, icons  (V5 Stage 4)  ✅ built (swappable)
 
-These get *built* in Stage 4, but a few need an asset or a decision from you:
+**Stage 4 is done** — all of this now ships, generated from the brand. Swap any of it
+whenever you want a custom asset; nothing here blocks shipping.
 
-- ☐ **Canonical production URL** — confirm it's `https://charlieramus.com` (I need it for
-  `metadataBase`, absolute OG URLs, sitemap, and JSON-LD). Say if it differs.
-- ☐ **Default site OG image** (🟡) — the share card for the homepage + non-essay routes.
-  Essays can reuse their `headerImage` and the gallery a featured photo, but the rest need
-  a default 1200×630 card. Options: (a) you supply one, or (b) I generate one from the
-  flower motif + wordmark. **Tell me which.**
-- ☐ **Favicon / app icons** (🟡) — currently the default `app/favicon.ico` scaffold. If you
-  want a custom mark (e.g. a flower or "C"), supply a square source PNG (≥512×512) or say
-  "generate from the flower" and I'll build `app/icon` + `apple-icon`.
+- ✅ **Canonical production URL** — defaulted to `https://charlieramus.com` in
+  `data/site.ts` (drives `metadataBase`, per-route canonicals, sitemap, robots, JSON-LD).
+  **Change it in that one file** if the domain ever differs.
+- ✅ **Default site OG image** — generated at `app/opengraph-image.tsx` (brand daisies +
+  wordmark + roles + tagline). To replace with your own, drop a real `opengraph-image.png`
+  (1200×630) in `app/` and delete the `.tsx`.
+- ✅ **Favicon / app icons** — generated red daisy at `app/icon.tsx` + `app/apple-icon.tsx`
+  (the old `favicon.ico` scaffold still serves as a fallback). To replace, drop a real
+  `icon.png` / `apple-icon.png` in `app/` (and a real `favicon.ico`) and delete the `.tsx`.
+- 🟡 **Essay share descriptions** (optional) — essay `<meta name="description">` currently
+  reads "*<title> — an essay by Charlie Ramus.*" (there's no excerpt field). If you want a
+  real one-line summary per essay for search snippets, add an `excerpt:` line to each MDX
+  frontmatter and I'll wire it in.
 
 ---
 

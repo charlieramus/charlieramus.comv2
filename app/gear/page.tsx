@@ -3,10 +3,10 @@ import Reveal from "@/components/reveal";
 import SiteHeader from "@/components/site-header";
 import SiteFooter from "@/components/site-footer";
 import { gear, gearSections } from "@/data/gear";
-import { snapshot } from "@/data/about";
 
 export const metadata: Metadata = {
-  title: `Gear — ${snapshot.name}`,
+  title: "Gear",
+  alternates: { canonical: "/gear" },
   description:
     "The camera kit behind the photography — Canon EOS R5, DJI Air 2s, and the lenses, bags and accessories Charlie Ramus travels with.",
 };

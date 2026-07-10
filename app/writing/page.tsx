@@ -4,10 +4,10 @@ import Reveal from "@/components/reveal";
 import SiteHeader from "@/components/site-header";
 import SiteFooter from "@/components/site-footer";
 import { writing } from "@/data/writing";
-import { snapshot } from "@/data/about";
 
 export const metadata: Metadata = {
-  title: `Writing — ${snapshot.name}`,
+  title: "Writing",
+  alternates: { canonical: "/writing" },
   description:
     "Essays and stories by Charlie Ramus — on optimization, machine learning, morality, and the occasional lighthouse.",
 };

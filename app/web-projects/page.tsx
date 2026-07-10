@@ -5,10 +5,10 @@ import Flower from "@/components/flower";
 import SiteHeader from "@/components/site-header";
 import SiteFooter from "@/components/site-footer";
 import { webProjects } from "@/data/projects-web";
-import { snapshot } from "@/data/about";
 
 export const metadata: Metadata = {
-  title: `Web Projects — ${snapshot.name}`,
+  title: "Web Projects",
+  alternates: { canonical: "/web-projects" },
   description:
     "Software Charlie Ramus has designed and shipped solo — Ostiara, MyLifeInARepo, Querryn, VaultDNA and more. Next.js, TypeScript, Tailwind.",
 };

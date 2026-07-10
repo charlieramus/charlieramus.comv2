@@ -4,12 +4,18 @@ import SiteHeader from "@/components/site-header";
 import SiteFooter from "@/components/site-footer";
 import PhotographyGallery from "@/components/photography-gallery";
 import { photos } from "@/data/photos";
-import { snapshot } from "@/data/about";
+
+// Share card = a featured photo (falls back to the site default OG otherwise).
+const ogPhoto = photos.find((p) => p.featured) ?? photos[0];
 
 export const metadata: Metadata = {
-  title: `Photography — ${snapshot.name}`,
+  title: "Photography",
   description:
     "Travel, landscape and wildlife photography by Charlie Ramus — Iceland, the Colorado Rockies, the British Virgin Islands and more. Shot on a Canon EOS R5.",
+  alternates: { canonical: "/photography" },
+  openGraph: ogPhoto
+    ? { images: [{ url: ogPhoto.src, alt: ogPhoto.alt }] }
+    : undefined,
 };
 
 export default function PhotographyPage() {

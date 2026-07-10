@@ -288,7 +288,77 @@ intentional, not a gap.
   or drop the stray `C:\Users\jason` lockfile).
 
 # Stage 4 Report
-_TBD._
+
+SEO/metadata/OG/icons/perf, all read from the Next 16 metadata docs first
+(`metadata-and-og-images`, `sitemap`, `robots`, `app-icons`, `opengraph-image`, `json-ld`).
+Everything is data-driven off one `SITE_URL` constant and the brand motif, so nothing here
+is hand-authored HTML.
+
+**Site identity + canonical**
+- [x] **`data/site.ts`** — `SITE_URL = "https://charlieramus.com"` + `SITE_NAME`, the single
+  source for every absolute URL. (Canonical domain defaulted per the whole-project intent;
+  change in one place if it ever differs — noted in `MANUAL-TODO.md`.)
+- [x] **`app/layout.tsx`** — `metadataBase: new URL(SITE_URL)` (resolves relative OG/canonical
+  URLs), a `title.template` (`%s — Charlie Ramus`) so inner routes set a short title, root
+  `alternates.canonical: "/"`, full `openGraph` (type/siteName/url/locale/title/description) and
+  a `twitter` `summary_large_image` card.
+- [x] **Per-route canonical + short titles** — `/web-projects`·`/design`·`/gear`·`/writing`·
+  `/photography` each set `alternates.canonical` + a short `title` (template appends the suffix;
+  dropped the now-unused `snapshot` imports). Verified rendered `<title>` + `<link rel=canonical>`
+  per route.
+
+**OG images (per-route)**
+- [x] **Default card — `app/opengraph-image.tsx`** (`next/og` `ImageResponse`, 1200×630): three
+  brand daisies + `Charlie Ramus` + roles + tagline on paper. Inherited by every route that
+  doesn't override. Reuses a new **`lib/flower-svg.ts`** (the daisy as an SVG data-URI, geometry
+  mirrored from `components/flower.tsx`) — no font files needed (ImageResponse's default font).
+- [x] **Essays → `headerImage`** (`app/writing/[slug]` `generateMetadata`, `og:type=article`);
+  the **headerless** essay falls back to the default card (explicit `images: ["/opengraph-image"]`,
+  since setting `openGraph` otherwise drops the inherited image — caught + fixed).
+- [x] **`/photography` → a featured photo** (`openGraph.images` = first `featured` photo). Verified
+  the rendered `og:image` per route (default / essay-header / featured-photo, one tag each).
+
+**Crawl + structured data + icons**
+- [x] **`app/sitemap.ts`** — static routes + every essay (driven by the `writing` manifest, so new
+  essays auto-list) with `lastModified`/`changeFrequency`/`priority`. Emits `/sitemap.xml`.
+- [x] **`app/robots.ts`** — allow-all + `Sitemap:` + `Host:` → `/robots.txt`.
+- [x] **JSON-LD** — `Person` on `/` (name/url/jobTitle/address/`sameAs` = socials, from
+  `data/about` + `data/socials`) and `Article` on each essay (headline/author/image/url), both
+  as sanitized `<script type="application/ld+json">` (per the Next json-ld guide, `<` → `<`).
+  Verified `@type` renders on each.
+- [x] **Icons — `app/icon.tsx` (32²) + `app/apple-icon.tsx` (180²)** — generated red brand daisy on
+  paper (`ImageResponse`); `favicon.ico` stays as fallback. Verified the `<link rel=icon>` /
+  `apple-touch-icon` tags + the rendered PNGs.
+
+**Performance**
+- [x] Audited every `next/image`: `sizes` on all; `priority` only where it earns it (gallery
+  first-4, the on-demand lightbox, the above-fold essay hero) — below-fold images (bento,
+  right-now, design slides, web screenshots) lazy-load by default. Fonts already `display: swap`;
+  gallery thumbnails are ≤600px WebP with `blurDataURL`. Gallery (heaviest route) domReady ≈43ms
+  locally, no blocking. (Full Lighthouse/CWV under throttling is best run against the Vercel
+  preview in Stage 5 — the optimizations that move CWV are in place.)
+
+**Build hygiene**
+- [x] **`next.config.ts`** — `turbopack: { root: path.join(__dirname) }` pins the workspace root, so
+  Turbopack stops inferring it from the stray `C:\Users\jason` lockfile. **The multi-lockfile build
+  warning is gone.**
+
+**Generated brand assets (swappable):** the OG card + favicon/apple-icon are generated from the
+flower motif (the option offered in `MANUAL-TODO.md §4`, which is now updated to "built"). Charlie
+can drop a real `opengraph-image.png` / `icon.png` / `apple-icon.png` into `app/` to replace any of
+them.
+
+**Verify:** `tsc` / `eslint` / `build` clean; all routes prerender static/SSG (incl. `/icon`,
+`/apple-icon`, `/opengraph-image`, `/sitemap.xml`, `/robots.txt`). Rendered the OG card + icon
+(eyeballed — clean, on-brand). Inspected `<head>` on `/`, both header'd + headerless essays,
+`/photography`, `/design`: correct canonical, one `og:image` each (default / header / featured
+photo), `og:type`, twitter card, and JSON-LD `@type`s. Re-ran **axe on `/`, an essay, and
+`/photography` → 0 violations**, no horizontal overflow, no console errors (Stage 3 stays green).
+
+**Issues:** (1) Essay `<meta description>` is a generic "*<title> — an essay by Charlie Ramus*"
+(no excerpt field exists); a real per-essay summary needs a Charlie-authored `excerpt:` in
+frontmatter — noted in `MANUAL-TODO.md §4` (🟡, optional). (2) Real Core Web Vitals numbers should
+be confirmed on the deployed preview (Stage 5); can't run throttled Lighthouse headless here.
 
 ---
 

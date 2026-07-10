@@ -3,7 +3,7 @@ import Image from "next/image";
 import SiteHeader from "@/components/site-header";
 import SiteFooter from "@/components/site-footer";
 import { writing } from "@/data/writing";
-import { snapshot } from "@/data/about";
+import { SITE_URL } from "@/data/site";
 
 // Prerender exactly the essays in the manifest; anything else 404s.
 export function generateStaticParams() {
@@ -20,8 +20,19 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const { frontmatter } = await import(`@/content/writing/${slug}.mdx`);
   const title = frontmatter.title || writing.find((w) => w.slug === slug)?.title;
   return {
-    title: `${title} — ${snapshot.name}`,
-    description: `${frontmatter.author} · ${frontmatter.date}`,
+    title, // title.template in the root layout appends "— Charlie Ramus"
+    description: `${title} — an essay by ${frontmatter.author}.`,
+    alternates: { canonical: `/writing/${slug}` },
+    openGraph: {
+      type: "article",
+      title,
+      // Essays with a header image share it; the headerless one falls back to the
+      // site's default generated card (setting openGraph here otherwise drops the
+      // root-inherited image).
+      images: frontmatter.headerImage
+        ? [{ url: frontmatter.headerImage, alt: title }]
+        : ["/opengraph-image"],
+    },
   };
 }
 
@@ -33,8 +44,27 @@ export default async function WritingArticle({ params }: Params) {
     `@/content/writing/${slug}.mdx`
   );
 
+  // Article structured data (schema.org) so search engines/AI parse the essay.
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: frontmatter.title,
+    author: { "@type": "Person", name: frontmatter.author, url: SITE_URL },
+    ...(frontmatter.headerImage
+      ? { image: `${SITE_URL}${frontmatter.headerImage}` }
+      : {}),
+    url: `${SITE_URL}/writing/${slug}`,
+    mainEntityOfPage: `${SITE_URL}/writing/${slug}`,
+  };
+
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c"),
+        }}
+      />
       <SiteHeader />
 
       <main id="main-content" tabIndex={-1} className="writing">

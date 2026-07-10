@@ -4,10 +4,10 @@ import SiteHeader from "@/components/site-header";
 import SiteFooter from "@/components/site-footer";
 import DesignGallery from "@/components/design-gallery";
 import { designProjects } from "@/data/projects-design";
-import { snapshot } from "@/data/about";
 
 export const metadata: Metadata = {
-  title: `Design — ${snapshot.name}`,
+  title: "Design",
+  alternates: { canonical: "/design" },
   description:
     "Brand, marketing and editorial design by Charlie Ramus — a Notion brand pitch, a Spotify IMC campaign, and a photography presentation UI. Produced in Figma.",
 };

@@ -1,7 +1,11 @@
 import type { NextConfig } from "next";
 import createMDX from "@next/mdx";
+import path from "node:path";
 
 const nextConfig: NextConfig = {
+  // Pin the workspace root to this project so Turbopack stops inferring it from
+  // the stray C:\Users\jason lockfile (silences the multi-lockfile build warning).
+  turbopack: { root: path.join(__dirname) },
   // Let .md / .mdx files act as pages/imports alongside the TS/JS routes.
   pageExtensions: ["ts", "tsx", "js", "jsx", "md", "mdx"],
   // /blog was dropped (V2 addendum): writing is unified under /writing. Nothing

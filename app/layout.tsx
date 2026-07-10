@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Libre_Baskerville, Inter, Caveat } from "next/font/google";
 import { snapshot, tagline } from "@/data/about";
+import { SITE_URL, SITE_NAME } from "@/data/site";
 import "./globals.css";
 
 // Serif — headings / quotes. Libre Baskerville is NOT a variable font, so weights
@@ -28,13 +29,29 @@ const caveat = Caveat({
 
 // Title = Charlie's name; description = `tagline` (the <meta>-only one-liner,
 // per the V2 hero decision — the name, not the tagline, is the hero headline).
+// metadataBase resolves relative OG/canonical URLs (and the generated
+// app/opengraph-image.tsx) to absolute; `title.template` lets inner routes set a
+// short title that gets the "— Charlie Ramus" suffix for free.
 export const metadata: Metadata = {
-  title: `${snapshot.name} — Developer, Designer, Photographer`,
+  metadataBase: new URL(SITE_URL),
+  title: {
+    default: `${snapshot.name} — Developer, Designer, Photographer`,
+    template: `%s — ${SITE_NAME}`,
+  },
   description: tagline,
+  alternates: { canonical: "/" },
   openGraph: {
-    title: snapshot.name,
-    description: tagline,
     type: "website",
+    siteName: SITE_NAME,
+    url: SITE_URL,
+    locale: "en_US",
+    title: `${snapshot.name} — Developer, Designer, Photographer`,
+    description: tagline,
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: `${snapshot.name} — Developer, Designer, Photographer`,
+    description: tagline,
   },
 };
 
