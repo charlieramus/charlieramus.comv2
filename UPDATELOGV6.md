@@ -392,4 +392,37 @@ The V6 gate. No deploy here — that's `UPDATELOGV7.md`.
   **V7 Cloudflare deploy**. List anything deliberately left.
 
 # Stage 6 Report
-_TBD._
+
+The V6 gate — verified, visually done, internally consistent, feature-complete ahead of V7.
+
+- [x] **`tsc` / `eslint` / `build` all clean.** Every route still prerenders: `/`, `/writing`,
+  `/photography`, `/web-projects`, `/design`, `/gear`, `/_not-found` are **○ Static**; the metadata
+  routes `/opengraph-image`, `/icon`, `/apple-icon`, `/sitemap.xml`, `/robots.txt` are static; the
+  essays are **● SSG** (`/writing/[slug]` via `generateStaticParams`). No SSR/λ routes — the whole
+  app is export-ready for V7.
+- [x] **Every route eyeballed at 1440 / 768 / 375** (+ short viewport for the finale): **axe = 0**,
+  **no horizontal overflow** (also clean at 320 + 1920), **no console errors** on render/scroll.
+- [x] **Motif system** — all render sites read the Stage-3 registry (`hero`, `finale`,
+  `personal-bento`, `work`, `web-projects` placeholders) and so do the generators (`opengraph-image`
+  = first 3 `activeMotifs`, `icon` + `apple-icon` = `activeMotifs[0]`). One edit to `activeMotifs`
+  re-skins the whole site **and** the OG card + favicon. SSR-safe (no hydration errors) and
+  reduced-motion-safe (`.motif` animation disabled under `prefers-reduced-motion`; `ring` is
+  `spin:false`). No leftover `Flower` / `flower-svg` imports anywhere.
+- [x] **Finale** fills the screen with nothing beneath it — re-verified at a short 1440×560
+  (`belowFinale = 0`, `finaleH ≈ viewport`); Stage 2 covered 1440/768/375 + short/tall.
+- [x] **Header** = nav only (`Work · Design · Photography · Writing · Gear`; the script wordmark /
+  `.site-logo` is gone). **Footer** reads "Looking to reach me? / Get in touch". **No footer** under
+  the homepage finale (no `.legal-min`).
+- [x] **Reworked bento + timeline** legible on mobile (Stage 4/5 screenshots); the V5 real-photo
+  bento tiles + the "Right now" photo card both survive the re-layout (confirmed present in the DOM).
+
+**Visually done + consistent:** motif usage, whitespace rhythm, and type scale read as one system
+across the homepage and inner pages; no orphaned V5 artifacts.
+
+**Deliberately left (all 🟡 polish, none block V6):**
+- Real **digital-home screenshots** (placeholders read honestly today) — `MANUAL-TODO.md §1`.
+- The remaining `MANUAL-TODO.md` asset/link items (web-project screenshots, gear links, essay
+  external links, org links) and Charlie's own **motif SVGs** (starter set ships in the meantime).
+- `DESIGN-BRIEF.md` still names the old `flower.tsx` in prose (historical north-star doc).
+
+**V6 is feature-complete.** Deploy + cutover proceeds in `UPDATELOGV7.md` (Cloudflare Pages).
