@@ -225,7 +225,44 @@ Shorten the About section by default; keep the full text one tap away.
   teaser, rest = expandable), so Charlie still edits copy in `data/about.ts`.
 
 # Stage 3 Report
-_TBD._
+
+- [x] **New `components/about-bio.tsx`** (leaf `"use client"` component) — splits
+  `aboutParagraphs` data-driven: `[0]` is the teaser shown by default, the rest
+  fold behind a **"Read more about me" / "Read less"** toggle. The toggle is a real
+  `<button>` with `aria-expanded` + `aria-controls` pointing at the rest region; a
+  small `aria-hidden` caret (↓/↑) hints direction. The hidden paragraphs are
+  **always rendered in the DOM** (collapsed with CSS, not fetched) → export-static
+  and crawlable; the collapsed region carries `aria-hidden` so assistive tech
+  tracks the visual state (the rest is plain text, no focusable elements, so no
+  hidden-focus trap).
+- [x] **`components/about.tsx`** — dropped the `aboutParagraphs.map` stack and the
+  now-unused `aboutParagraphs` import; renders `<AboutBio />` in the `.bio` slot.
+  The collage + head stay server-rendered.
+- [x] **Trimmed the timeline redundancy (DECISION: tighten, per draft)** — rewrote
+  `aboutParagraphs[1]` in `data/about.ts`. It was a near-verbatim restatement of
+  the Ostiara career-timeline entry (`data/experience.ts` — "SaaS platform for
+  door-to-door sales teams… pest control, solar, roofing…", "design system I built
+  for it", "customer-discovery interviews… quote prices on a doorstep"). Condensed
+  to keep only the insight the timeline lacks (the menu-priced vs measure-on-site
+  split), so the expanded bio no longer echoes the timeline.
+- [x] **`app/globals.css`** — `.bio-rest` collapses via the grid-rows `0fr→1fr`
+  trick so the reveal animates to the content's exact height (no fixed max-height,
+  no layout jump that would knock the collage out of alignment); `.bio-toggle` is
+  styled small + `--color-blue` link-ish (→ `--color-red-ink` on hover) matching
+  the `.go` links, with a visible `:focus-visible` ring. The teaser→rest gap is
+  padding applied **only** when open, so the collapsed track measures a true `0px`
+  (verified) rather than leaking the padding. Reduced-motion sets
+  `.bio-rest`/`.bio-rest-inner` `transition: none` → the expand is instant.
+- [x] **Verified** — `tsc`, `eslint`, `next build` (export) all green; all 18 routes
+  prerender. Confirmed the **static export contains every bio paragraph** even
+  while collapsed (SEO-friendly). Live-drove it: collapsed default shows only the
+  teaser (`aria-expanded=false`, rest `aria-hidden=true`, grid rows `0px`); clicking
+  expands (`aria-expanded=true`, `aria-hidden=false`, rows → full height, opacity
+  1); no console errors; collage stays aligned in both states; no horizontal
+  overflow at 1440 or 375; screenshotted both states.
+
+Issues: none. Live reduced-motion behavior and the full axe/1440/768/375 sweep are
+the Stage 4 gate; the reduced-motion CSS path is in place.
 
 ---
 

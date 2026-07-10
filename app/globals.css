@@ -148,6 +148,11 @@ body {
   .psimon-pad.is-lit .motif {
     transform: none;
   }
+  /* "Read more" expands instantly (no height/opacity animation) under reduce. */
+  .bio-rest,
+  .bio-rest-inner {
+    transition: none;
+  }
 }
 
 /* ---------------------------------------------------------------------------
@@ -1275,6 +1280,65 @@ body {
   }
   .about-grid .bio p + p {
     margin-top: 18px;
+  }
+
+  /* "Read more" disclosure (V8 Stage 3). The rest of the bio is always in the DOM
+     (crawlable / export-friendly) and collapsed with the grid-rows 0fr→1fr trick
+     so the reveal animates to the content's exact height — no fixed max-height,
+     no layout jump that would knock the collage out of alignment. */
+  .bio-rest {
+    display: grid;
+    grid-template-rows: 0fr;
+    opacity: 0;
+    transition:
+      grid-template-rows 0.5s cubic-bezier(0.2, 0.7, 0.3, 1),
+      opacity 0.4s ease;
+  }
+  .bio-rest.is-open {
+    grid-template-rows: 1fr;
+    opacity: 1;
+  }
+  .bio-rest-inner {
+    /* min-height:0 lets the row collapse fully; overflow clips while animating.
+       The teaser→rest gap is padding applied ONLY when open — padding on the grid
+       item would otherwise keep the collapsed track ~18px tall instead of 0. */
+    min-height: 0;
+    overflow: hidden;
+    padding-top: 0;
+    transition: padding-top 0.5s cubic-bezier(0.2, 0.7, 0.3, 1);
+  }
+  .bio-rest.is-open .bio-rest-inner {
+    padding-top: 18px;
+  }
+  .about-grid .bio-rest-inner p + p {
+    margin-top: 18px;
+  }
+
+  .bio-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 16px;
+    padding: 4px 0;
+    background: none;
+    border: 0;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    color: var(--color-blue);
+    cursor: pointer;
+  }
+  .bio-toggle:hover {
+    color: var(--color-red-ink);
+  }
+  .bio-toggle:focus-visible {
+    outline: 2px solid var(--color-blue);
+    outline-offset: 3px;
+    border-radius: 3px;
+  }
+  .bio-toggle-caret {
+    font-size: 11px;
+    line-height: 1;
   }
 
   /* ---------- CONTACT ---------- */

@@ -1,5 +1,5 @@
 import Reveal from "@/components/reveal";
-import { aboutParagraphs } from "@/data/about";
+import AboutBio from "@/components/about-bio";
 
 // Collage photo positions (classes p1–p4 carry the rotation/placement).
 const COLLAGE = [
@@ -32,14 +32,10 @@ export default function About() {
               />
             ))}
           </div>
-          {/* CUSTOMIZE: about copy lives in data/about.ts (aboutParagraphs).
-              V2 wrote 4 paragraphs; the mockup's .bio was a 2× <p> stack — it
-              flows the same with 4. */}
-          <div className="bio">
-            {aboutParagraphs.map((para, i) => (
-              <p key={i}>{para}</p>
-            ))}
-          </div>
+          {/* About copy lives in data/about.ts (aboutParagraphs). AboutBio shows
+              paragraph 0 as a teaser and folds the rest behind a "read more"
+              toggle (V8 Stage 3). CUSTOMIZE the copy in data/about.ts. */}
+          <AboutBio />
         </Reveal>
       </div>
     </section>
