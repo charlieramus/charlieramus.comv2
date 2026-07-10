@@ -339,7 +339,37 @@ A section-by-section detail sweep now that the big moves have landed.
 - Re-confirm **axe 0**, no horizontal overflow, no console errors on every route/width.
 
 # Stage 5 Report
-_TBD._
+
+Section-by-section detail sweep now that the big moves have landed.
+
+- [x] **Swept every section at 1440 + 375** (spot-checked 320 + 1920): hero, digital-home
+  carousel, right-now strip, the reworked "More than code" bento + timeline, work bands, services
+  fan, about collage, contact card, finale — plus every inner page (writing, photography,
+  web-projects, design, gear). Spacing rhythm, type scale, and alignment read as one system; no
+  cramped mobile states, no awkward wraps.
+- [x] **Digital-home carousel — white-on-orange caption contrast resolved** (`.s-warm .body`,
+  `app/globals.css`). The orange "Querryn" shot kept the default white text (~2.6:1, failed AA);
+  gave it dark warm ink `#3d1c00` (≥5:1 across the whole gradient), matching the dark-on-tint
+  pattern the `.s-mint` / `.s-lav` shots already use. This is the V5 Stage 3 note, now closed.
+  - The **placeholder browser-window shots vs. real screenshots** choice stays a Charlie item
+    (`MANUAL-TODO.md §1`) — the shots read honestly today (real project titles); only the contrast
+    was actionable here.
+- [x] **Consistency / no orphaned V5 artifacts** — confirmed the Stage-1 wordmark removal left no
+  stray spacing (inner-page header is nav-only, left-aligned); motif usage is uniform (all via the
+  Stage-3 registry); the bento/timeline type scale matches the inner pages.
+- [x] **Guardrails re-confirmed across all 6 routes at 1440 + 375:** **axe = 0 violations**
+  everywhere, **no horizontal overflow** (also clean at 320 + 1920), **no console errors** on
+  render/scroll.
+
+**Data flow:** no data or structural change — Stage 5 is CSS polish (one contrast token) plus a
+verification pass.
+
+**Verify:** `tsc` / `eslint` / `build` still clean (unchanged since Stage 4 aside from the one CSS
+line; re-confirmed below at commit). Rendered all routes; axe 0, zero overflow, zero console
+errors.
+
+**Issues:** None. Deliberately left to Charlie: real digital-home screenshots + the other
+`MANUAL-TODO.md` asset/link items (all 🟡 polish, none block V6 sign-off).
 
 ---
 

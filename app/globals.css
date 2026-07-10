@@ -396,6 +396,10 @@ body {
   }
   .s-warm .body {
     background: linear-gradient(120deg, #f6b24a, #e8743b);
+    /* Dark warm ink instead of the default white — white on this orange was
+       ~2.6:1 (fails AA). Matches the dark-on-tint pattern of .s-mint / .s-lav
+       (V5 Stage 3 note resolved). #3d1c00 is ≥5:1 across the whole gradient. */
+    color: #3d1c00;
   }
   .s-mint .body {
     background: linear-gradient(120deg, #dff5e1, #bfe9c8);
