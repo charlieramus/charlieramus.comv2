@@ -99,23 +99,19 @@ whenever you want a custom asset; nothing here blocks shipping.
 
 ---
 
-## 5 · Deploy + cutover  (V5 Stage 5)  🔴
+## 5 · Deploy + cutover  (V7 · Cloudflare Pages)  🔴
 
-The agent can't do these in a headless session — they're yours, and the **cutover happens
-only when you explicitly say so**.
+The build is **export-ready** — V7 Stages 1–3 are done (`output: export` → `out/`, the
+`_redirects` + `_headers` files, verified end-to-end locally). These final steps need the
+Cloudflare dashboard **and your go — the cutover happens only when you explicitly say so**.
 
-- ☐ **Authorize the Vercel connector** 🔴 — the Vercel MCP connector is **not authorized**
-  in these sessions, so I can't read the preview URL or drive a deploy. Authorize it in
-  your claude.ai connector settings (or use the Vercel dashboard directly).
-- ☐ **Connect the repo on Vercel** 🔴 — import the repo, set the **production branch** and
-  **project settings**.
-- ☐ **Environment variables** 🔴 — the app currently reads **none** at build/runtime, so
-  there's likely nothing to set; confirm once connected (add any you introduce here).
-- ☐ **Point the domain** 🔴 — attach **charlieramus.com** (+ `www`) to the new Vercel
-  project and retire the old one. **Only when you say go.**
-- ☐ **Legacy article redirects** 🔴 — the old site's article slugs changed. Add these to
-  `next.config.ts` `redirects()` if the old URLs are indexed (I can add them on your word —
-  confirm the old path prefix was `/writing/…`, `/blog/…`, or both):
+- ☐ **Create the Cloudflare Pages project** 🔴 — connect the repo; **build command**
+  `next build`; **output directory** `out`; **Node** is pinned by `.nvmrc` (`22`); pick the
+  **production branch**. **No env vars** are read by the app. (No MCP connector needed —
+  Cloudflare Pages is a dashboard flow.)
+- ✅ **Redirects** — moved off `next.config` into **`public/_redirects`**: `/blog → /writing`
+  plus the legacy article-slug map below, with **both** `/writing/*` and `/blog/*` prefixes
+  covered (unused rules never fire). Tell me the real old prefix and I'll trim the other half.
 
   | Old slug | New slug (`/writing/…`) |
   |---|---|
@@ -124,22 +120,27 @@ only when you explicitly say so**.
   | `article-three` | `the-third-rotation` |
   | `article-four` | `the-hobby-hexagon-is-a-trap` |
 
-  (`/blog → /writing` is already redirected in `next.config.ts`.)
-- ☐ **Post-deploy smoke test** — after the production URL is live I'll re-verify every
-  route at 1440 / 768 / 375 (no console errors, images/blur load, lightbox works, links
-  resolve); the final human sign-off that the new site fully replaces the old is yours.
+- ✅ **Metadata Content-Type** — **`public/_headers`** forces `image/png` on
+  `/icon` · `/apple-icon` · `/opengraph-image` (the extensionless export files), so the OG
+  card scrapes correctly.
+- ☐ **Point the domain** 🔴 — attach **charlieramus.com** (+ `www`) to the Pages project and
+  retire the old site. **Only when you say go.**
+- ☐ **Verify preview + production** 🔴 — on the Pages **preview** URL confirm the two
+  platform-only behaviors the local server can't test: `_redirects` resolve (301 → target)
+  and `_headers` set `image/png`. Then once the **domain is live** I'll re-smoke-test every
+  route at 1440 / 768 / 375 (no console errors, images/blur, lightbox, links, OG); the final
+  human sign-off that the new site fully replaces the old is yours.
 
 ---
 
-## 6 · Connector authorizations  🔴 (as needed)
+## 6 · Connector authorizations  🟡 (as needed)
 
-These MCP connectors are unauthorized in the current sessions and gate specific features:
-
-- ☐ **Vercel** — deploy status + preview URLs (see §5).
+- ✅ **Cloudflare Pages** — no MCP connector needed; it's a dashboard flow (see §5). *(Vercel
+  is no longer used — V7 deploys on Cloudflare.)*
 - ☐ **Intercom** — only if you want support-chat wired in; not currently in scope.
 
-Authorize via your claude.ai connector settings (or `claude mcp` / `/mcp` in an
-interactive session). I can't run the OAuth flow from here.
+Authorize any future connectors via your claude.ai connector settings (or `claude mcp` /
+`/mcp` in an interactive session). I can't run the OAuth flow from here.
 
 ---
 

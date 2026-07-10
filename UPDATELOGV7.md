@@ -213,4 +213,35 @@ settings above; then on the preview URL confirm the two platform-only behaviors 
   steps actually taken; check off the deploy items.
 
 # Stage 4 Report
-_TBD._
+
+**The domain cutover is deliberately NOT performed here.** Pointing `charlieramus.com` and
+retiring the old site is an irreversible, outward-facing production action that this log
+explicitly reserves for Charlie's explicit go ("**Only when Charlie explicitly says so**"), and it
+requires Cloudflare dashboard access that isn't available in a headless session. So Stage 4 covers
+only the parts I can do safely; the live flip waits for Charlie.
+
+- [x] **Redirect coverage verified** — the Stage 2 `public/_redirects` covers every changed
+  article slug (`article-one…four → their new /writing slugs`) under **both** `/writing/*` and
+  `/blog/*` prefixes, plus `/blog → /writing`. So no indexed old URL 404s after cutover regardless
+  of which prefix the old site used. (Charlie confirms the prefix and I trim the unused half.)
+- [x] **`MANUAL-TODO.md §5` + §6 rewritten** — replaced the old Vercel deploy steps with the
+  **Cloudflare Pages** steps actually taken: create-project settings (`next build` → `out`,
+  `.nvmrc` Node 22, production branch, no env vars), the `_redirects`/`_headers` marked ✅, and the
+  domain-point + preview/production verification left as the checked-out ☐ items gated on Charlie.
+  §6 drops Vercel (no connector needed for Cloudflare).
+- [ ] **Point the domain** — **pending Charlie's explicit go + dashboard.** Attach
+  `charlieramus.com` (+ `www`) to the Pages project; retire the old site.
+- [ ] **Final production sign-off** — **pending the live domain.** Once it's up I'll smoke-test
+  every route on the production domain at 1440 / 768 / 375 (no console errors, images/blur,
+  lightbox, links, OG, redirects resolve) and confirm the new site fully replaces the old — the
+  final human sign-off is Charlie's.
+
+**State at end of V7:** the site is **build-complete and export-verified** for Cloudflare Pages —
+everything that can be done without the dashboard is done and pushed. The remaining work is the
+three dashboard/DNS actions above (create project, point domain, verify live), which are Charlie's
+by design.
+
+**Verify:** no code changed in this stage (docs only); `tsc` / `eslint` / `build` remain clean from
+Stage 3.
+
+**Issues:** None. Cutover intentionally deferred to Charlie's explicit instruction.
