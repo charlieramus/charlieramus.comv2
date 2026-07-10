@@ -8,7 +8,7 @@
 // TO CHANGE WHAT'S PREVIEWED, EDIT ONLY THIS FILE. No component edits needed.
 //   • Photography bento  → `photographyBento`  (photo `code`s)
 //   • Graphic-design bento → `graphicDesignBento` (project `title`s)
-//   • "Right now" photo  → `rightNowPhoto`      (a `code`, or "auto")
+//   • "Right now" photo  → `rightNowPhoto`      (a photo `code`)
 //   • Digital-home carousel → `digitalHomeCarousel` (project `title` + window skin)
 //   • Work bands         → `workBands`          (project `title`s, in order)
 //
@@ -59,8 +59,8 @@ export type CarouselPick = {
 export type PreviewConfig = {
   photographyBento: PhotoPick[];
   graphicDesignBento: DesignPick[];
-  /** a photo `code`, or "auto" = newest featured */
-  rightNowPhoto: "auto" | string;
+  /** the "Right now" highlight photo, named by `code` (see rightNowPhoto below) */
+  rightNowPhoto: string;
   digitalHomeCarousel: CarouselPick[];
   workBands: string[];
 };
@@ -86,10 +86,10 @@ export const previews: PreviewConfig = {
     { title: "Photography Presentation UI" },
   ],
 
-  // CUSTOMIZE: "Right now" highlight photo. Either a specific photo `code`, or
-  // "auto" = the newest `featured` photo (the historical default). A pinned code
-  // always wins over the auto pick.
-  rightNowPhoto: "auto",
+  // CUSTOMIZE: "Right now" highlight photo — named directly by its `code` from
+  // data/photos.ts. (This card is driven entirely from here now; the `featured`
+  // flag in photos.ts no longer decides it.)
+  rightNowPhoto: "0055",
 
   // CUSTOMIZE: Digital-home carousel — which projects tour, in order, and the
   // browser-window skin for each. Titles come from data/projects-web.ts.
@@ -150,17 +150,10 @@ export function bentoDesignTiles(): PreviewTile[] {
     .filter((t): t is PreviewTile => Boolean(t));
 }
 
-/** The "Right now" highlight photo, or undefined if none resolves. */
+/** The "Right now" highlight photo named in `previews.rightNowPhoto`. Falls back
+ *  to the first catalog photo if the code is a typo, so the card never empties. */
 export function rightNowPhoto(): Photo | undefined {
-  if (previews.rightNowPhoto !== "auto") {
-    const pinned = photos.find((p) => p.code === previews.rightNowPhoto);
-    if (pinned) return pinned;
-    // fall through to auto if the pinned code was a typo
-  }
-  // auto = newest `featured` photo (stable sort keeps curation order on ties)
-  return [...photos]
-    .filter((p) => p.featured)
-    .sort((a, b) => (b.date ?? "").localeCompare(a.date ?? ""))[0];
+  return photos.find((p) => p.code === previews.rightNowPhoto) ?? photos[0];
 }
 
 /** A resolved carousel shot: the canonical title + its window skin. */

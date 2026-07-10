@@ -10,8 +10,8 @@ const spotlight = webProjects.filter((p) => p.spotlight);
 const [building, journal] = spotlight; // Ostiara, MyLifeInARepo
 const latestEssay = [...writing].sort((a, b) => a.order - b.order)[0];
 
-// Recent-trip photo: chosen in data/previews.ts (`rightNowPhoto`) — a pinned
-// code, or "auto" = the newest `featured` photo. Edit that one file to change it.
+// Recent-trip photo: named in data/previews.ts (`rightNowPhoto`) by its photo
+// `code`. Edit that one file to change which shot the card highlights.
 const recentTrip = rightNowPhoto();
 
 // First sentence of a description — a compact teaser without re-typing copy.

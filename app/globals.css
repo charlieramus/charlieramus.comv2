@@ -142,6 +142,12 @@ body {
   .pcard:hover {
     transform: none;
   }
+  /* Petal Simon stays playable under reduce: drop the scale, keep the tint +
+     brightness cue (lit pad stays full-opacity while the rest dim). */
+  .psimon-pad.is-lit,
+  .psimon-pad.is-lit .motif {
+    transform: none;
+  }
 }
 
 /* ---------------------------------------------------------------------------
@@ -617,18 +623,119 @@ body {
     white-space: nowrap;
   }
 
-  /* Decorative motifs filling the Playground card (repurposed accent flowers). */
-  .p-play-art {
+  /* Petal Simon — the memory game that replaced the Playground link card (V8
+     Stage 2). Lives inside the standard .pcard shell; these styles cover the pad
+     grid, the lit state, and the status / score / start footer. */
+  .psimon-pads {
     flex: 1;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    margin: 4px 0 16px;
+    min-height: 0;
+  }
+  .psimon-pad {
+    position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: clamp(20px, 4vw, 40px);
-    margin: 6px 0 18px;
-    min-height: 0;
+    min-height: 64px;
+    padding: 10px;
+    border: 1px solid var(--color-line);
+    border-radius: 14px;
+    background: #fff;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    transition:
+      transform 0.18s ease,
+      background 0.18s ease,
+      border-color 0.18s ease,
+      box-shadow 0.18s ease,
+      opacity 0.18s ease;
   }
-  .p-play-art .motif {
-    width: clamp(52px, 7vw, 76px);
+  .psimon-pad .motif {
+    width: clamp(40px, 6vw, 58px);
+    /* Game pads shouldn't wind-spin — hold the flower still. */
+    animation: none;
+    opacity: 0.82;
+    transition:
+      transform 0.18s ease,
+      opacity 0.18s ease;
+  }
+  .psimon-pad:hover {
+    border-color: var(--color-ink-soft);
+  }
+  .psimon-pad.is-watching {
+    cursor: default;
+  }
+  /* Lit = tint the pad its brand color + scale up (a shape/brightness cue, not
+     hue alone). The non-lit pads dim so the lit one reads even without color. */
+  .psimon-pads:has(.is-lit) .psimon-pad:not(.is-lit) {
+    opacity: 0.5;
+  }
+  .psimon-pad.is-lit {
+    background: var(--pad);
+    border-color: var(--pad);
+    transform: scale(1.06);
+    box-shadow: 0 8px 22px rgba(0, 0, 0, 0.16);
+  }
+  .psimon-pad.is-lit .motif {
+    opacity: 1;
+    transform: scale(1.06);
+  }
+  .psimon-pad:focus-visible {
+    outline: 2px solid var(--color-blue);
+    outline-offset: 2px;
+  }
+
+  .psimon-foot {
+    margin-top: auto;
+  }
+  .psimon-status {
+    /* Reserve ~two lines so the card doesn't jump as the message changes. */
+    min-height: 2.6em;
+    margin-bottom: 10px;
+    font-size: 12.5px;
+    line-height: 1.45;
+    color: var(--color-ink-soft);
+  }
+  .psimon-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  .psimon-score {
+    font-size: 12px;
+    letter-spacing: 0.04em;
+    color: var(--color-ink-soft);
+  }
+  .psimon-score b {
+    font-weight: 700;
+    color: var(--color-ink);
+  }
+  .psimon-start {
+    padding: 8px 16px;
+    border: 1px solid var(--color-ink);
+    border-radius: 999px;
+    background: var(--color-ink);
+    color: var(--color-paper);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition:
+      background 0.2s ease,
+      border-color 0.2s ease;
+  }
+  .psimon-start:hover {
+    background: var(--color-red);
+    border-color: var(--color-red);
+  }
+  .psimon-start:focus-visible {
+    outline: 2px solid var(--color-blue);
+    outline-offset: 2px;
   }
 
   /* Career journey — a flowing, legible vertical timeline (V6 rework: replaces

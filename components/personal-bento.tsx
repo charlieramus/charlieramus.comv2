@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Motif from "@/components/motif";
 import Reveal from "@/components/reveal";
+import PetalSimon from "@/components/petal-simon";
 import { entries } from "@/data/experience";
 import { writing } from "@/data/writing";
 import { bentoPhotoTiles, bentoDesignTiles } from "@/data/previews";
@@ -172,27 +173,9 @@ export default function PersonalBento() {
             <span className="go">Read all essays ↗</span>
           </Reveal>
 
-          {/* Playground ← /web-projects (decorative motifs fill the card) */}
-          <Reveal as="a" href="/web-projects" className="pcard p-play">
-            <span className="kick">
-              <span
-                className="fdot"
-                style={{ background: "var(--color-yellow)" }}
-              />{" "}
-              Playground
-            </span>
-            <h3>Side experiments</h3>
-            {/* CUSTOMIZE: playground blurb */}
-            <p className="sub">
-              Half-finished ideas, small tools, and things built just to see if
-              they&apos;d work.
-            </p>
-            <div className="p-play-art" aria-hidden="true">
-              <Motif fill="blue" accent="#0015D4" index={24} />
-              <Motif fill="red" accent="#F32317" index={25} />
-            </div>
-            <span className="go">Poke around ↗</span>
-          </Reveal>
+          {/* Playground → Petal Simon memory game (replaces the old "Side
+              experiments" link card; V8 Stage 2). Leaf client component. */}
+          <PetalSimon />
         </div>
       </div>
     </section>

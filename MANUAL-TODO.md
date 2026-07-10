@@ -196,7 +196,7 @@ The `previews` config object at the top controls five surfaces:
 |---|---|---|
 | Photography bento | `photographyBento` | photo `code`s (from `data/photos.ts`) |
 | Graphic-design bento | `graphicDesignBento` | design-project `title`s |
-| "Right now" photo | `rightNowPhoto` | a photo `code`, or `"auto"` (newest featured) |
+| "Right now" photo | `rightNowPhoto` | a photo `code` (currently `"0055"`) |
 | Digital-home carousel | `digitalHomeCarousel` | web-project `title` + window skin |
 | Work bands | `workBands` | 4 web-project `title`s, in order |
 
@@ -205,10 +205,11 @@ The `previews` config object at the top controls five surfaces:
   "/images/…"` to show a custom cover instead of the content's own thumb/slide 1.
 - **Safe by default** — an id that doesn't match anything is silently skipped (that
   tile drops out); it won't break the build.
-- **Right-now decision** (🟡, your call) — `featured` in `data/photos.ts` is kept as
-  the fallback: `rightNowPhoto: "auto"` picks the newest featured photo; set it to a
-  `code` to pin one. Say the word if you'd rather retire `featured` and drive the
-  right-now card from `previews.ts` only.
+- **Right-now decision** (✅ decided) — the right-now card is driven **entirely from
+  `previews.ts`** now: `rightNowPhoto` names the photo by `code`. The `featured` flag
+  in `data/photos.ts` no longer selects it (the field still exists — it's
+  auto-generated — but nothing reads it; harmless). To change the highlight, edit
+  that one `code`.
 
 ---
 
