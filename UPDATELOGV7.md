@@ -155,7 +155,48 @@ Charlie owns the dashboard steps (as he would have for Vercel); no MCP connector
   for this fully-static site.
 
 # Stage 3 Report
-_TBD._
+
+The Cloudflare Pages **project creation + live preview URL is Charlie's dashboard step** (no
+Cloudflare MCP connector is authorized in these sessions). I pinned the exact settings, fixed a
+static-export bug found in the smoke-test, and ran the full smoke-test against the local `out/`
+export as a stand-in for the preview.
+
+**Pages project settings (create with these):**
+- **Build command:** `next build` — **Output directory:** `out` (both already what the app emits).
+- **Node version:** pinned via new **`.nvmrc` → `22`** (Pages reads it; no dashboard step needed).
+- **Production branch:** Charlie's call at cutover (Stage 4). No env vars are read by the app
+  (confirmed — nothing reads `process.env` at build or runtime).
+- Framework preset: "Next.js (Static HTML Export)" or "None" with the command/dir above.
+
+- [x] **Static-export bug found + fixed (the RSC-prefetch 404s).** The first smoke-test surfaced
+  `404`s for `__next.<route>.__PAGE__.txt` — Next's `<Link>` viewport/hover **prefetch** of RSC
+  segment payloads, which `output: export` writes at a different path than the client requests, so
+  they 404 (nav still works via full-page fallback, but it violated "no console errors"). Fixed by
+  `prefetch={false}` on the only two `<Link>` sites — `components/site-header.tsx` (the inner-page
+  nav) and `app/writing/page.tsx` (the essay list). Re-verified: hovering every nav link produces
+  no request; navigation still works.
+- [x] **Full local smoke-test on the export** (`serve out`, all 7 routes at **1440 + 375**):
+  **no console errors**, **no horizontal overflow**, **axe = 0** everywhere.
+  - **Lightbox** (photography) works on the export: opens as `role="dialog"`, focus moves inside
+    (trap), `ArrowRight` navigates, `Esc` closes.
+  - **Images/blur** load (61/61 photography images, 0 broken) under the unoptimized loader.
+  - **`og:image` + `canonical` are absolute per route** (`https://charlieramus.com/...`; home/design
+    use the generated `/opengraph-image`, photography a featured photo, essays their headerImage);
+    **`sitemap.xml`** lists absolute URLs; **`robots.txt`** points at the sitemap. Motifs + finale
+    render.
+- [x] **OpenNext note (for the record):** if SSR or on-the-fly `next/image` optimization is ever
+  wanted, the `@opennextjs/cloudflare` adapter is the path — **not needed** for this fully-static
+  site.
+
+**Pending Charlie (Cloudflare preview, can't run headless):** create the Pages project with the
+settings above; then on the preview URL confirm the two platform-only behaviors — the Stage 2
+**`_redirects` resolve 301 → target** and the **`_headers` set `Content-Type: image/png`** on
+`/icon` · `/apple-icon` · `/opengraph-image` (the local `serve` can't interpret Cloudflare's
+`_redirects`/`_headers`). Everything else is verified above.
+
+**Verify:** `tsc` / `eslint` / `build` clean; export smoke-tested end-to-end.
+
+**Issues:** None open on our side. The live-preview 301/Content-Type checks await the Pages project.
 
 ---
 

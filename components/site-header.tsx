@@ -28,6 +28,10 @@ export default function SiteHeader() {
               <Link
                 key={l.href}
                 href={l.href}
+                // No RSC prefetch: under `output: export` the segment payloads
+                // (__next.<route>.__PAGE__.txt) aren't emitted at the prefetched
+                // path, so prefetch 404s. Full-page nav still works.
+                prefetch={false}
                 className={active ? "is-active" : undefined}
                 aria-current={active ? "page" : undefined}
               >

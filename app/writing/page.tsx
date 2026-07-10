@@ -37,7 +37,11 @@ export default function WritingIndex() {
           {essays.map((essay) => (
             <li key={essay.slug}>
               <Reveal>
-                <Link href={`/writing/${essay.slug}`} className="writing-item">
+                <Link
+                  href={`/writing/${essay.slug}`}
+                  prefetch={false}
+                  className="writing-item"
+                >
                   <span className="writing-item-title">{essay.title}</span>
                   <span className="writing-item-date">{essay.date}</span>
                 </Link>
