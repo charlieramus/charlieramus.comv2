@@ -1,14 +1,11 @@
 import Reveal from "@/components/reveal";
-import { webProjects } from "@/data/projects-web";
+import { carouselShots } from "@/data/previews";
 
 // "Step into my digital home" — a horizontally-scrolling tour of the projects.
-// Each .shot is a browser-window placeholder (real screenshots = V4); the caption
-// is wired to the real project title so the tour reads honestly today.
-const VARIANTS = ["s-acie", "s-dark", "s-warm", "s-lav", "s-mint", "s-dark"];
-const SHOTS = webProjects.map((p, i) => ({
-  variant: VARIANTS[i % VARIANTS.length],
-  title: p.title,
-}));
+// Which projects tour, in what order, and each browser-window skin are chosen in
+// data/previews.ts (`digitalHomeCarousel`). Each .shot is a browser-window
+// placeholder (real screenshots = V4); the caption is the real project title.
+const SHOTS = carouselShots();
 
 export default function DigitalHome() {
   return (

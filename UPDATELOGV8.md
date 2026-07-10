@@ -68,7 +68,56 @@ Make previews a first-class, content-independent choice.
 - Guardrail: `next build` (export) still green; no route reads content it no longer should.
 
 # Stage 1 Report
-_TBD._
+
+- [x] **New `data/previews.ts`** — one typed, `// CUSTOMIZE`-annotated curation
+  layer sitting on top of the content catalogs. A single `previews` config object
+  (the part Charlie edits) names, by stable id, what each homepage surface shows:
+  - `photographyBento` — photo `code`s (`["0001","0013","0030","0004"]`, unchanged
+    default). Each pick is a `PhotoPick` = `{ code, previewImage? }`.
+  - `graphicDesignBento` — design-project `title`s (all 3, unchanged). Each pick is
+    a `DesignPick` = `{ title, previewImage? }`; `previewImage` overrides slide 1.
+  - `rightNowPhoto` — `"auto"` (newest `featured`, the historical default) or a
+    pinned `code`.
+  - `digitalHomeCarousel` — web-project `title` + browser-window `variant` per
+    entry (all 6, same skins/order as before).
+  - `workBands` — the curated 4 project `title`s (unchanged).
+- [x] **Resolvers** in the same file (`bentoPhotoTiles`, `bentoDesignTiles`,
+  `rightNowPhoto`, `carouselShots`, `workBandProjects`) turn the config into
+  ready-to-render data and **skip any pick whose id isn't found** — a typo drops
+  that tile instead of crashing the build. Render sites no longer look up content
+  directly, so curation lives in exactly one place.
+- [x] **Wired each render site** to read the resolvers:
+  - `components/personal-bento.tsx` — dropped `BENTO_PHOTO_CODES` + the
+    `designProjects.map(images[0])` assumption; now `bentoPhotoTiles()` /
+    `bentoDesignTiles()`. Tile shape is `{ key, src, blurDataURL? }` (blur only
+    when using the content's own thumb, not an override).
+  - `components/right-now.tsx` — dropped the inline `featured` + newest-date sort;
+    now `rightNowPhoto()`.
+  - `components/digital-home.tsx` — dropped the raw `webProjects.map` + local
+    `VARIANTS`; now `carouselShots()` (variant carried per entry).
+  - `components/work.tsx` — dropped `BAND_TITLES`; now `workBandProjects()`.
+    Hardened for graceful degradation: `Caption` takes `p?` and renders null when
+    a band id is missing; the flagship band title and the `.touch` case-study bar
+    guard on `flagship` (`bands[0]`).
+- [x] **Content files untouched** — `data/photos.ts`, `data/projects-web.ts`,
+  `data/projects-design.ts` remain the full catalog; `previews.ts` only references
+  them by id, never forks or duplicates content.
+- [x] **Documented the workflow** — header block in `data/previews.ts` +
+  new §8 in `MANUAL-TODO.md`: "to change what's previewed, edit this one file."
+- [x] **DECISION (featured flag)** — implemented the draft: **kept `featured` as
+  the fallback**; `previews.rightNowPhoto` wins when it names a code, else `"auto"`
+  falls back to newest featured. `featured` is not retired. _Charlie can flip this
+  by pinning a code, or say the word and I'll retire `featured` in favor of
+  previews-only._
+- [x] **Verified** — `tsc --noEmit`, `eslint .`, and `next build` (export) all
+  green; **all 18 routes still prerender** (static/SSG). Confirmed in the exported
+  `out/index.html` that the default curation reproduces the V7 output exactly:
+  same 4 bento thumbs (0001/0013/0030/0004), same 6 carousel titles, same 4 work
+  bands, same right-now photo.
+
+Issues: none. Output is intentionally byte-for-byte equivalent to V7 — this stage
+only relocates the curation into one editable file; it doesn't change what shows.
+Full render + eyeball at 1440/768/375 is deferred to Stage 4 per the plan.
 
 ---
 

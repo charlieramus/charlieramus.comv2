@@ -182,4 +182,34 @@ convert it into a registry entry for you.
 
 ---
 
+## 8 · Homepage previews — curate what shows  (V8 Stage 1)  🟡 ✅ built (editable)
+
+**Done** — what the homepage *previews* is now decoupled from the underlying content
+and lives in **one file: `data/previews.ts`**. The content catalogs (`data/photos.ts`,
+`data/projects-web.ts`, `data/projects-design.ts`) stay the full source-of-truth
+libraries; `previews.ts` just names, by stable id, which items each surface shows.
+
+**To change what's previewed, edit only `data/previews.ts` — no component edits.**
+The `previews` config object at the top controls five surfaces:
+
+| Surface | Field | You edit |
+|---|---|---|
+| Photography bento | `photographyBento` | photo `code`s (from `data/photos.ts`) |
+| Graphic-design bento | `graphicDesignBento` | design-project `title`s |
+| "Right now" photo | `rightNowPhoto` | a photo `code`, or `"auto"` (newest featured) |
+| Digital-home carousel | `digitalHomeCarousel` | web-project `title` + window skin |
+| Work bands | `workBands` | 4 web-project `title`s, in order |
+
+- **Reorder / swap** — change the array order or the ids.
+- **Custom preview image** — a photo or design pick may carry `previewImage:
+  "/images/…"` to show a custom cover instead of the content's own thumb/slide 1.
+- **Safe by default** — an id that doesn't match anything is silently skipped (that
+  tile drops out); it won't break the build.
+- **Right-now decision** (🟡, your call) — `featured` in `data/photos.ts` is kept as
+  the fallback: `rightNowPhoto: "auto"` picks the newest featured photo; set it to a
+  `code` to pin one. Say the word if you'd rather retire `featured` and drive the
+  right-now card from `previews.ts` only.
+
+---
+
 _Ping me when any of the 🔴 items land and I'll wire them in immediately._

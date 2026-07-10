@@ -1,6 +1,7 @@
 import Motif from "@/components/motif";
 import Reveal from "@/components/reveal";
-import { webProjects, type WebProject } from "@/data/projects-web";
+import { type WebProject } from "@/data/projects-web";
+import { workBandProjects } from "@/data/previews";
 
 // Reusable [colored motif tile + white tile] stack that flanks each band.
 function Stack({
@@ -27,7 +28,9 @@ function Stack({
 // Compact caption under each band's (placeholder) device visual: title + date +
 // the top tags. Full descriptions live on /web-projects (V4) and the flagship's
 // blurb is in the .touch bar — the visual panels can't hold a paragraph each.
-function Caption({ p }: { p: WebProject }) {
+// Renders nothing if its band's project didn't resolve (a missing curation id).
+function Caption({ p }: { p?: WebProject }) {
+  if (!p) return null;
   return (
     <div className="label">
       <b>{p.title}</b>
@@ -38,15 +41,12 @@ function Caption({ p }: { p: WebProject }) {
   );
 }
 
-// Homepage work = the top 4 curated projects (Charlie's V3 call: the two
-// spotlight builds, then charlieramus.com + VaultDNA — Querryn dropped to the
-// /web-projects long tail). The four bespoke panels keep their placeholder
-// visuals until V4 screenshots; only the captions + case-study bar are wired.
-const BAND_TITLES = ["Ostiara", "MyLifeInARepo", "charlieramus.com", "VaultDNA"];
-const bands = BAND_TITLES.map(
-  (t) => webProjects.find((p) => p.title === t) as WebProject,
-);
-const [flagship] = bands; // Ostiara
+// Homepage work = the 4 curated projects chosen in data/previews.ts
+// (`workBands`). The four bespoke panels keep their placeholder visuals until V4
+// screenshots; only the captions + case-study bar are wired. A missing curation
+// id just drops that band's caption (Caption guards for undefined).
+const bands = workBandProjects();
+const [flagship] = bands; // Ostiara (bands[0])
 
 export default function Work() {
   return (
@@ -69,7 +69,7 @@ export default function Work() {
                 <div className="card ui">
                   <span className="pill">◍ Door-to-door, streamlined</span>
                   <span className="thumb" />
-                  <div className="big">{flagship.title}</div>
+                  <div className="big">{flagship?.title}</div>
                   <div className="srch">⌕</div>
                   <div className="statrow">
                     <span className="av" />
@@ -91,18 +91,20 @@ export default function Work() {
 
           {/* Full-width case-study bar → the flagship (Ostiara) blurb. Sits
               directly under the Ostiara band so its description reads with it. */}
-          <Reveal className="touch">
-            <p>{flagship.description}</p>
-            <a
-              className="btn"
-              href={flagship.href || "/web-projects"}
-              {...(flagship.href
-                ? { target: "_blank", rel: "noopener noreferrer" }
-                : {})}
-            >
-              View {flagship.title} ↗
-            </a>
-          </Reveal>
+          {flagship && (
+            <Reveal className="touch">
+              <p>{flagship.description}</p>
+              <a
+                className="btn"
+                href={flagship.href || "/web-projects"}
+                {...(flagship.href
+                  ? { target: "_blank", rel: "noopener noreferrer" }
+                  : {})}
+              >
+                View {flagship.title} ↗
+              </a>
+            </Reveal>
+          )}
 
           {/* Band 2 — stack LEFT + gallery panel RIGHT */}
           <Reveal className="band flip">

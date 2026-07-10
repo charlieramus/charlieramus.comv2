@@ -2,7 +2,7 @@ import Image from "next/image";
 import Reveal from "@/components/reveal";
 import { webProjects } from "@/data/projects-web";
 import { writing } from "@/data/writing";
-import { photos } from "@/data/photos";
+import { rightNowPhoto } from "@/data/previews";
 
 // "Right now" — Charlie's V2 "what's fresh" idea. Composed from the spotlight
 // builds, the latest essay, and (V5 Stage 2) a recent-trip photo card.
@@ -10,11 +10,9 @@ const spotlight = webProjects.filter((p) => p.spotlight);
 const [building, journal] = spotlight; // Ostiara, MyLifeInARepo
 const latestEssay = [...writing].sort((a, b) => a.order - b.order)[0];
 
-// Recent-trip photo: the newest `featured` photo by capture month (newest wins;
-// currently Longs Peak, 2026-06). Sort is stable so ties keep curation order.
-const recentTrip = [...photos]
-  .filter((p) => p.featured)
-  .sort((a, b) => (b.date ?? "").localeCompare(a.date ?? ""))[0];
+// Recent-trip photo: chosen in data/previews.ts (`rightNowPhoto`) — a pinned
+// code, or "auto" = the newest `featured` photo. Edit that one file to change it.
+const recentTrip = rightNowPhoto();
 
 // First sentence of a description — a compact teaser without re-typing copy.
 const firstSentence = (s: string) => s.split(". ")[0].replace(/\.$/, "") + ".";

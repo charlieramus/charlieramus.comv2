@@ -3,8 +3,7 @@ import Motif from "@/components/motif";
 import Reveal from "@/components/reveal";
 import { entries } from "@/data/experience";
 import { writing } from "@/data/writing";
-import { designProjects } from "@/data/projects-design";
-import { photos, type Photo } from "@/data/photos";
+import { bentoPhotoTiles, bentoDesignTiles } from "@/data/previews";
 
 // --- Writing (folds the mockup's separate "blog" into one body of essays) -----
 // Newest-first by `order`. Latest two headline the writing card; the next two
@@ -21,19 +20,12 @@ const ESSAY_THUMBS = [
   "linear-gradient(135deg,#3a2a5a,#c7b3f0)",
 ];
 
-// Photography bento tiles: 4 real featured photos (V5 Stage 2, survives the V6
-// re-layout). Curated for trip/format variety; the Longs Peak film-strip Frames
-// are excluded here since a square crop clips their baked border. Decorative
-// inside the described "Photography → View the gallery" link, so alt is empty.
-const BENTO_PHOTO_CODES = ["0001", "0013", "0030", "0004"];
-const BENTO_PHOTOS: Photo[] = BENTO_PHOTO_CODES.map((c) =>
-  photos.find((p) => p.code === c),
-).filter((p): p is Photo => Boolean(p));
-
-// Graphic-design bento tiles: first slide of each design project (real thumbnails).
-const GRAPHIC_THUMBS = designProjects
-  .map((p) => p.images?.[0])
-  .filter((src): src is string => Boolean(src));
+// Photography + graphic-design bento tiles are chosen in data/previews.ts (the
+// curation layer), not here — edit that one file to change what's previewed.
+// Both are decorative inside their described "→ View the gallery / See the work"
+// links, so alt is empty.
+const BENTO_PHOTOS = bentoPhotoTiles();
+const GRAPHIC_THUMBS = bentoDesignTiles();
 
 export default function PersonalBento() {
   return (
@@ -105,16 +97,16 @@ export default function PersonalBento() {
             </span>
             <h3>Through the viewfinder</h3>
             <div className="pgrid">
-              {BENTO_PHOTOS.map((p) => (
-                <span key={p.src} className="ptile-img">
+              {BENTO_PHOTOS.map((t) => (
+                <span key={t.key} className="ptile-img">
                   <Image
-                    src={p.thumb}
+                    src={t.src}
                     alt=""
                     fill
                     sizes="(max-width: 880px) 44vw, 220px"
                     className="pgrid-img"
-                    {...(p.blurDataURL
-                      ? { placeholder: "blur" as const, blurDataURL: p.blurDataURL }
+                    {...(t.blurDataURL
+                      ? { placeholder: "blur" as const, blurDataURL: t.blurDataURL }
                       : {})}
                   />
                 </span>
@@ -132,10 +124,10 @@ export default function PersonalBento() {
             {/* CUSTOMIZE: graphic-design card title */}
             <h3>Brand &amp; layout</h3>
             <div className="pgrid">
-              {GRAPHIC_THUMBS.map((src) => (
-                <span key={src} className="ptile-img">
+              {GRAPHIC_THUMBS.map((t) => (
+                <span key={t.key} className="ptile-img">
                   <Image
-                    src={src}
+                    src={t.src}
                     alt=""
                     fill
                     sizes="(max-width: 880px) 30vw, 150px"
