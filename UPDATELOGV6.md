@@ -119,7 +119,43 @@ Make the closing flower field a deliberate, full-viewport moment.
 - Reduced-motion: the flower wind-spin already disables under `prefers-reduced-motion`; keep it.
 
 # Stage 2 Report
-_TBD._
+
+The flower finale is now a full-viewport moment with nothing beneath it.
+
+- [x] **`app/globals.css` `.finale`** — replaced `padding: 56px 0` with `min-height: 100svh` +
+  `display: flex` + `padding: clamp(24px, 5vh, 60px) 0`. Using `svh` (not `vh`) so mobile browser
+  chrome can't clip the field or force a scroll past the bottom. `overflow: hidden` stays (still
+  clips edge flowers / their wind-spin so no horizontal scroll). `position: relative` stays (the
+  quote is absolutely centered against it).
+- [x] **`app/globals.css` `.grid-flowers`** — added `flex: 1` so the grid grows to fill the
+  finale (full width via flex-grow, full height via the parent flex's default
+  `align-items: stretch`), and `align-content: space-evenly` so the flower rows spread across that
+  height and fill the screen evenly instead of clustering in a centered band. Kept the existing
+  `grid-template-columns: repeat(8,1fr)` (→ 5 cols ≤880px), `gap`, `align-items`/`justify-items`.
+- **No `.center-text` change needed** — it's already `position:absolute; top:50%; translate(-50%,-50%)`
+  against `.finale`, so with the finale now a full viewport tall the quote lands dead-center of the
+  screen when you scroll to the bottom.
+- **© fold-in:** N/A — Charlie chose Stage 1 option (b) "drop the homepage © entirely," so there's
+  no legal line to place in the finale.
+- **Reduced motion:** untouched and still honored — `@media (prefers-reduced-motion: reduce) { .flower
+  { animation: none } }` (globals.css) disables the wind-spin.
+
+**Data flow:** none — `components/finale.tsx` (40-flower deterministic field + `finaleQuote` from
+`data/about.ts`) is unchanged; this is pure layout CSS.
+
+**Verify:** `tsc` / `eslint` / `build` all clean (18 routes still prerender). Rendered `/` scrolled
+to the bottom at **1440×900, 768×1024, 375×812** plus a **short laptop (1440×600)** and **tall phone
+(375×900)**. At every size the DOM checks return `belowFinalePx = 0` (finale is the last element,
+nothing under it) and `scrollBottomGap = 0` (the bottom of the finale is exactly the bottom of the
+scroll — no forced second scroll, no gap). The field fills the screen edge-to-edge with rows spread
+by `space-evenly`, the quote centered mid-viewport; 5-col layout kicks in at ≤880 and still fills.
+No horizontal overflow at 375 (`scrollWidth == innerWidth == 375`). After a clean `.next` restart the
+homepage loads 200 with no console errors.
+
+**Issues:** Same dev-only Turbopack quirk as Stage 1 — editing `globals.css` with the dev server
+running caused intermittent `500 / stale global-error.js` responses (the `[[turbopack-stale-css]]`
+caching artifact). `curl` returned 200 throughout, the production `build` was clean, and clearing
+`.next` + restarting gave a clean, error-free load. No code issue.
 
 ---
 

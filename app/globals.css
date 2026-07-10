@@ -1250,15 +1250,27 @@ body {
   /* ---------- FLOWER GRID FINALE ---------- */
   .finale {
     position: relative;
-    padding: 56px 0;
+    /* Full-viewport finale: the closing flower field is a deliberate, screen-
+       filling moment with no chrome beneath it. `svh` (not `vh`) so mobile
+       browser chrome can't clip the field or force a second scroll past the
+       bottom. `display:flex` lets the grid stretch to the full height below. */
+    min-height: 100svh;
+    display: flex;
+    padding: clamp(24px, 5vh, 60px) 0;
     /* Full-bleed flower field: clip the edge flowers (and their wind-spin) so the
        decorative grid never adds horizontal page scroll on narrow viewports. */
     overflow: hidden;
   }
   .grid-flowers {
+    /* Grow to fill the finale (full width via flex-grow, full height via the
+       parent's default `align-items:stretch`) and spread the rows across that
+       height so the field fills the screen evenly instead of clustering in a
+       centered band — it scales/crops gracefully at any viewport height. */
+    flex: 1;
     display: grid;
     grid-template-columns: repeat(8, 1fr);
     gap: 12px 6px;
+    align-content: space-evenly;
     align-items: center;
     justify-items: center;
   }
