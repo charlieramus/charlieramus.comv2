@@ -64,7 +64,43 @@ Small, high-signal edits to the shared chrome.
 - Leave the **homepage hero nav** (`work · photography · about`) as-is — Charlie didn't object.
 
 # Stage 1 Report
-_TBD._
+
+Chrome cleanup landed. Both **DECISION → Charlie** points were answered by Charlie
+(not the draft defaults):
+
+- **Header mark → (a) nothing, nav left-aligns.**
+- **Homepage © → (b) dropped entirely** (it still lives in the inner-page footer).
+
+- [x] **`components/site-header.tsx`** — removed the `<Link href="/" className="site-logo">charlie
+  ramus</Link>` script wordmark. The header is now nav-only; `.site-header-inner`'s
+  `justify-content: space-between` leaves the single `<nav>` left-aligned inside `.wrap`. The
+  cross-nav (Work · Design · Photography · Writing · Gear) and its active-state logic are
+  untouched. Updated the file's top comment to reflect the wordmark removal. `Link` is still
+  imported (used by the nav links).
+- [x] **`components/site-footer.tsx`** — replaced `Think we vibe?` with **`Looking to reach me?`**
+  in `.site-footer-vibe`. The `Get in touch` mailto button, socials row, and legal line are
+  unchanged, so the inner-page footer CTA now reads like the homepage contact card.
+- [x] **`app/page.tsx`** — deleted the `<footer className="legal-min">© {year} …</footer>` block
+  (and its `CUSTOMIZE` comment) so nothing sits below `<Finale />`. `snapshot` stays imported
+  (still used by the `personLd` structured data).
+- [x] **`app/globals.css`** — removed the now-dead `.site-logo` / `.site-logo:hover` rules and the
+  `.legal-min` rule (both were only used by the two elements deleted above; remaining refs are
+  docs + the mockup). The `--font-script` token stays (still used elsewhere, e.g. `.script`).
+
+**Data flow:** no data changes — this is pure chrome. Footer/header still read from
+`data/socials.ts` + `data/about.ts`; the homepage © was static JSX and is simply gone.
+
+**Verify:** `npx tsc --noEmit` clean · `npx eslint .` clean · `npm run build` clean (all 18
+routes still prerender static/SSG). Rendered `/writing` at 1440 + 375 — header is nav-only, no
+wordmark; footer reads "Looking to reach me? / Get in touch". Rendered `/` at 1440 scrolled to
+bottom — the flower finale is the last thing on the page, no © line beneath it; `.legal-min` is
+absent from the DOM.
+
+**Issues:** None in the shipped code. Turbopack's dev server threw a stale
+`global-error.js` React-Client-Manifest error after in-place edits (a known Next 16 HMR caching
+artifact, per the `[[turbopack-stale-css]]` note); clearing `.next` and restarting resolved it.
+The production `build` was clean throughout, so this was dev-only. Leftover HMR-websocket 500s in
+the dev console trace to the earlier killed dev process, not to any Stage 1 change.
 
 ---
 

@@ -11,7 +11,7 @@ export default function SiteFooter() {
     <footer className="site-footer">
       <div className="wrap site-footer-inner">
         <div className="site-footer-cta">
-          <span className="site-footer-vibe">Think we vibe?</span>
+          <span className="site-footer-vibe">Looking to reach me?</span>
           <a className="btn" href={`mailto:${contactEmail}`}>
             Get in touch
           </a>

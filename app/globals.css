@@ -1247,13 +1247,6 @@ body {
   .pills a:hover {
     background: #dbdad0;
   }
-  .legal-min {
-    text-align: center;
-    color: var(--color-ink-soft);
-    font-size: 13px;
-    padding: 30px var(--edge) 40px;
-  }
-
   /* ---------- FLOWER GRID FINALE ---------- */
   .finale {
     position: relative;
@@ -2007,16 +2000,6 @@ body {
     gap: 16px 24px;
     padding: 20px 0;
     flex-wrap: wrap;
-  }
-  .site-logo {
-    font-family: var(--font-script);
-    font-size: 28px;
-    font-weight: 700;
-    letter-spacing: 0.5px;
-    color: var(--color-ink);
-  }
-  .site-logo:hover {
-    color: var(--color-red-ink);
   }
   .site-nav {
     padding: 0;

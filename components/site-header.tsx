@@ -3,9 +3,9 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-// Shared inner-page header: the script wordmark links home (back-to-home), and
-// the route links cross-navigate the inner pages. The homepage keeps its own hero
-// nav; this is only mounted on the content routes.
+// Shared inner-page header: just the cross-nav that navigates between the inner
+// pages (the script wordmark was removed in V6 — see UPDATELOGV6 Stage 1). The
+// homepage keeps its own hero nav; this is only mounted on the content routes.
 const LINKS: { href: string; label: string }[] = [
   { href: "/web-projects", label: "Work" },
   { href: "/design", label: "Design" },
@@ -20,9 +20,6 @@ export default function SiteHeader() {
   return (
     <header className="site-header">
       <div className="wrap site-header-inner">
-        <Link href="/" className="site-logo">
-          charlie ramus
-        </Link>
         <nav className="site-nav" aria-label="Site">
           {LINKS.map((l) => {
             const active =

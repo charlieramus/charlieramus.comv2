@@ -43,10 +43,6 @@ export default function Home() {
         <Contact />
         <Finale />
       </main>
-      {/* CUSTOMIZE: legal line */}
-      <footer className="legal-min">
-        © {new Date().getFullYear()} {snapshot.name} · {snapshot.location}
-      </footer>
     </>
   );
 }
