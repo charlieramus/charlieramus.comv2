@@ -24,7 +24,7 @@ export type WebProject = {
 export const webProjects: WebProject[] = [
   {
     title: "Ostiara",
-    date: "2026",
+    date: "May 2026 - Present",
     description:
       "A SaaS platform for door-to-door sales teams across home-service verticals — pest control, solar, roofing, fencing, security. Built solo end to end: marketing site, admin dashboard, and a teams-and-roles system on Clerk Organizations with Supabase row-level security. The hard part was customer discovery — reps split between fixed-price menus and measure-on-site quoting, and that split changes what the tool owes each group.",
     href: "https://github.com/charlieramus/ostiara",
@@ -33,9 +33,9 @@ export const webProjects: WebProject[] = [
   },
   {
     title: "MyLifeInARepo",
-    date: "2026",
+    date: "May 2026 - June 2026",
     description:
-      "A personal life-tracking system built as a git repo of daily markdown files, parsed into structured data and rendered through a Next.js dashboard. Includes a financial module for net worth, budgeting, and cash-flow forecasting, plus a bank-statement import pipeline and a transaction-categorization engine modeled on how Monarch Money handles rule-based categorization. The hard part: turning freeform daily notes into reliable structured data.",
+      "A personal life-tracking system built as a git repo of daily markdown files, parsed into structured data and rendered through a Next.js dashboard. Includes a financial module for net worth, budgeting, and cash-flow forecasting, plus a bank-statement import pipeline and a transaction-categorization engine modeled on how Monarch Money handles rule-based categorization. The hard part: turning freeform daily notes into reliable structured data. I still contribute to it occasionally but it is mostly done.",
     href: "",
     tags: ["Next.js", "TypeScript", "Markdown", "Personal Finance"],
     spotlight: true,
@@ -43,7 +43,7 @@ export const webProjects: WebProject[] = [
   },
   {
     title: "Querryn",
-    date: "2025",
+    date: "December 2025 - January 2026",
     description:
       "A Chrome extension that rates the credibility of sources for students writing academic papers, using a tiered domain-trust system, and exports citations in MLA, APA, Chicago, and BibTeX. Submitted to the Chrome Web Store.",
     href: "",
@@ -51,7 +51,7 @@ export const webProjects: WebProject[] = [
   },
   {
     title: "VaultDNA",
-    date: "2026",
+    date: "April 2026 - May 2026",
     description:
       "An Obsidian plugin that encodes a personal knowledge base into synthetic DNA sequences, built around real DNA-storage constraints like homopolymer-run limits and GC-content biasing. Scoped as a quick one-to-two-week build alongside Ostiara.",
     href: "",
@@ -59,7 +59,7 @@ export const webProjects: WebProject[] = [
   },
   {
     title: "charlieramus.com",
-    date: "2025 — Present",
+    date: "May 2026 — Present",
     description:
       "This site — a personal portfolio in Next.js, TypeScript, and Tailwind, with MDX for writing and a masonry photography grid backed by a fullscreen lightbox.",
     href: "https://charlieramus.com",

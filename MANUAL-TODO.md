@@ -46,14 +46,14 @@ Every item in `data/gear.ts` has an empty `href` (no link) and some have empty `
 
 | Section | Item | `note` (short label) | `href` (product/retailer URL) |
 |---|---|---|---|
-| Bodies | Canon EOS R5 | Primary body *(set)* | ☐ |
-| Bodies | DJI Air 2s Combo | Primary drone *(set)* | ☐ |
-| Lenses | Canon RF 24-105mm f/4 | ☐ | ☐ |
-| Lenses | Sigma 150-600mm f/5.6-6.3 | ☐ | ☐ |
-| Bags | Kiboko V1 30L+ | Long travel / high capacity *(set)* | ☐ |
-| Bags | Thule Aspect V2 | Everyday carry *(set)* | ☐ |
-| Accessories | Carbon-fiber tripod | ☐ *(exact model?)* | ☐ |
-| Accessories | Deity V-Mic D4 Mini | ☐ | ☐ |
+| Bodies | Canon EOS R5 | Primary body *(set)* | ✅ |
+| Bodies | DJI Air 2s Combo | Primary drone *(set)* | ✅ |
+| Lenses | Canon RF 24-105mm f/4 | ✅ | ✅ |
+| Lenses | Sigma 150-600mm f/5.6-6.3 | ✅ | ✅ |
+| Bags | Kiboko V1 30L+ | Long travel / high capacity *(set)* | ✅ |
+| Bags | Thule Aspect V2 | Everyday carry *(set)* | ✅ |
+| Accessories | Carbon-fiber tripod | ✅ *(exact model?)* | ✅ |
+| Accessories | Deity V-Mic D4 Mini | ✅ | ✅ |
 
 > Leaving them all blank is a valid ship state — gear reads fine as a plain name→note
 > list. This is polish, not a blocker.
@@ -64,12 +64,12 @@ Every item in `data/gear.ts` has an empty `href` (no link) and some have empty `
 
 - ✅ **Hobby-Hexagon essay header** — **Decision (Charlie): ship headerless.** No action.
   The other 3 essays have their header images; this one intentionally has none.
-- ☐ **Essay external links** (🟡) — all 4 essays have `externalLink: ""`. If any was
+- ✅ **Essay external links** (🟡) — all 4 essays have `externalLink: ""`. If any was
   published somewhere (Substack, Medium, a Google Doc) and you want a "Read on …" button,
   give me the URL + label per slug.
-- ☐ **Web-project dates** (🟡) — `projects-web.ts` notes some dates are approximate
+- ✅ **Web-project dates** (🟡) — `projects-web.ts` notes some dates are approximate
   ("confirm"). Skim and correct any that are wrong.
-- ☐ **Experience org links** (🟡) — two roles in `data/experience.ts` have `href: ""`:
+- ✅ **Experience org links** (🟡) — two roles in `data/experience.ts` have `href: ""`:
   *Stealth Startup (Ostiara)* (expected — stealth) and *Content Creator & Builder* (Roblox
   / Bloxburg). If you want the community linked, give me a URL.
 - ☐ **New projects** — **Decision (Charlie): none to add** right now. If that changes,
