@@ -223,4 +223,22 @@ component edits.** It controls five surfaces:
 
 ---
 
+## V10 — depth & character (deferred)
+
+- 🟡 **Live visual sign-off sweep (Stage 6).** The build gate (`tsc`, `eslint`, `next build` export),
+  the exported-HTML structure checks, and the compiled-CSS guard checks all pass in-session. What still
+  needs a **real browser** (not runnable in this headless session): the **axe = 0** audit per route and
+  the pixel-level **responsive (1440 / 768 / 375)** + **reduced-motion** screenshots. Run locally:
+  `npm run dev`, then check `/`, `/writing`, `/writing/<slug>`, `/design`, `/photography`,
+  `/web-projects`, `/web-projects/<slug>` — confirm no horizontal scroll, the `/writing` spiral shows on
+  wide viewports / vanishes below 1200px + under reduced-motion, and the `/photography` marquee freezes
+  under reduced-motion / hides where the gutter collapses. (All these are enforced in CSS; this is a
+  confirmation pass, not a fix.)
+- 🟡 **Author V10 long-form fields.** Web-project detail pages (`/web-projects/<slug>`) render from the
+  existing fields today; fill `problem` / `approach` / `outcome` / `gallery` per project in
+  `site.config.ts` to give each case study depth. Finalize the `writingSpirals` quotes and the
+  `marquees` taglines/colors while you're in there.
+- 🔴 **Wire homepage `work.tsx` bands → `/web-projects/<slug>`.** Deferred on purpose (waits on the
+  screenshot pass); the bands still render placeholders and "See all my work ↗" points to `/web-projects`.
+
 _Ping me when any of the 🔴 items land and I'll wire them in immediately._

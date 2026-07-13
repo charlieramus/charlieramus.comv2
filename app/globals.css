@@ -1534,9 +1534,103 @@ body {
      measure; the back-nav shares the same 760px box so it aligns to the column. */
   .writing {
     padding-bottom: clamp(60px, 8vw, 110px);
+    position: relative;
+    /* Clip so a "bleed" spiral can hang off the page without adding scroll, and
+       a low spiral can't stretch the page — margin/edge spirals stay visible. */
+    overflow: clip;
   }
   .writing-wrap {
     max-width: 760px;
+    /* Sit above the decorative spirals so the prose column always wins. */
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Decorative Archimedean-spiral quotes (components/spiral-text.tsx). The layer
+     is a column-matched box (760px, centered) so each spiral is placed relative
+     to the reading column — "edge" hugs the text, "gutter" sits in the margin,
+     "bleed" hangs off the page. Desktop-only (the margins only exist ≥1200px);
+     removed entirely under prefers-reduced-motion. Rendered in body-ink black. */
+  .writing-spirals {
+    display: none;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    max-width: 760px;
+    margin: 0 auto;
+    pointer-events: none;
+    z-index: 0;
+  }
+  .writing-spiral {
+    position: absolute;
+    color: var(--color-ink);
+  }
+  /* Anchor a left spiral's right edge to the column's left edge (right spiral
+     mirrors it), then nudge: negative margin hugs the text ("edge"), positive
+     pushes into the gutter, and "bleed" translates further off the page. */
+  .writing-spiral.spiral-left {
+    right: 110%;
+  }
+  .writing-spiral.spiral-right {
+    left: 110%;
+  }
+  /* "inner" rides inside the column (closer to centre); "edge" hugs the text;
+     "gutter" sits out in the margin; "bleed" hangs off the page. Negative margin
+     pulls the spiral toward/into the column, positive pushes it outward. */
+  .spiral-left.place-inner {
+    margin-right: -20px;
+  }
+  .spiral-left.place-edge {
+    margin-right: 80px;
+  }
+  .spiral-left.place-gutter {
+    margin-right: -150px;
+  }
+  .spiral-left.place-bleed {
+    margin-right: 70px;
+    transform: translateX(-44%);
+  }
+  .spiral-right.place-inner {
+    margin-left: -170px;
+  }
+  .spiral-right.place-edge {
+    margin-left: -34px;
+  }
+  .spiral-right.place-gutter {
+    margin-left: 28px;
+  }
+  .spiral-right.place-bleed {
+    margin-left: 28px;
+    transform: translateX(44%);
+  }
+  .spiral-svg {
+    display: block;
+    transform-origin: 50% 50%;
+    animation: spiral-spin 90s linear infinite;
+  }
+  .spiral-text-el {
+    fill: currentColor;
+    font-family: var(--font-serif);
+    letter-spacing: 0.06em;
+  }
+  @keyframes spiral-spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  /* Render only where the margins actually exist. */
+  @media (min-width: 1200px) {
+    .writing-spirals {
+      display: block;
+    }
+  }
+  /* No rotation, no spiral at all, for reduced-motion users. */
+  @media (prefers-reduced-motion: reduce) {
+    .writing-spirals {
+      display: none !important;
+    }
   }
 
   /* Index header + list */
@@ -1720,7 +1814,62 @@ body {
   /* ---------- PHOTOGRAPHY (/photography) ---------- */
   .gallery-page {
     padding-bottom: clamp(60px, 8vw, 110px);
+    position: relative;
   }
+
+  /* Decorative vertical marquee (components/vertical-marquee.tsx) in the left
+     gutter — a thin rail anchored to the viewport edge, inside the gallery's
+     --edge padding so it never touches the masonry grid. Desktop-only (the
+     gutter collapses on narrow viewports); frozen under reduced motion. */
+  .photo-marquee {
+    display: none;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 46px;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: 0;
+  }
+  .photo-marquee-track {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    will-change: transform;
+    animation: pm-scroll 51s linear infinite;
+  }
+  .pm-seg {
+    writing-mode: vertical-rl;
+    margin-bottom: 44px;
+    font-family: var(--font-sans);
+    font-weight: 800;
+    font-size: clamp(20px, 2vw, 28px);
+    letter-spacing: 0.08em;
+    white-space: nowrap;
+  }
+  /* One copy is exactly half the duplicated track, so -50% loops seamlessly. */
+  @keyframes pm-scroll {
+    from {
+      transform: translateY(0);
+    }
+    to {
+      transform: translateY(-50%);
+    }
+  }
+  /* Only show where the gutter has room (grid keeps its --edge padding). */
+  @media (min-width: 1024px) {
+    .photo-marquee {
+      display: block;
+    }
+  }
+  /* Freeze (static text, no scroll) for reduced-motion users. */
+  @media (prefers-reduced-motion: reduce) {
+    .photo-marquee-track {
+      animation: none;
+    }
+  }
+
   .gallery-head {
     padding: clamp(24px, 5vw, 56px) 0 clamp(22px, 4vw, 38px);
   }
@@ -1989,6 +2138,25 @@ body {
     line-height: 1.15;
     letter-spacing: -0.01em;
   }
+  /* Row title links in to the case study; the external "View on GitHub ↗" link
+     stays the secondary off-site action. */
+  .proj-title-link {
+    color: inherit;
+    text-decoration: none;
+    background-image: linear-gradient(var(--color-red), var(--color-red));
+    background-size: 0 2px;
+    background-position: 0 100%;
+    background-repeat: no-repeat;
+    transition: background-size 0.3s ease;
+  }
+  .proj-title-link:hover {
+    background-size: 100% 2px;
+  }
+  .proj-title-link:focus-visible {
+    outline: 2px solid var(--color-blue);
+    outline-offset: 3px;
+    border-radius: 3px;
+  }
   .proj-tags {
     margin-top: 16px;
     display: flex;
@@ -2025,6 +2193,57 @@ body {
   }
   .proj-placeholder .motif {
     width: 38%;
+  }
+
+  /* Web-project detail page (/web-projects/[slug]) — back-link, long-form
+     case-study sections, and an optional screenshot gallery. */
+  .case-back {
+    display: inline-block;
+    margin-bottom: 16px;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    color: var(--color-blue);
+  }
+  .case-back:hover {
+    color: var(--color-red-ink);
+  }
+  .case-body {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(28px, 4vw, 44px);
+    padding: clamp(30px, 5vw, 52px) 0;
+  }
+  .case-section h2 {
+    font-family: var(--font-serif);
+    font-weight: 700;
+    font-size: clamp(20px, 2.6vw, 26px);
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+    margin-bottom: 12px;
+  }
+  .case-section p {
+    font-size: 16px;
+    line-height: 1.65;
+    color: var(--color-ink);
+    max-width: 62ch;
+  }
+  .case-gallery {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    padding-bottom: clamp(20px, 3vw, 40px);
+  }
+  .case-shot {
+    position: relative;
+    aspect-ratio: 16 / 10;
+    border-radius: 16px;
+    overflow: hidden;
+    background: var(--color-panel);
+    border: 1px solid var(--color-line);
+  }
+  .case-img {
+    object-fit: cover;
   }
 
   /* Design — per-project slide galleries */
@@ -2080,6 +2299,32 @@ body {
   }
   .design-slide:hover .design-img {
     transform: scale(1.03);
+  }
+
+  /* "Show all N →" / "Show fewer" toggle under each project's grid. The reveal
+     is a plain re-render (no height/opacity transition), so it's instant and
+     reduced-motion-safe by construction. */
+  .design-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 16px;
+    padding: 4px 0;
+    background: none;
+    border: 0;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    color: var(--color-blue);
+    cursor: pointer;
+  }
+  .design-toggle:hover {
+    color: var(--color-red-ink);
+  }
+  .design-toggle:focus-visible {
+    outline: 2px solid var(--color-blue);
+    outline-offset: 3px;
+    border-radius: 3px;
   }
 
   /* Gear — sectioned lists */

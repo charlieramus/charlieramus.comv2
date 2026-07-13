@@ -88,3 +88,10 @@ export function workBandProjects(): WebProject[] {
     .map((title) => webProjects.find((p) => p.title === title))
     .filter((p): p is WebProject => Boolean(p));
 }
+
+/** Resolve a web project by its stable `slug` (the `/web-projects/[slug]` route
+ *  segment). Returns `undefined` for an unknown slug so callers can 404/skip —
+ *  the route pairs this with `dynamicParams = false`, so only real slugs render. */
+export function webProjectBySlug(slug: string): WebProject | undefined {
+  return webProjects.find((p) => p.slug === slug);
+}

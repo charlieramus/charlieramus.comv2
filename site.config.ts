@@ -345,6 +345,10 @@ export type DesignProject = {
   /** shared aspect ratio (w/h) of this project's slides — drives the frame so
    *  slides render un-cropped. Slides within a project are uniform. */
   ratio?: number;
+  /** CUSTOMIZE: how many slides show before the "Show all" toggle; default 2.
+   *  Leave unset to use the default. Projects with fewer slides than this hide
+   *  the toggle entirely. */
+  previewCount?: number;
 };
 
 export const designProjects: DesignProject[] = [
@@ -409,6 +413,10 @@ export const designProjects: DesignProject[] = [
 export type WebProject = {
   /** CUSTOMIZE: project name */
   title: string;
+  /** CUSTOMIZE: the URL segment for this project's detail page —
+   *  `/web-projects/<slug>`. Stable + URL-safe, required (titles can carry dots
+   *  like "charlieramus.comv2", so slugs are explicit, not derived). */
+  slug: string;
   /** CUSTOMIZE: year or range (some are approximate — confirm) */
   date: string;
   /** CUSTOMIZE: 1-3 sentences — what it is + the hard part */
@@ -421,11 +429,19 @@ export type WebProject = {
   spotlight?: boolean;
   /** CUSTOMIZE: screenshot path in /public (added in V4) */
   image?: string;
+  /** CUSTOMIZE: optional long-form case-study body for the detail page. All
+   *  optional — a project with none still renders a valid page from the fields
+   *  above. `gallery` is screenshot paths in /public. */
+  problem?: string;
+  approach?: string;
+  outcome?: string;
+  gallery?: string[];
 };
 
 export const webProjects: WebProject[] = [
   {
     title: "Ostiara",
+    slug: "ostiara",
     date: "May 2026 - Present",
     description:
       "A SaaS platform for door-to-door sales teams across home-service verticals, pest control, solar, roofing, fencing, security. Built solo end to end: marketing site, admin dashboard, and a teams-and-roles system on Clerk Organizations with Supabase row-level security. The hard part was customer discovery. Reps split between fixed-price menus and measure-on-site quoting, and that split changes what the tool owes each group.",
@@ -435,6 +451,7 @@ export const webProjects: WebProject[] = [
   },
   {
     title: "MyLifeInARepo",
+    slug: "mylifeinarepo",
     date: "May 2026 - June 2026",
     description:
       "A personal life-tracking system built as a git repo of daily markdown files, parsed into structured data and rendered through a Next.js dashboard. Includes a financial module for net worth, budgeting, and cash-flow forecasting, plus a bank-statement import pipeline and a transaction-categorization engine modeled on how Monarch Money handles rule-based categorization. The hard part: turning freeform daily notes into reliable structured data. I still contribute to it occasionally but it is mostly done.",
@@ -445,6 +462,7 @@ export const webProjects: WebProject[] = [
   },
   {
     title: "Querryn",
+    slug: "querryn",
     date: "December 2025 - January 2026",
     description:
       "A Chrome extension that rates the credibility of sources for students writing academic papers, using a tiered domain-trust system, and exports citations in MLA, APA, Chicago, and BibTeX. Submitted to the Chrome Web Store.",
@@ -453,6 +471,7 @@ export const webProjects: WebProject[] = [
   },
   {
     title: "VaultDNA",
+    slug: "vaultdna",
     date: "April 2026 - May 2026",
     description:
       "An Obsidian plugin that encodes a personal knowledge base into synthetic DNA sequences, built around real DNA-storage constraints like homopolymer-run limits and GC-content biasing. Scoped as a quick one-to-two-week build alongside Ostiara.",
@@ -461,6 +480,7 @@ export const webProjects: WebProject[] = [
   },
   {
     title: "charlieramus.comv2",
+    slug: "charlieramus-com",
     date: "May 2026 — Present",
     description:
       "This site — a personal portfolio in Next.js, TypeScript, and Tailwind, with MDX for writing and a masonry photography grid backed by a fullscreen lightbox.",
@@ -470,6 +490,7 @@ export const webProjects: WebProject[] = [
   },
   {
     title: "Backtrace",
+    slug: "backtrace",
     date: "July 2026 - August 2026",
     description:
       "An honest field instrument for reasoning about where a wildland fire started. You walk the burn with a map, flag physical fire-pattern indicators, and record the direction each one points. Backtrace fuses those bearings, each with its own angular uncertainty into a probability field for the origin: a heatmap with credible regions, not a single false-precision dot.",
@@ -573,6 +594,99 @@ export const previews: PreviewConfig = {
 };
 
 // -----------------------------------------------------------------------------
+// DECORATION  (V10 — per-surface decorative motion, config-driven)
+// -----------------------------------------------------------------------------
+// Two flagship surfaces each get one signature decorative idea, both fully
+// editable here and both motion-safe (removed / frozen under reduced motion):
+//   • writingSpirals — rotating Archimedean-spiral quote text in the /writing
+//     margins (desktop-only). components/spiral-text.tsx renders each entry.
+//   • marquees       — a vertical color rail on /photography (Stage 5).
+
+/** One spiral quote laid down beside the /writing reading column. Decorative —
+ *  desktop-only, removed entirely under prefers-reduced-motion. Every field but
+ *  `text` is a placement knob you can freely play with:
+ *    • side  — which side of the column it sits on
+ *    • size  — "xs" (tiny) · "sm" · "md" · "lg"
+ *    • place — "inner" sits it INSIDE the reading column, closer to the centre
+ *              (it rides behind the text, which always stays on top),
+ *              "edge" tucks it right up against the text,
+ *              "gutter" sits it out in the margin (fully revealed),
+ *              "bleed" lets it hang off the page edge as pure texture.
+ *              Defaults to "gutter".
+ *    • top   — vertical position down the page as a CSS length (e.g. "18%"). */
+export type WritingSpiral = {
+  text: string;
+  side: "left" | "right";
+  size?: "xs" | "sm" | "md" | "lg";
+  place?: "inner" | "edge" | "gutter" | "bleed";
+  top?: string;
+};
+
+// CUSTOMIZE: the spiral quotes + where each one lands. Pulled from Charlie's
+// essays + the closing line. Mix sizes/places/sides freely — reuse a line at a
+// different size if you like. They render black (same ink as the body text).
+export const writingSpirals: WritingSpiral[] = [
+  {
+    text: "A portfolio is not proof of what you built. It is proof you noticed.",
+    side: "right",
+    size: "md",
+    place: "inner",
+    top: "4%",
+  },
+  {
+    text: "Got tired of uneven things. The city. People wanting more than they need.",
+    side: "left",
+    size: "sm",
+    place: "edge",
+    top: "22%",
+  },
+  {
+    text: "The moment you can explain why a hobby is good for you, you have already started to kill it.",
+    side: "left",
+    size: "md",
+    place: "inner",
+    top: "48%",
+  },
+  {
+    text: "The bigger the model, the more confidently it reflects whoever dominated the data it learned from.",
+    side: "right",
+    size: "sm",
+    place: "edge",
+    top: "40%",
+  },
+  {
+    text: "It is proof you noticed.",
+    side: "right",
+    size: "xs",
+    place: "gutter",
+    top: "72%",
+  },
+  {
+    text: "Got tired of uneven things.",
+    side: "left",
+    size: "xs",
+    place: "gutter",
+    top: "68%",
+  },
+];
+
+/** One segment of the vertical `/photography` marquee. `color` resolves to a
+ *  theme token (`--color-cyan` / `--color-red` / `--color-yellow`); `text` is
+ *  the tagline. Bold Inter, decorative — frozen under prefers-reduced-motion. */
+export type Marquee = {
+  color: "cyan" | "red" | "yellow";
+  text: string;
+};
+
+// CUSTOMIZE: play with the words and colors — one segment per turquoise / red /
+// yellow. Keep them about the photography (this rail lives on /photography).
+export const marquees: Marquee[] = [
+  { color: "cyan", text: ".FRAME.SHOOT." },
+  { color: "red", text: ".CHASE.LIGHT." },
+  { color: "yellow", text: ".ROAM.CAPTURE." },
+];
+
+// -----------------------------------------------------------------------------
 // SECTION COPY  (folded in from components + pages, V9 Stage 2)
 // -----------------------------------------------------------------------------
 // The headings, sublines, nav labels and page ledes that used to be hardcoded
@@ -667,6 +781,17 @@ export const sections = {
       heading: "Things I've built",
       lede:
         "Sites, apps and extensions, designed and shipped solo, from the backend to the last pixel.",
+    },
+    // app/writing/page.tsx — `heading` renders the "&" as-is (React escapes it);
+    // `metaDescription` is the <meta> description for the /writing index.
+    writing: {
+      kicker: "Writing",
+      // CUSTOMIZE: heading + lede + metaDescription
+      heading: "Essays & stories",
+      lede:
+        "Long-form pieces — arguments I've talked myself into, and one I made up entirely.",
+      metaDescription:
+        "Essays and stories by Charlie Ramus — on optimization, machine learning, morality, and the occasional lighthouse.",
     },
   },
 } as const;

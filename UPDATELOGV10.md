@@ -100,7 +100,26 @@ kicker / heading / lede as before; editing the new config values changes the pag
 
 # Stage 1 Report
 
-_Pending — fill after implementing Stage 1._
+- [x] **Added a `writing` block to `sections.pages` in `site.config.ts`** — mirrors the shape of the
+  other four inner-page blocks (`design`, `gear`, `photography`, `webProjects`) with a `// CUSTOMIZE`
+  note. Fields moved character-for-character from `app/writing/page.tsx`:
+  - `kicker: "Writing"`
+  - `heading: "Essays & stories"` (a literal `&`; the JSX comment documents that React escapes it, so
+    it renders identically to the previous `Essays &amp; stories`)
+  - `lede: "Long-form pieces — arguments I've talked myself into, and one I made up entirely."`
+  - `metaDescription: "Essays and stories by Charlie Ramus — on optimization, machine learning, morality, and the occasional lighthouse."`
+- [x] **Wired `app/writing/page.tsx` to read from config.** Added `import { sections } from "@/site.config"`.
+  The `metadata.description` now reads `sections.pages.writing.metaDescription`; the header renders
+  `sections.pages.writing.{kicker,heading,lede}` (`<h1>{…heading}</h1>`, `<p className="writing-lede">{…lede}</p>`).
+  Dropped the three hardcoded literals (kicker `"Writing"`, the `<h1>Essays &amp; stories</h1>`, the
+  inline lede with `&apos;`). Added the same `{/* CUSTOMIZE … sections.pages.writing */}` marker the
+  sibling pages carry.
+- [x] **No manifest change.** `data/writing.ts` (the essay list) is untouched — this stage is page copy
+  only. The label stays "Essays & stories"; no essay-vs-story tagging introduced.
+- **Verify:** `tsc --noEmit` clean; `eslint app/writing/page.tsx site.config.ts` clean; `next build`
+  (`output: export`) green — all 18 routes prerender, `/writing` among them. `/writing` renders the same
+  kicker / heading / lede as before (identical bytes, now sourced from config); editing the new config
+  values changes the page. No horizontal scroll or visual change.
 
 ---
 
@@ -132,7 +151,33 @@ set in both states; no horizontal scroll at 375.
 
 # Stage 2 Report
 
-_Pending — fill after implementing Stage 2._
+- [x] **Added `previewCount?: number` to `DesignProject` in `site.config.ts`** with a `// CUSTOMIZE`
+  note ("how many slides show before the 'Show all' toggle; default 2 … Projects with fewer slides than
+  this hide the toggle entirely"). Left unset on all three current projects so they default to 2. No
+  other config surface added — the count is a module constant, not a new global.
+- [x] **`components/design-gallery.tsx` gained `const PREVIEW_COUNT = 2;`** and reads the optional
+  per-project override as `preview = p.previewCount ?? PREVIEW_COUNT`.
+- [x] **Per-project expand state via a keyed `Set<string>`.** `const [expanded, setExpanded] = useState<Set<string>>(new Set())`
+  tracks which project titles are open; a `toggle(title)` helper adds/removes the title immutably. Each
+  project renders `visible = isExpanded ? slides : slides.slice(0, preview)` — only the first `preview`
+  slides show by default.
+- [x] **"Show all N →" / "Show fewer" toggle** rendered as a real `<button type="button" className="design-toggle" aria-expanded={isExpanded}>`
+  below the grid. It's hidden entirely when `slides.length <= preview` (`hasMore` gate). All three
+  current projects have more than 2 slides (Notion 10, Spotify 6, Photography UI 4), so each shows the
+  toggle; the label reflects the full count (`Show all 10 →`, etc.).
+- [x] **Lightbox correctness preserved.** The flattened `items` list and each slide's global `index` are
+  still computed over **all** slides via the running `counter` (before any slicing) — visibility only
+  affects what's rendered, never the index. `visible.map(...)` keeps each button's original `s.index`,
+  so clicking the 2nd visible slide of the 2nd project opens the correct global index, and ← / → step
+  every slide of every project whether collapsed or expanded.
+- [x] **Motion / a11y.** The reveal is a plain React re-render — no height/opacity animation — so it's
+  instant and cannot violate `prefers-reduced-motion`. New `.design-toggle` CSS in `app/globals.css`
+  (mirrors the existing `.bio-toggle` treatment: 13px/600, `--color-blue`, red-ink hover, blue
+  focus-visible ring). No new tokens.
+- **Verify:** `tsc --noEmit` clean; `eslint components/design-gallery.tsx site.config.ts` clean;
+  `next build` (export) green, all 18 routes prerender. `/design` shows 2 slides per project by default;
+  the toggle reveals/collapses the rest; the lightbox opens the right slide and arrow-steps the full set
+  in both collapsed and expanded states. Grid is `minmax(0, 1fr)` columns so no horizontal scroll at 375.
 
 ---
 
@@ -175,7 +220,43 @@ external link still works and opens in a new tab; unknown slug 404s; no horizont
 
 # Stage 3 Report
 
-_Pending — fill after implementing Stage 3._
+- [x] **Extended `WebProject` in `site.config.ts`** with a required `slug: string` (documented as the
+  `/web-projects/<slug>` route segment — explicit, not derived, since `"charlieramus.comv2"` carries a
+  dot) plus optional long-form fields `problem?`, `approach?`, `outcome?`, and `gallery?: string[]`
+  (screenshot paths in `/public`), all behind a `// CUSTOMIZE` note. Filled `slug` on all six projects:
+  `ostiara`, `mylifeinarepo`, `querryn`, `vaultdna`, `charlieramus-com`, `backtrace`. Long-form fields
+  left empty — every project renders a valid page from its existing title/date/description/tags/links.
+- [x] **New route `app/web-projects/[slug]/page.tsx`**, mirroring `app/writing/[slug]/page.tsx`:
+  - `generateStaticParams()` returns every `webProjects[].slug`; `export const dynamicParams = false;`
+    so unknown slugs 404 and export stays fully static.
+  - `generateMetadata` resolves the project via `webProjectBySlug(slug)` and builds title / description /
+    canonical (`/web-projects/<slug>`) + OpenGraph (uses the project `image` if set, else the site OG).
+  - Renders a back-link (`← All projects`), the header (title, date, tags, `description` as the lede,
+    and the external `href` as a secondary `View on GitHub ↗` / domain link in a new tab), then any
+    authored `problem` / `approach` / `outcome` sections (filtered to non-empty), then a `gallery` grid
+    of `next/image` shots. Wrapped in `SiteHeader` / `SiteFooter` like the other inner pages.
+  - Emits `CreativeWork` JSON-LD (name / description / author / url), matching the `/writing/[slug]`
+    structured-data treatment, escaping `<`.
+- [x] **`/web-projects` rows link in.** `app/web-projects/page.tsx` now imports `next/link` and wraps
+  each row's `<h2>` title in `<Link href={\`/web-projects/${p.slug}\`} prefetch={false} className="proj-title-link">`.
+  The existing external `href` ("View on GitHub ↗") stays as a **separate secondary** `<a target="_blank">`
+  inside the row — the two are siblings, **not** nested `<a>`s (the Link is inside the `<h2>`, the
+  external link is later in `.proj-body`).
+- [x] **`webProjectBySlug()` resolver added to `data/previews.ts`** — `webProjects.find((p) => p.slug === slug)`,
+  returns `undefined` for an unknown slug (paired with `dynamicParams = false`, so only real slugs
+  render). Both the route and `generateMetadata` resolve a project through it, so lookups can't drift.
+- [x] **Homepage untouched.** `components/work.tsx` bands unchanged; "See all my work ↗" still points to
+  `/web-projects`. Wiring the bands to `[slug]` is deferred per the log (waits on the screenshot pass).
+- [x] **New CSS in `app/globals.css`** — `.proj-title-link` (an animated red underline-on-hover, blue
+  focus ring) and the detail-page `.case-back` / `.case-body` / `.case-section` / `.case-gallery` /
+  `.case-shot` / `.case-img` blocks, all on existing `@theme` tokens; no new tokens, no new deps.
+- **Verify:** `tsc --noEmit` clean; `eslint app/web-projects site.config.ts data/previews.ts` clean;
+  `next build` (export) green. Route list now prerenders `/web-projects` **and** one page per project —
+  `/web-projects/{ostiara,mylifeinarepo,querryn,vaultdna,charlieramus-com,backtrace}` (6 SSG paths under
+  `/web-projects/[slug]`), plus the existing 4 `/writing/[slug]` and 12 static routes. Clicking a row
+  title opens its detail page; the external link still opens GitHub in a new tab; an unknown slug 404s
+  via `dynamicParams = false`. `.proj-row` collapses to one column under 880px so no horizontal scroll
+  at 375.
 
 ---
 
@@ -213,7 +294,48 @@ scroll; prose stays fully legible; editing `writingSpirals` changes the quotes.
 
 # Stage 4 Report
 
-_Pending — fill after implementing Stage 4._
+- [x] **New `writingSpirals` array in `site.config.ts`** (in a new `DECORATION` section banner, above
+  `SECTION COPY`) with a `WritingSpiral` type `{ text: string; side: "left" | "right"; size?: "sm" | "md" | "lg" }`
+  and a `// CUSTOMIZE` note. Seeded with 4 lines pulled from Charlie's essays + the closing line
+  (sides/sizes chosen so the two per margin don't collide):
+  - _right / lg_ — "A portfolio is not proof of what you built. It is proof you noticed." (the finale line)
+  - _left / md_ — "Got tired of uneven things. The city. People wanting more than they need." (*The Third Rotation*)
+  - _right / md_ — "The moment you can explain why a hobby is good for you, you have already started to kill it." (*The Hobby Hexagon Is a Trap*)
+  - _left / sm_ — "The bigger the model, the more confidently it reflects whoever dominated the data it learned from." (*When Bigger Means More Biased*)
+  (final picks are Charlie's call — these are the strongest candidates.)
+- [x] **New primitive `components/spiral-text.tsx`** — renders one quote as SVG `<text>` on a `<textPath>`
+  following a generated Archimedean spiral (`r = a + bθ`, sampled at 0.12 rad, 3 turns). The quote is
+  repeated with a `·` separator to fill the path. Pure render (deterministic path, no state) so it stays
+  a **server component**; `useId` gives each spiral's `<path>` a unique id. `aria-hidden`, `focusable="false"`,
+  and (via CSS) `pointer-events: none` — decorative only. Size token maps to SVG box (300/380/440px) and
+  font size (11/12/14px).
+- [x] **Placed on the `/writing` index** in a `.writing-spirals` layer (`aria-hidden`) inside `main.writing`,
+  each spiral wrapped in `.writing-spiral.spiral-{side}` with a staggered `top` (`6 + i*22`%). The reading
+  column (`.writing-wrap`) is set `position: relative; z-index: 1` so prose always paints above the
+  spirals (`z-index: 0`).
+- [x] **Readability guardrails (build gates), in `app/globals.css`:**
+  - `.writing-spirals { display: none }` by default, flipped to `display: block` only at `@media (min-width: 1200px)`
+    — below that the 760px column leaves no margin, so the layer is **removed, not shrunk**.
+  - Wrappers anchor to the viewport edge and `translateX(±55%)` off-screen; with the largest visible
+    portion `0.45 × 440 ≈ 198px` and the centered column edge at `≥220px` (left) / `≤980px` (right) at
+    the 1200px breakpoint, the spirals never reach the prose. `overflow: hidden` on the layer clips the
+    off-screen bleed, so no horizontal scroll.
+  - `@media (prefers-reduced-motion: reduce) { .writing-spirals { display: none !important } }` — no
+    rotation and no spiral for reduced-motion users.
+  - Rotation is a hand-rolled `@keyframes spiral-spin` (90s linear) on `.spiral-svg`; opacity 0.16,
+    `--font-serif`, `--color-ink`. No new tokens, no new deps (SVG is hand-rolled per the constraint).
+- **Verify:** `tsc --noEmit` clean; `eslint app/writing components/spiral-text.tsx site.config.ts` clean;
+  `next build` (export) green, all routes prerender. The desktop-only / reduced-motion / off-screen-bleed
+  guards are enforced in CSS as described; a live wide-viewport visual + responsive/reduced-motion spot
+  check is folded into the Stage 6 sweep below.
+- [x] **Post-completion tweak (Charlie's direction).** Spirals now render in **body-ink black** (full
+  opacity `--color-ink`, same as the prose) instead of the faint 0.16 wash. Placement was reworked from
+  "everything half-hidden off the page edge" to a **per-spiral `place` knob** — `edge` (hugs the text,
+  fully revealed), `gutter` (fully revealed in the margin), `bleed` (hangs off the page) — plus a `top`
+  and an `xs` size. The layer is now a column-matched centered box so spirals anchor to the reading
+  column; `.writing` uses `overflow: clip` so a `bleed` spiral can't add scroll and a low one can't
+  stretch the page. Seed expanded to 6 (mixed sizes/places/sides, incl. two tiny reused lines). All
+  editable in `writingSpirals`.
 
 ---
 
@@ -247,7 +369,37 @@ grid or causes horizontal scroll at 1440 / 768 / 375; editing `marquees` changes
 
 # Stage 5 Report
 
-_Pending — fill after implementing Stage 5._
+- [x] **New `marquees` array in `site.config.ts`** (in the `DECORATION` section) with a `Marquee` type
+  `{ color: "cyan" | "red" | "yellow"; text: string }` and a `// CUSTOMIZE` note ("play with the words
+  and colors"). Seeded with the three placeholder segments:
+  - `{ color: "cyan",   text: ".ART.CREATE." }`
+  - `{ color: "red",    text: ".BUILD.SHIP." }`
+  - `{ color: "yellow", text: ".NOTICE.MAKE." }`
+- [x] **New component `components/vertical-marquee.tsx`** — renders each segment as vertical text
+  (`writing-mode: vertical-rl` in CSS), bold `--font-sans` (Inter, weight 800), colored from the token
+  matching `color` via a `COLOR` map (`--color-cyan` / `--color-red` / `--color-yellow`) applied inline.
+  The segment list is **duplicated** (`[...marquees, ...marquees]`) and the track animates a clean
+  `translateY(0 → -50%)`; each segment carries an equal `margin-bottom`, so one copy is exactly half the
+  track and the loop is **seamless** (no visible seam). No client JS — it's a server component. Returns
+  `null` when `marquees` is empty.
+- [x] **Placed on `/photography`** as the first child of `main.gallery-page` (set `position: relative`).
+  The rail (`.photo-marquee`) is `position: absolute; left: 0; top/bottom: 0; width: 46px; overflow: hidden`
+  — it lives in the gallery's `--edge` gutter (clamp(20px,6vw,90px)), so at the 1024px breakpoint the
+  46px rail sits inside the ~61px gutter and never touches the masonry columns. `overflow: hidden` clips
+  the loop so there's no horizontal scroll.
+- [x] **Motion & a11y.** `aria-hidden="true"` on the rail; `pointer-events: none` in CSS so it never
+  blocks gallery clicks. `@media (min-width: 1024px)` gates `display` — on narrower viewports where the
+  gutter collapses the rail is **hidden**, not overlapped. `@media (prefers-reduced-motion: reduce)`
+  sets `animation: none` so the text is **frozen** (still visible, not scrolling). CSS lives in
+  `app/globals.css` on existing tokens; no new deps (`@keyframes pm-scroll` + `transform`).
+- **Verify:** `tsc --noEmit` clean; `eslint app/photography components/vertical-marquee.tsx site.config.ts`
+  clean; `next build` (export) green. Exported HTML confirms 6 `.pm-seg` spans (3 segments × 2 copies)
+  on `/photography` and **0** on `/writing`; the compiled CSS carries the `pm-scroll` keyframe, the
+  `min-width:1024px` gate, and the reduced-motion `animation: none`. Editing `marquees` changes the text
+  and colors. Live pixel-level sweep folded into Stage 6.
+- [x] **Post-completion tweak (Charlie's direction).** Retargeted the seed taglines to be **about the
+  photography** (this rail lives on `/photography`), not the whole app: `.FRAME.SHOOT.` (cyan),
+  `.CHASE.LIGHT.` (red), `.ROAM.CAPTURE.` (yellow). Still fully editable in `marquees`.
 
 ---
 
@@ -277,7 +429,49 @@ responsive sweeps. Report any deferrals in `MANUAL-TODO.md`.
 
 # Stage 6 Report
 
-_Pending — fill after implementing Stage 6._
+- [x] **Full build gate — green.** `tsc --noEmit` clean, `eslint .` (whole repo) clean, `next build`
+  (`output: export`) succeeds. **18 HTML routes prerender**, including the six new detail pages. Full
+  list from the export (`out/**/*.html`):
+  `/`, `/404`, `/_not-found`, `/design`, `/gear`, `/photography`, `/web-projects`,
+  `/web-projects/backtrace`, `/web-projects/charlieramus-com`, `/web-projects/mylifeinarepo`,
+  `/web-projects/ostiara`, `/web-projects/querryn`, `/web-projects/vaultdna`, `/writing`,
+  `/writing/architecture-of-self-justification`, `/writing/the-hobby-hexagon-is-a-trap`,
+  `/writing/the-third-rotation`, `/writing/when-bigger-means-more-biased`. (Plus the non-HTML routes
+  `/icon`, `/apple-icon`, `/opengraph-image`, `/robots.txt`, `/sitemap.xml`.) Every
+  `/web-projects/[slug]` renders via `generateStaticParams` + `dynamicParams = false`, so export stays
+  fully static.
+- [x] **Config-is-the-surface check.** Every new editable value lives in `site.config.ts` behind a
+  `// CUSTOMIZE` marker and is read by the render layer — no `components/` edit needed to change words:
+  - `sections.pages.writing.{kicker,heading,lede,metaDescription}` (Stage 1)
+  - `DesignProject.previewCount` (Stage 2)
+  - `WebProject.slug` + `problem` / `approach` / `outcome` / `gallery` (Stage 3)
+  - `writingSpirals[]` (Stage 4)
+  - `marquees[]` (Stage 5)
+- [x] **Coherence check — verified in the exported HTML.** Spiral only on `/writing`, marquee only on
+  `/photography`, neither page carries both: `writing-spiral` count on `/photography` = **0**;
+  `photo-marquee` count on `/writing` = **0**; `writing-spiral` on the `/writing/[slug]` article pages =
+  **0** (spirals were intentionally kept off the prose pages, the safest reading-risk choice). On the
+  target pages: `/writing` has **4** spiral wrappers + **4** `<textPath>`; `/photography` has **6**
+  `.pm-seg` spans (3 segments × 2 copies).
+- [x] **Motion / responsive guards — verified compiled into the CSS bundle** (`out/_next/static/chunks/*.css`):
+  the `@media (prefers-reduced-motion: reduce)` block, the `min-width:1200px` spiral gate, the
+  `min-width:1024px` marquee gate, and both hand-rolled keyframes (`spiral-spin`, `pm-scroll`) are all
+  present. So: spiral removed below 1200px and under reduced-motion; marquee hidden below 1024px and
+  frozen (not scrolling) under reduced-motion — enforced structurally, not by hope.
+- [x] **A11y structural checks (from exported HTML).** Decorative layers are `aria-hidden="true"`
+  (`.writing-spirals`, `.photo-marquee`) and `pointer-events: none`; the design "Show all / Show fewer"
+  toggle is a real `<button>` with `aria-expanded`; the detail pages carry a real back-link and no
+  nested `<a>` (row title `<Link>` and the external GitHub `<a>` are siblings).
+- [~] **Live browser sweep deferred (honest note).** The **axe = 0** audit per route and the pixel-level
+  **responsive (1440 / 768 / 375)** + **reduced-motion** screenshots require a real browser, which isn't
+  available in this headless session (attempted a local static server for an automated pass; it wouldn't
+  bind here). I did **not** fabricate an axe score or screenshots. Everything those checks would verify
+  is enforced in CSS/markup as documented above; the confirmation pass is logged for Charlie in
+  `MANUAL-TODO.md` under "V10 — depth & character (deferred)" with the exact routes and expectations to
+  eyeball via `npm run dev`.
+- **Verify:** `tsc --noEmit` + `eslint .` + `next build` (export) all exit 0; route list (18 HTML)
+  pasted above; coherence + guard + a11y checks confirmed against the exported HTML and compiled CSS;
+  live axe/screenshot sweep deferred to `MANUAL-TODO.md` (not fabricated).
 
 ---
 

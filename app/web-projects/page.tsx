@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Image from "next/image";
+import Link from "next/link";
 import Reveal from "@/components/reveal";
 import Motif from "@/components/motif";
 import SiteHeader from "@/components/site-header";
@@ -52,7 +53,15 @@ export default function WebProjectsPage() {
                     Featured
                   </span>
                 )}
-                <h2>{p.title}</h2>
+                <h2>
+                  <Link
+                    href={`/web-projects/${p.slug}`}
+                    prefetch={false}
+                    className="proj-title-link"
+                  >
+                    {p.title}
+                  </Link>
+                </h2>
                 <p className="proj-meta">{p.date}</p>
                 <p className="proj-desc">{p.description}</p>
                 <div className="proj-tags">

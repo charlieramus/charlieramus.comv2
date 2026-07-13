@@ -3,6 +3,7 @@ import Reveal from "@/components/reveal";
 import SiteHeader from "@/components/site-header";
 import SiteFooter from "@/components/site-footer";
 import PhotographyGallery from "@/components/photography-gallery";
+import VerticalMarquee from "@/components/vertical-marquee";
 import { photos } from "@/data/photos";
 import { sections } from "@/site.config";
 
@@ -25,6 +26,11 @@ export default function PhotographyPage() {
       <SiteHeader />
 
       <main id="main-content" tabIndex={-1} className="gallery-page">
+
+      {/* Decorative vertical marquee in the left gutter — desktop-only, frozen
+          under prefers-reduced-motion (see .photo-marquee in globals.css).
+          CUSTOMIZE the segments via `marquees` in site.config.ts. */}
+      <VerticalMarquee />
 
       <div className="wrap">
         <Reveal as="header" className="gallery-head">
