@@ -3,6 +3,7 @@ import Reveal from "@/components/reveal";
 import SiteHeader from "@/components/site-header";
 import SiteFooter from "@/components/site-footer";
 import { gear, gearSections } from "@/data/gear";
+import { sections } from "@/site.config";
 
 export const metadata: Metadata = {
   title: "Gear",
@@ -20,13 +21,10 @@ export default function GearPage() {
 
       <div className="wrap">
         <Reveal as="header" className="inner-head">
-          <p className="writing-kicker">Gear</p>
-          {/* CUSTOMIZE: heading + lede */}
-          <h1>What&apos;s in the bag</h1>
-          <p className="inner-lede">
-            The kit behind the photography — a Canon EOS R5 body, a DJI Air 2s in
-            the air, and the glass and bags that travel with them.
-          </p>
+          <p className="writing-kicker">{sections.pages.gear.kicker}</p>
+          {/* CUSTOMIZE: kicker + heading + lede in site.config.ts (sections.pages.gear) */}
+          <h1>{sections.pages.gear.heading}</h1>
+          <p className="inner-lede">{sections.pages.gear.lede}</p>
         </Reveal>
 
         <div className="gear-sections">

@@ -1,6 +1,7 @@
 import Motif from "@/components/motif";
 import Reveal from "@/components/reveal";
 import { snapshot } from "@/data/about";
+import { sections } from "@/site.config";
 
 // Nav sits at the top of the hero; nothing is sticky (it scrolls away).
 export default function Hero() {
@@ -14,10 +15,13 @@ export default function Hero() {
       </div>
 
       <nav aria-label="Primary">
-        {/* CUSTOMIZE: nav labels + hrefs (homepage anchors; V4 adds inner routes) */}
-        <a href="#work">work</a>
-        <a href="/photography">photography</a>
-        <a href="#about">about</a>
+        {/* CUSTOMIZE: edit nav labels + hrefs in site.config.ts (sections.nav).
+            Rendered as fixed siblings (not a .map) so the three anchors keep the
+            same keyless markup they had before V9 — add/remove an item here + in
+            the config together. */}
+        <a href={sections.nav[0].href}>{sections.nav[0].label}</a>
+        <a href={sections.nav[1].href}>{sections.nav[1].label}</a>
+        <a href={sections.nav[2].href}>{sections.nav[2].label}</a>
       </nav>
 
       <Reveal className="inner">

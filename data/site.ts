@@ -1,5 +1,4 @@
-// Canonical site identity — single source of truth for absolute URLs used by
-// metadata (metadataBase / canonical / OG), sitemap.ts, robots.ts, and JSON-LD.
-// CUSTOMIZE: if the production domain ever changes, change it here only.
-export const SITE_URL = "https://charlieramus.com";
-export const SITE_NAME = "Charlie Ramus";
+// Thin re-export — the values now live in the single editable source,
+// site.config.ts (V9). This file preserves the "@/data/site" import surface so
+// downstream importers don't change. To edit the domain/name, open site.config.ts.
+export { SITE_URL, SITE_NAME } from "@/site.config";

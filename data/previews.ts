@@ -1,117 +1,29 @@
-// PREVIEW CURATION LAYER — the one file that decides *what* the homepage previews.
+// PREVIEW RESOLVERS — turn the curation config into ready-to-render data.
 // -----------------------------------------------------------------------------
-// The content catalogs (`data/photos.ts`, `data/projects-web.ts`,
-// `data/projects-design.ts`) are the full, source-of-truth libraries. THIS file
-// is a thin curation layer on top: it names, by stable id, which items each
-// homepage surface shows — and in what order — without touching the catalogs.
+// The curation a person edits (`previews` + the pick types) now lives in the
+// single editable source, site.config.ts (V9). THIS file keeps the resolver
+// functions that read the content catalogs (data/photos.ts + the projects) and
+// resolve each pick into render-ready tiles, skipping any id that isn't found.
+// Render sites import these from "@/data/previews" unchanged.
 //
-// TO CHANGE WHAT'S PREVIEWED, EDIT ONLY THIS FILE. No component edits needed.
-//   • Photography bento  → `photographyBento`  (photo `code`s)
-//   • Graphic-design bento → `graphicDesignBento` (project `title`s)
-//   • "Right now" photo  → `rightNowPhoto`      (a photo `code`)
-//   • Digital-home carousel → `digitalHomeCarousel` (project `title` + window skin)
-//   • Work bands         → `workBands`          (project `title`s, in order)
-//
-// Every pick references content by a stable id (photo `code`, project `title`).
-// If an id doesn't match anything in the catalog it is simply skipped — a typo
-// degrades gracefully (that tile drops out) rather than breaking the build.
-//
-// Each visual pick may also carry a `previewImage` override so a homepage
-// preview can differ from the content's own first image (e.g. show a custom
-// cover in the design bento instead of slide 1).
+// TO CHANGE WHAT'S PREVIEWED, EDIT `previews` IN site.config.ts. No component
+// edits needed. See the comments on that object for each surface.
 
 import { photos, type Photo } from "@/data/photos";
 import { designProjects, type DesignProject } from "@/data/projects-design";
 import { webProjects, type WebProject } from "@/data/projects-web";
+import { previews } from "@/site.config";
+import type { CarouselPick } from "@/site.config";
+
+// Re-export the curation config + pick types so existing importers of
+// "@/data/previews" keep resolving unchanged.
+export { previews };
+export type { PhotoPick, DesignPick, CarouselPick, PreviewConfig } from "@/site.config";
 
 // -----------------------------------------------------------------------------
-// Pick types
-// -----------------------------------------------------------------------------
-
-/** A photo pick: a photo `code`, plus an optional image override. */
-export type PhotoPick = {
-  /** stable photo `code` from data/photos.ts, e.g. "0013" */
-  code: string;
-  /** optional /public image path to show instead of the photo's own thumb */
-  previewImage?: string;
-};
-
-/** A design pick: a project `title`, plus an optional cover override. */
-export type DesignPick = {
-  /** exact project `title` from data/projects-design.ts */
-  title: string;
-  /** optional /public image path to show instead of the project's slide 1 */
-  previewImage?: string;
-};
-
-/** A carousel pick: a web-project `title` + which browser-window skin to use. */
-export type CarouselPick = {
-  /** exact project `title` from data/projects-web.ts */
-  title: string;
-  /** browser-window skin class (see `.shot` variants in globals.css) */
-  variant: "s-acie" | "s-dark" | "s-warm" | "s-lav" | "s-mint";
-};
-
-// -----------------------------------------------------------------------------
-// THE CURATION — this is the part Charlie edits.
-// -----------------------------------------------------------------------------
-
-export type PreviewConfig = {
-  photographyBento: PhotoPick[];
-  graphicDesignBento: DesignPick[];
-  /** the "Right now" highlight photo, named by `code` (see rightNowPhoto below) */
-  rightNowPhoto: string;
-  digitalHomeCarousel: CarouselPick[];
-  workBands: string[];
-};
-
-export const previews: PreviewConfig = {
-  // CUSTOMIZE: Photography bento — the 4 (or N) photos shown in the "More than
-  // code" photography card, in order. Codes come from data/photos.ts.
-  // (Film-strip Frames like Longs Peak are skipped here — a square crop clips
-  // their baked border.) A `previewImage` may override any tile's thumb.
-  photographyBento: [
-    { code: "0001" },
-    { code: "0013" },
-    { code: "0030" },
-    { code: "0004" },
-  ],
-
-  // CUSTOMIZE: Graphic-design bento — which design projects appear, in order.
-  // Default shows each project's slide 1; set `previewImage` to show a custom
-  // cover instead.
-  graphicDesignBento: [
-    { title: "Notion Brand Pitch" },
-    { title: "Spotify IMC Campaign" },
-    { title: "Photography Presentation UI" },
-  ],
-
-  // CUSTOMIZE: "Right now" highlight photo — named directly by its `code` from
-  // data/photos.ts. (This card is driven entirely from here now; the `featured`
-  // flag in photos.ts no longer decides it.)
-  rightNowPhoto: "0055",
-
-  // CUSTOMIZE: Digital-home carousel — which projects tour, in order, and the
-  // browser-window skin for each. Titles come from data/projects-web.ts.
-  digitalHomeCarousel: [
-    { title: "Ostiara", variant: "s-acie" },
-    { title: "MyLifeInARepo", variant: "s-dark" },
-    { title: "Querryn", variant: "s-warm" },
-    { title: "VaultDNA", variant: "s-lav" },
-    { title: "charlieramus.com", variant: "s-mint" },
-    { title: "Browser-automation experiments", variant: "s-dark" },
-  ],
-
-  // CUSTOMIZE: Work bands — the curated projects (in order) for the "Tiny
-  // fraction of my work" section. The homepage renders exactly 4 bespoke band
-  // visuals, so keep this at 4 titles; extras beyond 4 are ignored.
-  workBands: ["Ostiara", "MyLifeInARepo", "charlieramus.com", "VaultDNA"],
-};
-
-// -----------------------------------------------------------------------------
-// Resolvers — turn the curation above into ready-to-render data, skipping any
-// pick whose id isn't found. Render sites call these; they never look up
-// content directly, so the curation stays in one place.
+// Resolvers — turn the curation into ready-to-render data, skipping any pick
+// whose id isn't found. Render sites call these; they never look up content
+// directly, so the curation stays in one place.
 // -----------------------------------------------------------------------------
 
 /** A resolved image tile: what to render for a photo/design preview. */

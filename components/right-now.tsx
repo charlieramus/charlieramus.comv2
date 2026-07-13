@@ -3,6 +3,7 @@ import Reveal from "@/components/reveal";
 import { webProjects } from "@/data/projects-web";
 import { writing } from "@/data/writing";
 import { rightNowPhoto } from "@/data/previews";
+import { sections } from "@/site.config";
 
 // "Right now" — Charlie's V2 "what's fresh" idea. Composed from the spotlight
 // builds, the latest essay, and (V5 Stage 2) a recent-trip photo card.
@@ -62,12 +63,9 @@ export default function RightNow() {
     <section className="now">
       <div className="wrap">
         <Reveal className="head">
-          {/* CUSTOMIZE: section copy */}
-          <h2>Right now</h2>
-          <p>
-            A quick pulse on what&apos;s fresh, the active build, the open
-            journal, and the latest essay.
-          </p>
+          {/* CUSTOMIZE: section heading + subline in site.config.ts (sections.rightNow) */}
+          <h2>{sections.rightNow.title}</h2>
+          <p>{sections.rightNow.subline}</p>
         </Reveal>
 
         <div className="now-grid">

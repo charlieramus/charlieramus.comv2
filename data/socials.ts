@@ -1,36 +1,5 @@
-// Social links — single source of truth (data only; icons live in the component
-// layer). Seeded from the current site. CUSTOMIZE handles/links.
-
-export type Social = {
-  /** display label */
-  label: string;
-  href: string;
-  /** @handle or username, optional */
-  handle?: string;
-  /** which account, for the two Instagrams */
-  note?: string;
-};
-
-export const socials: Social[] = [
-  {
-    label: "LinkedIn",
-    href: "https://www.linkedin.com/in/charlie-ramus-776366398/",
-  },
-  { label: "GitHub", href: "https://github.com/charlieramus", handle: "charlieramus" },
-  {
-    label: "Instagram",
-    href: "https://www.instagram.com/chahramii/",
-    handle: "@chahramii",
-    note: "photography",
-  },
-  {
-    label: "Instagram",
-    href: "https://www.instagram.com/charlieramus_/",
-    handle: "@charlieramus_",
-    note: "personal",
-  },
-  { label: "Letterboxd", href: "https://letterboxd.com/cwramus/", handle: "cwramus" },
-];
-
-// CUSTOMIZE: preferred contact for the "Get in touch" CTA.
-export const contactEmail = "charlie.ramus12@gmail.com";
+// Thin re-export — the social links now live in the single editable source,
+// site.config.ts (V9). This file preserves the "@/data/socials" import surface so
+// downstream importers don't change. To edit links, open site.config.ts.
+export type { Social } from "@/site.config";
+export { socials, contactEmail } from "@/site.config";

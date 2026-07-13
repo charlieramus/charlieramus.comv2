@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import type { CSSProperties } from "react";
 import Motif from "@/components/motif";
 import Reveal from "@/components/reveal";
+import { sections } from "@/site.config";
 
 // Petal Simon — a small memory game built from the brand motif registry. Watch a
 // growing sequence of brand-color flowers light up, then repeat it. Each cleared
@@ -155,12 +156,12 @@ export default function PetalSimon() {
 
   return (
     <Reveal className="pcard psimon">
+      {/* CUSTOMIZE: playground kicker + game card title in site.config.ts (sections.petalSimon) */}
       <span className="kick">
         <span className="fdot" style={{ background: "var(--color-yellow)" }} />{" "}
-        Playground
+        {sections.petalSimon.kicker}
       </span>
-      {/* CUSTOMIZE: game card title */}
-      <h3>Petal Simon</h3>
+      <h3>{sections.petalSimon.title}</h3>
 
       <div
         className="psimon-pads"

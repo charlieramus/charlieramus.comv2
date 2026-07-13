@@ -4,6 +4,7 @@ import SiteHeader from "@/components/site-header";
 import SiteFooter from "@/components/site-footer";
 import PhotographyGallery from "@/components/photography-gallery";
 import { photos } from "@/data/photos";
+import { sections } from "@/site.config";
 
 // Share card = a featured photo (falls back to the site default OG otherwise).
 const ogPhoto = photos.find((p) => p.featured) ?? photos[0];
@@ -27,11 +28,11 @@ export default function PhotographyPage() {
 
       <div className="wrap">
         <Reveal as="header" className="gallery-head">
-          <p className="writing-kicker">Photography</p>
-          {/* CUSTOMIZE: gallery heading + lede */}
-          <h1>Through the lens</h1>
+          <p className="writing-kicker">{sections.pages.photography.kicker}</p>
+          {/* CUSTOMIZE: kicker + heading + lede in site.config.ts (sections.pages.photography); {count} = photos.length */}
+          <h1>{sections.pages.photography.heading}</h1>
           <p className="gallery-lede">
-            {`${photos.length} frames from the road — Iceland, the Colorado Rockies, the British Virgin Islands and wherever the light's good. Tap any photo to open it.`}
+            {sections.pages.photography.lede.replace("{count}", String(photos.length))}
           </p>
         </Reveal>
 

@@ -4,6 +4,7 @@ import SiteHeader from "@/components/site-header";
 import SiteFooter from "@/components/site-footer";
 import DesignGallery from "@/components/design-gallery";
 import { designProjects } from "@/data/projects-design";
+import { sections } from "@/site.config";
 
 export const metadata: Metadata = {
   title: "Design",
@@ -21,13 +22,10 @@ export default function DesignPage() {
 
       <div className="wrap">
         <Reveal as="header" className="inner-head">
-          <p className="writing-kicker">Design</p>
-          {/* CUSTOMIZE: heading + lede */}
-          <h1>Brand &amp; layout</h1>
-          <p className="inner-lede">
-            Pitches, campaigns and editorial UI — where the argument is carried
-            as much by type and image as by words. Produced in Figma.
-          </p>
+          <p className="writing-kicker">{sections.pages.design.kicker}</p>
+          {/* CUSTOMIZE: kicker + heading + lede in site.config.ts (sections.pages.design) */}
+          <h1>{sections.pages.design.heading}</h1>
+          <p className="inner-lede">{sections.pages.design.lede}</p>
         </Reveal>
 
         <DesignGallery projects={designProjects} />

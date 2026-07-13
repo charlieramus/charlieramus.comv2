@@ -2,6 +2,7 @@ import Motif from "@/components/motif";
 import Reveal from "@/components/reveal";
 import { type WebProject } from "@/data/projects-web";
 import { workBandProjects } from "@/data/previews";
+import { sections } from "@/site.config";
 
 // Reusable [colored motif tile + white tile] stack that flanks each band.
 function Stack({
@@ -54,11 +55,8 @@ export default function Work() {
       <div className="wrap">
         <Reveal className="head">
           <h2>Tiny fraction of my work</h2>
-          {/* CUSTOMIZE: work subline */}
-          <p>
-            A few things I&apos;ve built solo, end to end — from the backend and
-            data model to the design system and the copy.
-          </p>
+          {/* CUSTOMIZE: work subline in site.config.ts (sections.work.subline) */}
+          <p>{sections.work.subline}</p>
         </Reveal>
 
         <div className="proj">

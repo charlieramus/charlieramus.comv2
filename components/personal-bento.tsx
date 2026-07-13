@@ -5,6 +5,7 @@ import PetalSimon from "@/components/petal-simon";
 import { entries } from "@/data/experience";
 import { writing } from "@/data/writing";
 import { bentoPhotoTiles, bentoDesignTiles } from "@/data/previews";
+import { sections } from "@/site.config";
 
 // --- Writing (folds the mockup's separate "blog" into one body of essays) -----
 // Newest-first by `order`. Latest two headline the writing card; the next two
@@ -33,13 +34,9 @@ export default function PersonalBento() {
     <section id="personal" className="mtc">
       <div className="wrap">
         <Reveal className="head">
-          {/* CUSTOMIZE: section title (Charlie: "More than code", may change) */}
-          <h2>More than code</h2>
-          {/* CUSTOMIZE: section subline */}
-          <p>
-            Where I&apos;ve worked, the essays I write, photography, and the
-            design work — everything beyond the code.
-          </p>
+          {/* CUSTOMIZE: section title + subline in site.config.ts (sections.personalBento) */}
+          <h2>{sections.personalBento.title}</h2>
+          <p>{sections.personalBento.subline}</p>
         </Reveal>
 
         {/* Career journey — a readable, flowing vertical timeline (V6 rework:
@@ -47,8 +44,8 @@ export default function PersonalBento() {
         <Reveal as="article" className="cj">
           <div className="cj-head">
             <span className="cj-title">Career journey</span>
-            {/* CUSTOMIZE: timeline caption */}
-            <span className="cj-note">Solo builds &amp; side work</span>
+            {/* CUSTOMIZE: timeline caption in site.config.ts (sections.personalBento.careerNote) */}
+            <span className="cj-note">{sections.personalBento.careerNote}</span>
           </div>
           <ol className="tl">
             {entries.map((role) => (
@@ -122,8 +119,8 @@ export default function PersonalBento() {
               <span className="fdot" style={{ background: "var(--color-red)" }} />{" "}
               Graphic design
             </span>
-            {/* CUSTOMIZE: graphic-design card title */}
-            <h3>Brand &amp; layout</h3>
+            {/* CUSTOMIZE: graphic-design card title in site.config.ts (sections.personalBento.graphicTitle) */}
+            <h3>{sections.personalBento.graphicTitle}</h3>
             <div className="pgrid">
               {GRAPHIC_THUMBS.map((t) => (
                 <span key={t.key} className="ptile-img">

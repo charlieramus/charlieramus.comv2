@@ -1,5 +1,6 @@
 import Reveal from "@/components/reveal";
 import AboutBio from "@/components/about-bio";
+import { sections } from "@/site.config";
 
 // Collage photo positions (classes p1–p4 carry the rotation/placement).
 const COLLAGE = [
@@ -15,11 +16,8 @@ export default function About() {
       <div className="wrap">
         <Reveal className="head">
           <h2>Behind the pixels</h2>
-          {/* CUSTOMIZE: about subline */}
-          <p>
-            The person behind the builds — where I&apos;m based, what I care
-            about, and how I like to work.
-          </p>
+          {/* CUSTOMIZE: about subline in site.config.ts (sections.about.subline) */}
+          <p>{sections.about.subline}</p>
         </Reveal>
 
         <Reveal className="about-grid">

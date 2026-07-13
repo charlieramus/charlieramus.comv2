@@ -5,6 +5,7 @@ import Motif from "@/components/motif";
 import SiteHeader from "@/components/site-header";
 import SiteFooter from "@/components/site-footer";
 import { webProjects } from "@/data/projects-web";
+import { sections } from "@/site.config";
 
 export const metadata: Metadata = {
   title: "Web Projects",
@@ -32,13 +33,10 @@ export default function WebProjectsPage() {
 
       <div className="wrap">
         <Reveal as="header" className="inner-head">
-          <p className="writing-kicker">Web Projects</p>
-          {/* CUSTOMIZE: heading + lede */}
-          <h1>Things I&apos;ve built</h1>
-          <p className="inner-lede">
-            Sites, apps and extensions — designed and shipped solo, from the
-            backend to the last pixel.
-          </p>
+          <p className="writing-kicker">{sections.pages.webProjects.kicker}</p>
+          {/* CUSTOMIZE: kicker + heading + lede in site.config.ts (sections.pages.webProjects) */}
+          <h1>{sections.pages.webProjects.heading}</h1>
+          <p className="inner-lede">{sections.pages.webProjects.lede}</p>
         </Reveal>
 
         <div className="proj-list">
