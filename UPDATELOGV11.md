@@ -175,7 +175,44 @@ renders just the header (no empty frame). Temporarily setting a heroShot to an e
 
 ## Stage 2 Report
 
-_Pending._
+- [x] **Rebuilt `app/web-projects/[slug]/page.tsx` as the screenshot-forward shell.** Kept
+  all the scaffolding: `generateStaticParams`, `dynamicParams = false`, `generateMetadata`,
+  the JSON-LD `<script>`, `SiteHeader`/`SiteFooter`, and the resolved `project` (via
+  `webProjectBySlug`). The old text-forward body (`problem`/`approach`/`outcome` prose +
+  the stacked gallery) was already removed in Stage 1; this stage lays down the new body.
+- [x] **OG + JSON-LD prefer the hero shot.** `generateMetadata` now uses
+  `project.heroShot ?? project.image` for the OG/Twitter card (then `/opengraph-image`);
+  the JSON-LD `image` uses `heroShot ?? image` when either exists. Verified in the built
+  `out/web-projects/ostiara.html` — `og:image`, `twitter:image`, and JSON-LD `image` all
+  pointed at the (temporarily-set) hero.
+- [x] **Slim header** (`.inner-head.case-head`, wrapped in `Reveal as="header"`): just the
+  "← All projects" back-link, the `<h1>` title, and the date (`.proj-meta`). Dropped the
+  description and the inline external link from the header per the spec ("keep it quiet") —
+  tags + link move into the Overview facts card in Stage 3.
+- [x] **HERO SHOT section** — renders only when `project.heroShot` is set: a full-width,
+  rounded `next/image` (`fill` + `sizes="(max-width: 1200px) 100vw, 1200px"`, `priority`),
+  wrapped in `Reveal`, no caption. Classed `.case-hero` / `.case-hero-img`.
+- [x] **Placeholder slots** for every later section (cards → process → squares → article →
+  wide → full-bleed → banner → next) left as a single JSX comment in intended order, so
+  Stages 3–4 and V12 drop straight in.
+- [x] **CSS (`app/globals.css`, in `@layer components`):** retired the old `.case-body` /
+  `.case-section` / `.case-gallery` / `.case-shot` / `.case-img` rules; kept `.case-back`;
+  added `.case-head` (drops the header's bottom rule so the hero carries the eye) and
+  `.case-hero` / `.case-hero-img` — full content width inside `.wrap` (honors the `--edge`
+  gutter), `aspect-ratio: 16/9`, `object-fit: cover`, `border-radius: 16px` (the site's
+  established image-frame radius — there is no `--radius` token; 16px matches `.proj-visual`
+  / the old `.case-shot`). No hover motion (that's the V12 pass). No new tokens, no deps.
+
+**Verify:** `tsc --noEmit` clean; `eslint` on both web-projects pages + `site.config.ts`
+clean (exit 0); `next build` (export) green — all 24 routes prerender, every
+`/web-projects/<slug>` included. Temporarily setting Ostiara's `heroShot` to
+`/images/web/charlieramus-com.webp` rendered `<div class="reveal case-hero"><img
+class="case-hero-img" …></div>` in the built HTML (then reverted). With no `heroShot`,
+querryn's built page has **no** `case-hero` frame — header only, no empty frame.
+
+Issues: no interactive browser was driven this stage, so the "no horizontal scroll at 375"
+check is deferred to the Stage 5 responsive sweep (the hero is width-constrained to `.wrap`,
+which already governs every other inner page without overflow).
 
 ---
 

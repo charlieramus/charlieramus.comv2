@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import Reveal from "@/components/reveal";
 import SiteHeader from "@/components/site-header";
@@ -17,16 +18,13 @@ export const dynamicParams = false;
 
 type Params = { params: Promise<{ slug: string }> };
 
-// Friendly label for the external link (mirrors the /web-projects list page).
-function linkLabel(href: string): string {
-  if (href.includes("github.com")) return "View on GitHub";
-  return href.replace(/^https?:\/\//, "").replace(/\/$/, "");
-}
-
 export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const { slug } = await params;
   const project = webProjectBySlug(slug);
   if (!project) return {};
+  // Prefer the case-study hero screenshot for the social card, then the list
+  // thumbnail, then the site OG fallback.
+  const ogImage = project.heroShot ?? project.image;
   return {
     title: project.title,
     description: project.description,
@@ -35,8 +33,8 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
       type: "article",
       title: project.title,
       description: project.description,
-      images: project.image
-        ? [{ url: project.image, alt: `${project.title} screenshot` }]
+      images: ogImage
+        ? [{ url: ogImage, alt: `${project.title} screenshot` }]
         : ["/opengraph-image"],
     },
   };
@@ -53,7 +51,9 @@ export default async function WebProjectDetail({ params }: Params) {
     name: project.title,
     description: project.description,
     author: { "@type": "Person", name: "Charlie Ramus", url: SITE_URL },
-    ...(project.image ? { image: `${SITE_URL}${project.image}` } : {}),
+    ...(project.heroShot || project.image
+      ? { image: `${SITE_URL}${project.heroShot ?? project.image}` }
+      : {}),
     url: `${SITE_URL}/web-projects/${slug}`,
     mainEntityOfPage: `${SITE_URL}/web-projects/${slug}`,
   };
@@ -71,31 +71,40 @@ export default async function WebProjectDetail({ params }: Params) {
       <main id="main-content" tabIndex={-1} className="inner">
 
       <div className="wrap">
-        <Reveal as="header" className="inner-head">
+        {/* SLIM HEADER — the screenshots carry the page; keep this quiet.
+            Tags + link move into the Overview facts card (Stage 3). */}
+        <Reveal as="header" className="inner-head case-head">
           <Link href="/web-projects" prefetch={false} className="case-back">
             ← All projects
           </Link>
           <h1>{project.title}</h1>
           <p className="proj-meta">{project.date}</p>
-          <div className="proj-tags">
-            {project.tags.map((t) => (
-              <span className="tag" key={t}>
-                {t}
-              </span>
-            ))}
-          </div>
-          <p className="inner-lede">{project.description}</p>
-          {project.href && (
-            <a
-              className="proj-link"
-              href={project.href}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              {linkLabel(project.href)} ↗
-            </a>
-          )}
         </Reveal>
+
+        {/* HERO SHOT — full-width rounded main screenshot, no caption. */}
+        {project.heroShot && (
+          <Reveal className="case-hero">
+            <Image
+              src={project.heroShot}
+              alt={`${project.title} screenshot`}
+              fill
+              sizes="(max-width: 1200px) 100vw, 1200px"
+              className="case-hero-img"
+              priority
+            />
+          </Reveal>
+        )}
+
+        {/* Case-study sections render below in this fixed order, each only when
+            its data exists. Stages 3–4 + V12 drop straight into these slots:
+              CARDS      — Overview facts · What I worked on · The Challenge (Stage 3)
+              PROCESS    — flower-bulleted build timeline (Stage 4)
+              SQUARES    — two side-by-side square images (V12)
+              ARTICLE    — editorial paragraphs + optional pull-quote (V12)
+              WIDE SHOT  — second full-width screenshot (V12)
+              FULL BLEED — full-screen edge-to-edge image (V12)
+              BANNER     — closing banner image / text (V12)
+              NEXT       — next-project nav (V12) */}
       </div>
 
       </main>
