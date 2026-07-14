@@ -487,6 +487,16 @@ export const webProjects: WebProject[] = [
     href: "https://github.com/charlieramus/ostiara",
     tags: ["Next.js", "TypeScript", "Clerk", "Supabase", "Design Systems"],
     spotlight: true,
+    // CUSTOMIZE: case-study content for /web-projects/ostiara. Timeline, Stack,
+    // and Link are omitted here on purpose — they fall back to date/tags/href.
+    overview: {
+      role: "Solo — full stack + design",
+      status: "In progress",
+    },
+    worked:
+      "Everything end to end: the marketing site, an admin dashboard, and a teams-and-roles system built on Clerk Organizations with Supabase row-level security — all wearing a design system I built for it. The backend data model, the UI, and the copy in between.",
+    challenge:
+      "The hard part wasn't the code — it was customer discovery. Talking to door-to-door reps surfaced a real split between fixed-price menus and measure-on-site quoting, and that split changes what the tool owes each group.",
   },
   {
     title: "MyLifeInARepo",

@@ -2231,6 +2231,69 @@ body {
     object-fit: cover;
   }
 
+  /* CARDS — the row under the hero: Overview facts + the two prose cards.
+     3-up on desktop, equal height, on the panel surface; stacks at 880px. */
+  .case-cards {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: clamp(14px, 2vw, 22px);
+    align-items: stretch;
+    margin-top: clamp(28px, 4vw, 44px);
+  }
+  .card {
+    display: flex;
+    flex-direction: column;
+    background: var(--color-panel);
+    border: 1px solid var(--color-line);
+    border-radius: 16px;
+    padding: clamp(20px, 2.4vw, 30px);
+  }
+  .card-title {
+    font-family: var(--font-serif);
+    font-weight: 700;
+    font-size: clamp(17px, 2vw, 21px);
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+    margin-bottom: 16px;
+  }
+  .card-text {
+    font-size: 15px;
+    line-height: 1.65;
+    color: var(--color-ink);
+  }
+  /* Overview facts — quiet muted labels, values in body ink. */
+  .card-facts {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .card-facts .fact {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .card-facts dt {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-ink-soft);
+  }
+  .card-facts dd {
+    margin: 0;
+    font-size: 15px;
+    line-height: 1.5;
+    color: var(--color-ink);
+  }
+  .card-facts .fact-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .card-facts .fact-link {
+    margin-top: 0;
+  }
+
   /* Design — per-project slide galleries */
   .design-project {
     padding: clamp(30px, 5vw, 58px) 0;
@@ -2355,6 +2418,9 @@ body {
 
   @media (max-width: 880px) {
     .proj-row {
+      grid-template-columns: 1fr;
+    }
+    .case-cards {
       grid-template-columns: 1fr;
     }
     .gear-sections {

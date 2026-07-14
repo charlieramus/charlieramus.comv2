@@ -252,7 +252,47 @@ cards stack cleanly on mobile.
 
 ## Stage 3 Report
 
-_Pending._
+- [x] **`app/web-projects/[slug]/page.tsx` — rendered the `.case-cards` row** in the CARDS
+  slot under the hero, wrapped in `Reveal`. The whole row renders only if at least one of
+  `project.overview` / `project.worked` / `project.challenge` has content; otherwise nothing.
+  Re-added the `linkLabel` helper (removed in the Stage 2 rewrite) for the Overview Link row.
+- [x] **Overview card** (`<section className="card">` → "Project Overview" + a `<dl className="card-facts">`):
+  - `Role` — `overview.role`, row omitted when absent.
+  - `Timeline` — `overview.timeline ?? project.date` (always shown; date always exists).
+  - `Stack` — `(overview.stack ?? project.tags)` rendered as the existing `.tag` chips; row
+    skipped if the resolved array is empty.
+  - `Status` — `overview.status`, row omitted when absent.
+  - `Link` — `overview.link ?? project.href` via the `linkLabel` helper ("View on GitHub ↗"
+    / bare domain), row omitted when empty.
+- [x] **Worked / Challenge cards** — "What I worked on" (`project.worked`) and "The Challenge"
+  (`project.challenge`), each a single freeform `.card-text` paragraph, each conditional.
+- [x] **Design decision (reconciling the spec with Stage 5's empty state):** the spec's
+  "render Overview if `project.overview` OR always-derivable facts exist" would show an
+  Overview card on *every* project (date/tags always derive), which contradicts Stage 5's
+  requirement that an unauthored project (querryn) render **no** card row. I gated the
+  Overview card on `project.overview` being authored; the date/tags/href fallbacks then
+  operate *within* the card once it's shown. Verified: querryn's built page has no
+  `.case-cards`.
+- [x] **CSS (`app/globals.css`):** added `.case-cards` (3-col grid, `align-items: stretch`
+  for equal height, on the site's tokens), `.card` (flex column, `--color-panel` surface,
+  `--color-line` border, 16px radius, generous clamp padding), `.card-title` (serif),
+  `.card-text`, and the `.card-facts` `<dl>` styling — quiet uppercase `--color-ink-soft`
+  `<dt>` labels, `--color-ink` `<dd>` values, `.fact-tags` chip row, `.fact-link`. Added
+  `.case-cards { grid-template-columns: 1fr }` to the existing `@media (max-width: 880px)`
+  block so it stacks on the same breakpoint the rest of the site uses. Existing tokens only.
+- [x] **Authored the real Ostiara example** in `site.config.ts`: `overview` = { role:
+  "Solo — full stack + design", status: "In progress" } (timeline/stack/link intentionally
+  omitted to exercise the fallbacks), plus `worked` and `challenge` drawn from its existing
+  description + bio (no new facts invented). Other projects stay unset.
+
+**Verify:** `tsc --noEmit` clean; `eslint` clean; `next build` (export) green (all 24
+routes). In the built HTML, `out/web-projects/ostiara.html` shows the three cards — Overview
+with Role, Timeline ("May 2026 - Present", the date fallback), Stack (the 5 tag chips, the
+tags fallback), Status, and Link ("View on GitHub", the href fallback) — then "What I worked
+on" and "The Challenge". `out/web-projects/querryn.html` has no `.case-cards` row.
+
+Issues: mobile stacking + no-horizontal-scroll-at-375 confirmed via the CSS breakpoint
+(`.case-cards → 1fr` at ≤880px); the live-browser responsive sweep is Stage 5.
 
 ---
 

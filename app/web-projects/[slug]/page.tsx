@@ -18,6 +18,12 @@ export const dynamicParams = false;
 
 type Params = { params: Promise<{ slug: string }> };
 
+// Friendly label for the external link (mirrors the /web-projects list page).
+function linkLabel(href: string): string {
+  if (href.includes("github.com")) return "View on GitHub";
+  return href.replace(/^https?:\/\//, "").replace(/\/$/, "");
+}
+
 export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const { slug } = await params;
   const project = webProjectBySlug(slug);
@@ -95,9 +101,81 @@ export default async function WebProjectDetail({ params }: Params) {
           </Reveal>
         )}
 
+        {/* CARDS — Overview facts · What I worked on · The Challenge. Each card
+            renders only when it has content; the row is hidden if none do. The
+            Overview card is gated on `project.overview` (an authored intent) —
+            NOT on the always-derivable date/tags — so unauthored projects show
+            no card row (see Stage 5's empty-state). Once shown, its rows fall
+            back: timeline→date, stack→tags, link→href. */}
+        {(project.overview || project.worked || project.challenge) && (
+          <Reveal className="case-cards">
+            {project.overview && (
+              <section className="card">
+                <h2 className="card-title">Project Overview</h2>
+                <dl className="card-facts">
+                  {project.overview.role && (
+                    <div className="fact">
+                      <dt>Role</dt>
+                      <dd>{project.overview.role}</dd>
+                    </div>
+                  )}
+                  <div className="fact">
+                    <dt>Timeline</dt>
+                    <dd>{project.overview.timeline ?? project.date}</dd>
+                  </div>
+                  {(project.overview.stack ?? project.tags).length > 0 && (
+                    <div className="fact">
+                      <dt>Stack</dt>
+                      <dd className="fact-tags">
+                        {(project.overview.stack ?? project.tags).map((t) => (
+                          <span className="tag" key={t}>
+                            {t}
+                          </span>
+                        ))}
+                      </dd>
+                    </div>
+                  )}
+                  {project.overview.status && (
+                    <div className="fact">
+                      <dt>Status</dt>
+                      <dd>{project.overview.status}</dd>
+                    </div>
+                  )}
+                  {(project.overview.link ?? project.href) && (
+                    <div className="fact">
+                      <dt>Link</dt>
+                      <dd>
+                        <a
+                          className="proj-link fact-link"
+                          href={project.overview.link ?? project.href}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          {linkLabel(project.overview.link ?? project.href)} ↗
+                        </a>
+                      </dd>
+                    </div>
+                  )}
+                </dl>
+              </section>
+            )}
+            {project.worked && (
+              <section className="card">
+                <h2 className="card-title">What I worked on</h2>
+                <p className="card-text">{project.worked}</p>
+              </section>
+            )}
+            {project.challenge && (
+              <section className="card">
+                <h2 className="card-title">The Challenge</h2>
+                <p className="card-text">{project.challenge}</p>
+              </section>
+            )}
+          </Reveal>
+        )}
+
         {/* Case-study sections render below in this fixed order, each only when
-            its data exists. Stages 3–4 + V12 drop straight into these slots:
-              CARDS      — Overview facts · What I worked on · The Challenge (Stage 3)
+            its data exists. Stage 4 + V12 drop straight into these slots:
               PROCESS    — flower-bulleted build timeline (Stage 4)
               SQUARES    — two side-by-side square images (V12)
               ARTICLE    — editorial paragraphs + optional pull-quote (V12)
