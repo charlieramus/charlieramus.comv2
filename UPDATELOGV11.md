@@ -326,7 +326,45 @@ prefers-reduced-motion the flowers don't spin. No horizontal scroll at 375.
 
 ## Stage 4 Report
 
-_Pending._
+- [x] **`app/web-projects/[slug]/page.tsx` — rendered the `.case-process` section** in the
+  PROCESS slot (after the cards), gated on `project.process && project.process.length > 0`.
+  Section heading "The process" (a quiet serif `.case-process-title` h2), then an `<ol
+  className="process-list">` with one `.process-step` per entry.
+- [x] **Each step** is a two-column grid row: a `.process-marker` holding `<Motif>` (fed a
+  cycling `PETALS` fill + the entry `index`, the same deterministic wind-spin pattern as the
+  `/web-projects` list placeholders — SSR-safe, no `Math.random`), then a bold serif
+  `.process-step-title` and, when present, a muted `.process-detail` line beneath it. Keyed
+  `${step.title}-${i}`.
+- [x] **Alignment / count.** The marker column is a fixed `34px` grid track so all titles
+  align regardless of marker; the list length is whatever `process` holds (no cap, no
+  minimum beyond the length>0 gate). Imported `Motif`; added the `PETALS` fill array.
+- [x] **CSS (`app/globals.css`):** added `.case-process`, `.case-process-title` (serif),
+  `.process-list` (list-style none, flex column with clamp rhythm), `.process-step`
+  (`grid-template-columns: 34px 1fr`), `.process-marker` (26px flower nudged onto the
+  title cap-height), `.process-step-title` (serif bold, `--color-ink`), `.process-detail`
+  (`--color-ink-soft`, 60ch). **The reduced-motion freeze is NOT re-implemented** — it
+  comes from the shared `.motif` rule (globals.css `@media (prefers-reduced-motion: reduce)
+  { .motif { animation: none } }`), confirmed in place. Existing tokens only.
+- [x] **Authored a real Ostiara `process`** in `site.config.ts`: 5 entries (Customer
+  discovery → Data model & access control → Admin dashboard → Design system → Marketing
+  site), each with a one-line detail drawn from its existing description + the experience
+  entry (no new facts). Other projects stay unset.
+
+**Verify:** `tsc --noEmit` clean; **`npm run lint`** (the repo's bare-`eslint` flat-config
+script) clean — note: `eslint .` and passing `site.config.ts` as an explicit path both error
+under this flat config ("all files … are ignored" / "no files matching the pattern"), so the
+correct invocation is `npm run lint`, which lets ESLint's own config-driven discovery run;
+that is what I used and it passed. `next build` (export) green — all 24 routes, all six
+`/web-projects/<slug>`. In the built HTML, `out/web-projects/ostiara.html` shows the
+`.case-process` list with 5 `.motif` markers + the 5 aligned titles/details in order;
+`out/web-projects/querryn.html` has no `.case-process` (0 matches). Changing the entry count
+in config changes the rendered count 1:1 (grid row structure, no layout break). Under
+`prefers-reduced-motion` the markers are still — inherited from `.motif` (verified in CSS).
+
+Issues: mid-stage, a stale Git-Bash wait-loop shell that had `cd`'d into `out/web-projects`
+held a Windows directory handle, so `next build`'s export-clean hit `EBUSY: rmdir`. Killed
+the stray shells, cleared `out/`, and the build then ran green. Not a code issue — a
+tooling/CWD artifact; noted so Stage 5 avoids `cd`-ing into `out/`.
 
 ---
 

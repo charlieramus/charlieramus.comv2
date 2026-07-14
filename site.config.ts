@@ -497,6 +497,30 @@ export const webProjects: WebProject[] = [
       "Everything end to end: the marketing site, an admin dashboard, and a teams-and-roles system built on Clerk Organizations with Supabase row-level security — all wearing a design system I built for it. The backend data model, the UI, and the copy in between.",
     challenge:
       "The hard part wasn't the code — it was customer discovery. Talking to door-to-door reps surfaced a real split between fixed-price menus and measure-on-site quoting, and that split changes what the tool owes each group.",
+    process: [
+      {
+        title: "Customer discovery",
+        detail:
+          "Interviewed door-to-door reps to learn how they actually quote a job on a doorstep.",
+      },
+      {
+        title: "Data model & access control",
+        detail:
+          "Teams and roles on Clerk Organizations, with Supabase row-level security drawing the boundaries.",
+      },
+      {
+        title: "Admin dashboard",
+        detail: "The day-to-day surface managers and reps run the team from.",
+      },
+      {
+        title: "Design system",
+        detail: "Built one for the product and wore it across every surface.",
+      },
+      {
+        title: "Marketing site",
+        detail: "Shipped the public site and the copy around the product.",
+      },
+    ],
   },
   {
     title: "MyLifeInARepo",

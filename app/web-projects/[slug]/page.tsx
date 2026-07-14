@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import Reveal from "@/components/reveal";
+import Motif from "@/components/motif";
 import SiteHeader from "@/components/site-header";
 import SiteFooter from "@/components/site-footer";
 import { webProjects } from "@/data/projects-web";
@@ -17,6 +18,11 @@ export function generateStaticParams() {
 export const dynamicParams = false;
 
 type Params = { params: Promise<{ slug: string }> };
+
+// Petal fills cycled through the process markers (the flower shape itself
+// rotates via `activeMotifs`, keyed off the entry index) — same pattern as the
+// /web-projects list placeholders.
+const PETALS = ["red", "blue", "yellow", "pink", "cyan"];
 
 // Friendly label for the external link (mirrors the /web-projects list page).
 function linkLabel(href: string): string {
@@ -174,9 +180,33 @@ export default async function WebProjectDetail({ params }: Params) {
           </Reveal>
         )}
 
+        {/* PROCESS — the flower-bulleted build timeline. Renders only when
+            `project.process` has entries. Each row: a spinning-flower marker
+            (deterministic per-index wind-spin, frozen under reduced motion via
+            the shared .motif rule), a bold stage title, and an optional detail. */}
+        {project.process && project.process.length > 0 && (
+          <Reveal as="section" className="case-process">
+            <h2 className="case-process-title">The process</h2>
+            <ol className="process-list">
+              {project.process.map((step, i) => (
+                <li className="process-step" key={`${step.title}-${i}`}>
+                  <span className="process-marker">
+                    <Motif fill={PETALS[i % PETALS.length]} index={i} />
+                  </span>
+                  <div className="process-copy">
+                    <p className="process-step-title">{step.title}</p>
+                    {step.detail && (
+                      <p className="process-detail">{step.detail}</p>
+                    )}
+                  </div>
+                </li>
+              ))}
+            </ol>
+          </Reveal>
+        )}
+
         {/* Case-study sections render below in this fixed order, each only when
-            its data exists. Stage 4 + V12 drop straight into these slots:
-              PROCESS    — flower-bulleted build timeline (Stage 4)
+            its data exists. V12 drops straight into these slots:
               SQUARES    — two side-by-side square images (V12)
               ARTICLE    — editorial paragraphs + optional pull-quote (V12)
               WIDE SHOT  — second full-width screenshot (V12)
