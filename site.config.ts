@@ -427,15 +427,54 @@ export type WebProject = {
   tags: string[];
   /** CUSTOMIZE: true = featured/"highlights" tier (V3 reads this). */
   spotlight?: boolean;
-  /** CUSTOMIZE: screenshot path in /public (added in V4) */
+  /** CUSTOMIZE: screenshot path in /public (the /web-projects list thumbnail +
+   *  the detail-page OG fallback when no heroShot is set). */
   image?: string;
-  /** CUSTOMIZE: optional long-form case-study body for the detail page. All
-   *  optional — a project with none still renders a valid page from the fields
-   *  above. `gallery` is screenshot paths in /public. */
-  problem?: string;
-  approach?: string;
-  outcome?: string;
-  gallery?: string[];
+
+  // ---------------------------------------------------------------------------
+  //  CASE STUDY (V11/V12) — the screenshot-forward detail page at
+  //  /web-projects/<slug>. Every field below is OPTIONAL: a section renders
+  //  ONLY when its backing field is present and non-empty, in this fixed order.
+  //  A project with none of these still renders a clean page from the fields
+  //  above (title / date / tags / description). Author them per project here.
+  // ---------------------------------------------------------------------------
+  /** CUSTOMIZE: full-width rounded main screenshot (a /public path). Top of the
+   *  case study; also the preferred OG image (falls back to `image`). */
+  heroShot?: string;
+  /** CUSTOMIZE: the "Project Overview" facts card. Each row is optional and is
+   *  skipped when empty; `timeline` / `stack` / `link` fall back to the
+   *  project's own `date` / `tags` / `href` when their field is omitted. */
+  overview?: {
+    /** e.g. "Solo — full stack + design" */
+    role?: string;
+    /** defaults to project.date if omitted */
+    timeline?: string;
+    /** defaults to project.tags if omitted; rendered as .tag chips */
+    stack?: string[];
+    /** e.g. "Shipped", "In progress" */
+    status?: string;
+    /** defaults to project.href if omitted; rendered as the external link */
+    link?: string;
+  };
+  /** CUSTOMIZE: the "What I worked on" card — a freeform paragraph. */
+  worked?: string;
+  /** CUSTOMIZE: the "The Challenge" card — a freeform paragraph. */
+  challenge?: string;
+  /** CUSTOMIZE: the flower-bulleted process timeline. Each entry is a bold
+   *  stage `title` + an optional one-line `detail`. Any length; the section is
+   *  hidden when the array is empty/absent. */
+  process?: { title: string; detail?: string }[];
+  /** CUSTOMIZE (V12): two side-by-side square images (/public paths). */
+  squares?: [string, string];
+  /** CUSTOMIZE (V12): the editorial "article" block — body paragraphs + an
+   *  optional pull-quote. */
+  article?: { paragraphs: string[]; pullQuote?: string };
+  /** CUSTOMIZE (V12): a second full-width screenshot (/public path). */
+  wideShot?: string;
+  /** CUSTOMIZE (V12): a full-screen, edge-to-edge image (/public path). */
+  fullBleed?: string;
+  /** CUSTOMIZE (V12): the closing banner — an optional image and/or text. */
+  banner?: { image?: string; text?: string };
 };
 
 export const webProjects: WebProject[] = [
