@@ -234,11 +234,33 @@ component edits.** It controls five surfaces:
   wide viewports / vanishes below 1200px + under reduced-motion, and the `/photography` marquee freezes
   under reduced-motion / hides where the gutter collapses. (All these are enforced in CSS; this is a
   confirmation pass, not a fix.)
-- 🟡 **Author V10 long-form fields.** Web-project detail pages (`/web-projects/<slug>`) render from the
-  existing fields today; fill `problem` / `approach` / `outcome` / `gallery` per project in
-  `site.config.ts` to give each case study depth. Finalize the `writingSpirals` quotes and the
-  `marquees` taglines/colors while you're in there.
+- 🟡 **Author the V11/V12 case-study fields.** V11 retired the old `problem` / `approach` / `outcome` /
+  `gallery` fields and replaced the detail page (`/web-projects/<slug>`) with a screenshot-forward,
+  render-if-present case study. Fill the new optional fields per project in `site.config.ts` to give each
+  case study depth: `heroShot`, `overview` (role / timeline / stack / status / link), `worked`,
+  `challenge`, `process[]` (V11 renders these), plus `squares` / `article` / `wideShot` / `fullBleed` /
+  `banner` (V12 renders these). Ostiara is authored as the reference (overview + worked + challenge +
+  process). Finalize the `writingSpirals` quotes and the `marquees` taglines/colors while you're in there.
 - 🔴 **Wire homepage `work.tsx` bands → `/web-projects/<slug>`.** Deferred on purpose (waits on the
   screenshot pass); the bands still render placeholders and "See all my work ↗" points to `/web-projects`.
+
+---
+
+## V11 → V12 — case-study detail pages
+
+**V11 shipped the top of the case study** (`/web-projects/<slug>`): the render-if-present schema, the
+full-width hero screenshot, the three cards (Overview facts · What I worked on · The Challenge), and the
+flower-bulleted process timeline — all authored from `site.config.ts`, with Ostiara filled in as the
+reference. Every section is optional; a project with none of the new fields renders a clean header-only page.
+
+- 🟡 **V12 finishes the page.** The remaining sections render in this fixed order after the process:
+  **squares → article (drop-cap + optional pull-quote) → second full-width (`wideShot`) → full-bleed →
+  banner → next-project nav**, followed by the **hover-grow motion pass** and the full responsive / a11y /
+  coherence sign-off. The schema for these (`squares`, `article`, `wideShot`, `fullBleed`, `banner`) is
+  already declared in `site.config.ts`; V12 wires the rendering. See `UPDATELOGV12.md`.
+- 🟡 **Live responsive / reduced-motion sign-off for the detail page.** As with the V10 sweep above, the
+  pixel-level 1440 / 768 / 375 pass and the reduced-motion confirmation on `/web-projects/<slug>` want a
+  real browser; the behaviors are CSS-enforced (cards stack at ≤880px, `body { overflow-x: hidden }`, the
+  process flowers freeze via the shared `.motif` reduced-motion rule).
 
 _Ping me when any of the 🔴 items land and I'll wire them in immediately._

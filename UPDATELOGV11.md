@@ -398,7 +398,85 @@ MANUAL-TODO.md (do not fabricate a browser axe score if no browser is available 
 
 ## Stage 5 Report
 
-_Pending._
+**1. Full build gate — all green.** `tsc --noEmit` clean; `npm run lint` (the repo's bare
+`eslint` flat-config script) clean; `next build` (export) green. Route list (24 routes):
+
+```
+┌ ○ /                          ├ ○ /photography
+├ ○ /_not-found                ├ ○ /robots.txt
+├ ○ /apple-icon                ├ ○ /sitemap.xml
+├ ○ /design                    ├ ○ /web-projects
+├ ○ /gear                      ├ ● /web-projects/[slug]
+├ ○ /icon                      │   ostiara · mylifeinarepo · querryn · vaultdna ·
+├ ○ /opengraph-image           │   charlieramus-com · backtrace  (all 6 prerender)
+├ ○ /writing                   └ ● /writing/[slug]  (4 essays)
+```
+
+All six `/web-projects/<slug>` pages prerender (`●` SSG via `generateStaticParams`,
+`dynamicParams = false`).
+
+**2. Empty-state sweep.** Verified in a real headless browser (served the freshly-built
+`out/`) and in the built HTML:
+- **querryn** (no new fields): `hasHero:false, hasCards:false, hasProcess:false` — a valid,
+  uncluttered header-only page. No empty hero frame, no empty card row, no process section.
+- **Ostiara** (authored): renders the three cards → the process timeline in order. Note:
+  Ostiara has **no `heroShot`** authored (no real Ostiara screenshot exists in `/public`,
+  and none was assigned by any stage — Stage 2 only did a temporary hero smoke-test, then
+  reverted). So the hero *slot* correctly renders nothing for it; the slot itself is proven
+  by Stage 2's temporary test, which rendered the full-width rounded shot. This is exactly
+  the render-if-present contract.
+
+**3. Config-is-the-surface.** `heroShot`, `overview`, `worked`, `challenge`, and `process`
+are all authored in `site.config.ts` behind `// CUSTOMIZE` markers on the `WebProject`
+type / the Ostiara entry; every section is gated on its field, so changing a field in that
+one file visibly changes the page with no edit to `components/` or the page file. (Confirmed
+across the stages: the Stage-2 temporary `heroShot` edit added/removed the hero; the Stage-3
+`overview/worked/challenge` edits added the cards; the Stage-4 `process` edit added the
+timeline — all from `site.config.ts` alone.)
+
+**4. Responsive sweep (real headless Chromium via gstack `browse`, against the built `out/`):**
+horizontal overflow = `scrollWidth − innerWidth`:
+
+| Page | 1440 | 768 | 375 |
+|---|---|---|---|
+| ostiara (authored) | 0 (cards 3-up: `327.7px ×3`) | 0 | 0 (cards 1-col: `330px`) |
+| querryn (unauthored) | 0 | 0 | 0 (header only) |
+
+No horizontal scroll anywhere; the `.case-cards` row is 3-up on desktop and stacks to a
+single column at 375 (the site's `≤880px` breakpoint). Hero stays rounded/uncropped (16:9,
+`object-fit: cover`, verified in Stage 2's temporary test); process titles align (fixed 34px
+marker column).
+
+**5. Motion sweep.** The process flowers reuse the shared `.motif`, whose reduced-motion
+freeze is a single shared rule. I confirmed it **ships in the compiled stylesheet** the page
+loads: `@media (prefers-reduced-motion:reduce){.motif{animation:none…}}` is present in
+`out/_next/static/chunks/*.css`. I could **not** toggle the media feature through the browse
+tool to re-observe it live — `CDP Emulation.setEmulatedMedia` is denied by gstack's CDP
+allowlist — so this is confirmed at the compiled-CSS-artifact level (and it's the same rule
+that already freezes every other flower on the shipped site), not via an in-browser media
+emulation. Flagged honestly rather than faked.
+
+**6. Retired fields fully gone.** Grepped the repo (`*.ts`/`*.tsx`) for
+`problem`/`approach`/`outcome`/`gallery` as `WebProject` fields / property accesses — **no
+matches**. (The remaining textual hits elsewhere are unrelated: the photography *gallery*
+component, design-copy prose using the word "approach", etc.)
+
+**7. MANUAL-TODO.md** updated: added a "V11 → V12 — case-study detail pages" section noting
+V12 continues with squares → article → wide → full-bleed → banner → next-project → hover-grow
+(+ a live responsive/reduced-motion sign-off item), and fixed the stale V10 note that still
+told Charlie to fill the now-retired `problem/approach/outcome/gallery` fields (repointed to
+the new case-study fields).
+
+**Verify:** build route list pasted above; empty-state confirmed for querryn (unauthored,
+header-only) and Ostiara (authored, cards → process); responsive table at 1440/768/375 shows
+0 horizontal overflow with cards stacking; reduced-motion freeze confirmed present in the
+compiled CSS (live media-emulation deferred — CDP method not allowlisted; noted, not
+fabricated). No new deps, no config file; Tailwind v4 CSS-first on existing `@theme` tokens.
+
+Issues: (a) reduced-motion could only be verified via the compiled-CSS artifact, not a live
+media toggle, because the browse tool's CDP allowlist blocks `Emulation.setEmulatedMedia` —
+recorded in MANUAL-TODO's live sign-off item. (b) Ostiara ships without a hero image (no real
+screenshot available) — by design, the hero renders only when a `heroShot` is authored.
 
 ---
 
