@@ -2218,7 +2218,8 @@ body {
   /* HERO SHOT — full-width rounded main screenshot. Sits inside .wrap so it
      honors the --edge gutter; 16:9 frame, matching the site's 16px image
      radius. No caption, no hover motion (the V12 pass adds hover-grow). */
-  .case-hero {
+  .case-hero,
+  .case-wide {
     position: relative;
     width: 100%;
     aspect-ratio: 16 / 9;
@@ -2229,6 +2230,10 @@ body {
   }
   .case-hero-img {
     object-fit: cover;
+  }
+  /* The wide shot is the hero frame again, just spaced from the article above. */
+  .case-wide {
+    margin-top: clamp(40px, 6vw, 72px);
   }
 
   /* CARDS — the row under the hero: Overview facts + the two prose cards.
@@ -2411,6 +2416,26 @@ body {
     letter-spacing: -0.01em;
     text-align: center;
     color: var(--color-ink);
+  }
+
+  /* FULL BLEED — the one section that breaks the content gutter: an edge-to-edge
+     image spanning the full viewport width. `margin-left: calc(50% - 50vw)` +
+     `width: 100vw` re-centers it on the viewport (the .wrap it lives in is
+     centered via margin:0 auto, so its content-box centre is the viewport
+     centre); `body { overflow-x: hidden }` is the belt-and-braces against a
+     scrollbar-width overflow. NOT rounded, by design; height capped via clamp
+     so it never dominates on ultrawide. */
+  .case-bleed {
+    position: relative;
+    width: 100vw;
+    margin-left: calc(50% - 50vw);
+    margin-top: clamp(44px, 6vw, 80px);
+    height: clamp(320px, 68vh, 660px);
+    overflow: hidden;
+    background: var(--color-panel);
+  }
+  .case-bleed-img {
+    object-fit: cover;
   }
 
   /* Design — per-project slide galleries */

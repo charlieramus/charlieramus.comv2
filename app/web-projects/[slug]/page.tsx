@@ -246,10 +246,38 @@ export default async function WebProjectDetail({ params }: Params) {
           </Reveal>
         ) : null}
 
+        {/* WIDE SHOT — a second full-content-width rounded screenshot, same
+            frame treatment as the hero (shared .case-hero styling). Renders
+            only when `project.wideShot` is set. No caption. */}
+        {project.wideShot && (
+          <Reveal className="case-hero case-wide">
+            <Image
+              src={project.wideShot}
+              alt={`${project.title} — wide screenshot`}
+              fill
+              sizes="(max-width: 1200px) 100vw, 1200px"
+              className="case-hero-img"
+            />
+          </Reveal>
+        )}
+
+        {/* FULL BLEED — an edge-to-edge, full-viewport cinematic image that
+            breaks the content gutter (NOT rounded, by design). Renders only
+            when `project.fullBleed` is set. No caption. */}
+        {project.fullBleed && (
+          <Reveal className="case-bleed">
+            <Image
+              src={project.fullBleed}
+              alt={`${project.title} — full-bleed image`}
+              fill
+              sizes="100vw"
+              className="case-bleed-img"
+            />
+          </Reveal>
+        )}
+
         {/* Case-study sections render below in this fixed order, each only when
             its data exists. V12 drops into these remaining slots:
-              WIDE SHOT  — second full-width screenshot (V12)
-              FULL BLEED — full-screen edge-to-edge image (V12)
               BANNER     — closing banner image / text (V12)
               NEXT       — next-project nav (V12) */}
       </div>

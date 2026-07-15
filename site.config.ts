@@ -537,6 +537,12 @@ export const webProjects: WebProject[] = [
       pullQuote:
         "The hard part wasn't the code. It was learning how a rep actually quotes a job on a doorstep.",
     },
+    // CUSTOMIZE (V12): a second full-width rounded screenshot + a full-screen
+    // edge-to-edge image. PLACEHOLDER — no real Ostiara wide/full-bleed shots
+    // exist yet; these reuse the two existing /images/web shots so both beats
+    // render in review. Swap for real Ostiara captures when available.
+    wideShot: "/images/web/charlieramus-com.webp",
+    fullBleed: "/images/web/mylifeinarepo.webp",
   },
   {
     title: "MyLifeInARepo",

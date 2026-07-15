@@ -214,7 +214,42 @@ scroll from the full-bleed at 1440 / 768 / 375. Full-bleed spans the viewport wi
 
 ## Stage 3 Report
 
-_Pending._
+- [x] **WIDE SHOT (`app/web-projects/[slug]/page.tsx`)** — rendered a `.case-hero.case-wide`
+  frame in the slot after the article, gated on `project.wideShot`. It **reuses the hero
+  frame** (grouped the selectors `.case-hero, .case-wide` in CSS rather than duplicating the
+  rule) — same full-content-width, 16:9, 16px-rounded, panel-surface treatment — with
+  `.case-wide` adding only a `margin-top` to space it from the article. `next/image` (`fill` +
+  `sizes="(max-width: 1200px) 100vw, 1200px"`), `className="case-hero-img"`, no caption,
+  wrapped in `Reveal`.
+- [x] **FULL BLEED** — rendered a `.case-bleed` frame in the slot after the wide shot, gated
+  on `project.fullBleed`: an edge-to-edge image that breaks the content gutter, **not rounded**
+  (by design), `next/image` (`fill` + `sizes="100vw"`), no caption, `Reveal`.
+- [x] **CSS (`app/globals.css`):** grouped `.case-hero, .case-wide` for the shared frame; added
+  `.case-wide { margin-top }`. Added `.case-bleed` using the safe full-bleed technique —
+  `width: 100vw; margin-left: calc(50% - 50vw)` (re-centers on the viewport because the `.wrap`
+  it lives in is centered via `margin: 0 auto`, so its content-box centre **is** the viewport
+  centre), height **capped** via `clamp(320px, 68vh, 660px)` so it never dominates on
+  ultrawide, `overflow: hidden`, no border-radius. `body { overflow-x: hidden }` (already in
+  base) is the belt-and-braces against any scrollbar-width overflow. `.case-bleed-img
+  { object-fit: cover }`. Existing tokens only, no new deps.
+- [x] **Authored real `wideShot` + `fullBleed` on Ostiara** in `site.config.ts`. **Placeholder
+  note:** no real Ostiara wide/full-bleed captures exist, so per the stage I reused the two
+  existing `/images/web` shots (`charlieramus-com.webp` for the wide, `mylifeinarepo.webp` for
+  the bleed) — **no files fabricated** — flagged in a `// CUSTOMIZE` comment. Other projects
+  stay unset.
+
+**Verify:** `npx tsc --noEmit` clean; `npm run lint` clean; `next build` (export) green — all
+24 routes. In the built HTML, `out/web-projects/ostiara.html` contains both `.case-wide` and
+`.case-bleed`; `out/web-projects/querryn.html` has **neither** — projects without these fields
+show neither section. The rounded wide shot precedes the edge-to-edge full-bleed in order.
+
+Issues: the CRITICAL "no horizontal scroll from the full-bleed at 1440 / 768 / 375" check is a
+**live** measurement, and (matching how V11 split its work) I run the full live responsive
+sweep at the **Stage 5 gate**, where this log explicitly mandates it ("no horizontal scroll
+anywhere — especially the full-bleed"). The technique itself is the standard centered-container
+full-bleed (`calc(50% - 50vw)` + `width: 100vw`) with `body { overflow-x: hidden }` as the
+safety net; a local static-server + headless-browser measurement at all three widths lands in
+Stage 5 rather than being claimed here unverified.
 
 ---
 
