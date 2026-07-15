@@ -228,7 +228,36 @@ the full ecosystem in order, no empty sections, no horizontal scroll at 375.
 
 ## Stage 3 Report
 
-_Pending._
+- [x] Authored the full case-study field set on the `backtrace` entry in
+  `site.config.ts`, mirroring the Ostiara shape. **Data-only.**
+- [x] `overview` = `{ role: "Solo build", status: "Shipped" }`; `timeline` /
+  `stack` / `link` omitted → fall back to `date` / `tags` / `href`. `href` is the
+  public GitHub repo, so the Link row shows "View on GitHub".
+- [x] `worked` + `challenge` — drafted from the description: the walk-the-burn
+  workflow, indicator flagging, bearing capture, the sensor-fusion math, the
+  heatmap output and PDF report; the challenge is the honesty-of-uncertainty
+  framing (fusing noisy bearings into a credible probability field, not a
+  false-precision dot).
+- [x] `process` — 6 DRAFT bullets (indicator taxonomy → map + bearing capture →
+  angular-uncertainty model → bearing fusion → probability field / heatmap → PDF
+  report generation), `// CUSTOMIZE (V13): DRAFT`.
+- [x] `article` — 3 drafted paragraphs + a pull-quote on credible regions vs a
+  false-precision dot, `// CUSTOMIZE` DRAFT.
+- [x] `banner` — drafted closing line over a PLACEHOLDER image.
+- **Placeholder image slots** — Backtrace has NO own screenshot, so every image is
+  a PLACEHOLDER reusing the two real `/images/web/*.webp` shots (varied per slot,
+  each `// CUSTOMIZE PLACEHOLDER`):
+  - `heroShot` → `charlieramus-com.webp`
+  - `squares` → `[mylifeinarepo.webp, charlieramus-com.webp]`
+  - `midShot` → `mylifeinarepo.webp`
+  - `squares2` → `[charlieramus-com.webp, mylifeinarepo.webp]`
+  - `wideShot` → `charlieramus-com.webp`
+  - `banner.image` → `mylifeinarepo.webp`
+- **Verify:** `tsc --noEmit` clean; `npm run lint` clean; `next build` (export)
+  green — `/web-projects/backtrace` prerenders in the `[slug]` group. Full
+  ecosystem renders in order (hero → cards → process → squares → midShot →
+  squares2 → article → wideShot → banner → next). No empty sections; no
+  component/CSS change. **Issues:** none.
 
 ---
 

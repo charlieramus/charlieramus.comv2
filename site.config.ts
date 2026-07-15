@@ -744,6 +744,70 @@ export const webProjects: WebProject[] = [
     href: "https://github.com/charlieramus/backtrace",
     tags: ["HTML", "TypeScript", "Vector mathematics", " Sensor fusion", "Automatic PDF generation"],
     spotlight: true,
+    // CUSTOMIZE (V13): case-study content for /web-projects/backtrace, mirroring
+    // the Ostiara shape. Copy is a DRAFT distilled from the `description` above —
+    // refine it. Timeline/Stack/Link omitted → fall back to date/tags/href
+    // (href is the public GitHub, so the Link row shows "View on GitHub").
+    // CUSTOMIZE PLACEHOLDER: no real Backtrace capture exists — reuses an existing
+    // /images/web shot so the hero renders. Swap when captured.
+    heroShot: "/images/web/charlieramus-com.webp",
+    overview: {
+      role: "Solo build",
+      status: "Shipped",
+    },
+    worked:
+      "A field instrument for reasoning about where a wildland fire started. You walk the burn with a map, flag physical fire-pattern indicators, and record the direction each one points. Backtrace fuses those bearings — each carrying its own angular uncertainty — into a probability field for the origin, rendered as a heatmap with credible regions rather than a single dot, and generates a PDF report from the result.",
+    challenge:
+      "Staying honest about uncertainty. The instinct is to draw one confident point where the bearings cross, but real bearings are noisy — so the hard part was fusing them into a credible probability field with honest regions instead of a false-precision single point.",
+    // CUSTOMIZE (V13): DRAFT process — a plausible build order. Refine to match.
+    process: [
+      {
+        title: "Indicator taxonomy",
+        detail: "Catalogued the physical fire-pattern indicators a walker flags in the field.",
+      },
+      {
+        title: "Map + bearing capture",
+        detail: "The map-based walk-the-burn workflow for recording each indicator's direction.",
+      },
+      {
+        title: "Angular-uncertainty model",
+        detail: "Gave every bearing its own angular uncertainty rather than a hard line.",
+      },
+      {
+        title: "Bearing fusion",
+        detail: "Fused the noisy bearings into a single probability field for the origin.",
+      },
+      {
+        title: "Probability field / heatmap",
+        detail: "Rendered credible regions as a heatmap — not a false-precision dot.",
+      },
+      {
+        title: "PDF report generation",
+        detail: "Generated a shareable report from the fused result.",
+      },
+    ],
+    // CUSTOMIZE (V13): PLACEHOLDER images — reuse the two real /images/web shots
+    // (cropped to square via object-fit for the square slots). Swap when captured.
+    squares: ["/images/web/mylifeinarepo.webp", "/images/web/charlieramus-com.webp"],
+    midShot: "/images/web/mylifeinarepo.webp",
+    squares2: ["/images/web/charlieramus-com.webp", "/images/web/mylifeinarepo.webp"],
+    // CUSTOMIZE (V13): DRAFT article distilled from the description.
+    article: {
+      paragraphs: [
+        "Backtrace is an honest field instrument for a deceptively hard question: where did a wildland fire start? The workflow is physical — you walk the burn with a map, flag the fire-pattern indicators the fire itself leaves behind, and record the direction each one points back toward the origin. Each of those readings is a bearing, and no single bearing is trustworthy on its own.",
+        "The design refuses false precision. Rather than crossing a few lines and dropping a confident pin, Backtrace treats every bearing as carrying its own angular uncertainty and fuses them into a probability field — a heatmap with credible regions that says where the origin probably is, and how sure the evidence lets you be. That honesty about uncertainty was the whole point, and the hardest part to get right.",
+        "From that fused field it generates a PDF report, so the reasoning travels with the conclusion instead of getting lost behind a single dot on a map.",
+      ],
+      pullQuote:
+        "A heatmap with credible regions, not a single false-precision dot.",
+    },
+    // CUSTOMIZE (V13): PLACEHOLDER wide shot — reuses a real /images/web shot.
+    wideShot: "/images/web/charlieramus-com.webp",
+    // CUSTOMIZE (V13): closing banner — DRAFT text over a PLACEHOLDER image.
+    banner: {
+      image: "/images/web/mylifeinarepo.webp",
+      text: "Bearings are noisy. An honest instrument says so — and shows you where the evidence points anyway.",
+    },
   },
 ];
 
