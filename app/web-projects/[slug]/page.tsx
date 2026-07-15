@@ -7,7 +7,7 @@ import Motif from "@/components/motif";
 import SiteHeader from "@/components/site-header";
 import SiteFooter from "@/components/site-footer";
 import { webProjects } from "@/data/projects-web";
-import { webProjectBySlug } from "@/data/previews";
+import { webProjectBySlug, nextWebProject } from "@/data/previews";
 import { SITE_URL } from "@/data/site";
 
 // Prerender exactly the projects in the manifest; anything else 404s. Same
@@ -57,6 +57,8 @@ export default async function WebProjectDetail({ params }: Params) {
   const { slug } = await params;
   // dynamicParams = false guarantees this resolves for every prerendered slug.
   const project = webProjectBySlug(slug)!;
+  // Next case study, derived from webProjects order (wraps last → first).
+  const next = nextWebProject(slug);
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -276,10 +278,48 @@ export default async function WebProjectDetail({ params }: Params) {
           </Reveal>
         )}
 
-        {/* Case-study sections render below in this fixed order, each only when
-            its data exists. V12 drops into these remaining slots:
-              BANNER     — closing banner image / text (V12)
-              NEXT       — next-project nav (V12) */}
+        {/* BANNER — a customizable closing band: an optional background image
+            and/or an optional overlaid line of text, both // CUSTOMIZE. A
+            subtle scrim is added only when text sits over an image. Rounded to
+            match the page (not full-bleed). Renders only when `banner` has an
+            image or text. No caption. */}
+        {project.banner && (project.banner.image || project.banner.text) && (
+          <Reveal
+            as="section"
+            className={`case-banner${project.banner.image ? " has-image" : ""}${
+              project.banner.text ? " has-text" : ""
+            }`}
+          >
+            {project.banner.image && (
+              <Image
+                src={project.banner.image}
+                alt={`${project.title} — banner`}
+                fill
+                sizes="(max-width: 1200px) 100vw, 1200px"
+                className="case-banner-img"
+              />
+            )}
+            {project.banner.text && (
+              <p className="case-banner-text">{project.banner.text}</p>
+            )}
+          </Reveal>
+        )}
+
+        {/* NEXT PROJECT — the quiet foot link handing the visitor to the next
+            case study, derived from `webProjects` order (wraps last → first).
+            No config field. With ≥1 project it always resolves a target. */}
+        {next && (
+          <Reveal as="nav" className="case-next" aria-label="Project navigation">
+            <Link
+              href={`/web-projects/${next.slug}`}
+              prefetch={false}
+              className="case-next-link"
+            >
+              <span className="case-next-label">Next project</span>
+              <span className="case-next-title">{next.title} →</span>
+            </Link>
+          </Reveal>
+        )}
       </div>
 
       </main>

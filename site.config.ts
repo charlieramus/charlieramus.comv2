@@ -543,6 +543,14 @@ export const webProjects: WebProject[] = [
     // render in review. Swap for real Ostiara captures when available.
     wideShot: "/images/web/charlieramus-com.webp",
     fullBleed: "/images/web/mylifeinarepo.webp",
+    // CUSTOMIZE (V12): the closing banner — an optional background image and/or
+    // an overlaid line of text. Here it's text over an image (a subtle scrim is
+    // added automatically for legibility). PLACEHOLDER image — reuses an
+    // existing /images/web shot until a real Ostiara banner asset exists.
+    banner: {
+      image: "/images/web/charlieramus-com.webp",
+      text: "Built solo, end to end — and still bending back to how the work is really done.",
+    },
   },
   {
     title: "MyLifeInARepo",

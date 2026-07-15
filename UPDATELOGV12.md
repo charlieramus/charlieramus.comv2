@@ -285,7 +285,46 @@ scroll at 375; banner text stays legible over its image.
 
 ## Stage 4 Report
 
-_Pending._
+- [x] **BANNER (`app/web-projects/[slug]/page.tsx`)** — rendered a `.case-banner` section in
+  the slot after the full-bleed, gated on `project.banner && (banner.image || banner.text)`.
+  The band takes conditional `has-image` / `has-text` classes; the optional `next/image`
+  (`fill` + `sizes`) fills it and the optional `<p className="case-banner-text">` overlays it.
+  Rounded to match the page (kept in the content frame, **not** full-bleed). No caption,
+  wrapped in `Reveal as="section"`.
+- [x] **Banner CSS (`app/globals.css`):** `.case-banner` — a centered flex band on the panel
+  surface with the site's 16px radius + line border and a clamped `min-height`;
+  `.case-banner-img { object-fit: cover }`; a **subtle flat scrim** (`rgba(20,20,15,0.4)`)
+  applied via `.case-banner.has-image.has-text::after` **only** when text sits over an image
+  (no gradient); `.case-banner-text` is a centered serif line, flipped to `--color-paper` over
+  an image and left in `--color-ink` on a text-only panel band. So: text-only → clean panel
+  band; image-only → image band; image+text → scrimmed for contrast.
+- [x] **NEXT PROJECT** — added `nextWebProject(slug)` to `data/previews.ts` (next to
+  `webProjectBySlug`): `findIndex` + `(i + 1) % webProjects.length`, so it returns the next
+  project and **wraps the last back to the first**, deterministically, with no config field.
+  The page resolves `const next = nextWebProject(slug)` and always renders a `.case-next`
+  `<nav aria-label="Project navigation">` with a quiet `Link` (`prefetch={false}`) to
+  `/web-projects/{next.slug}` — a small uppercase "Next project" label over the serif
+  `{next.title} →`. (Hero-shot thumbnail on the link is deferred per the Decisions — text
+  link only.)
+- [x] **Next-project CSS:** `.case-next` sits under a dashed rule (matching the inner pages);
+  `.case-next-title` carries the site's animated **underline-grow on hover** (mirrors
+  `.proj-title-link` — `background-size: 0 2px` → `100% 2px`) and a `:focus-visible` ring on
+  the link. No new tokens/deps.
+- [x] **Authored a real `banner` on Ostiara** in `site.config.ts`: text over an image (to
+  exercise the scrim path for the reference). **Placeholder note:** the banner image reuses an
+  existing `/images/web` shot (no real Ostiara banner asset yet) — flagged in a `// CUSTOMIZE`
+  comment; **no files fabricated**. Other projects stay unset.
+
+**Verify:** `npx tsc --noEmit` clean; `npm run lint` clean; `next build` (export) green — all
+24 routes. In the built HTML: `out/web-projects/ostiara.html` shows the `.case-banner` **then**
+a "Next project → MyLifeInARepo" link (Ostiara is index 0 → index 1). The **wrap** is proven:
+`out/web-projects/backtrace.html` (the last project, no banner) has **no** `.case-banner` but a
+"Next project → Ostiara" link (last → first). `out/web-projects/querryn.html` (unauthored) has
+no banner but still shows "Next project → VaultDNA". So a project without `banner` shows no
+banner yet always shows next-project.
+
+Issues: banner image is a placeholder (reused web shot); noted in config and to be logged in
+MANUAL-TODO at Stage 5. Live 375 legibility/no-scroll confirmation is the Stage 5 sweep.
 
 ---
 

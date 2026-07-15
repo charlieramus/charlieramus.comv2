@@ -95,3 +95,13 @@ export function workBandProjects(): WebProject[] {
 export function webProjectBySlug(slug: string): WebProject | undefined {
   return webProjects.find((p) => p.slug === slug);
 }
+
+/** The project after `slug` in `webProjects` order, wrapping the last back to
+ *  the first — the "Next project →" target on each case study (V12). Derived
+ *  from array order, no config field. Returns `undefined` only for an unknown
+ *  slug (callers gate on it); with ≥1 project it always resolves a target. */
+export function nextWebProject(slug: string): WebProject | undefined {
+  const i = webProjects.findIndex((p) => p.slug === slug);
+  if (i === -1) return undefined;
+  return webProjects[(i + 1) % webProjects.length];
+}
