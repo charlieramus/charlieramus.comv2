@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Fragment } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import Reveal from "@/components/reveal";
@@ -225,9 +226,28 @@ export default async function WebProjectDetail({ params }: Params) {
           </Reveal>
         )}
 
+        {/* ARTICLE — the NYT-clean editorial reading beat: a centered serif
+            column, a drop-cap on the first paragraph, and an optional large
+            pull-quote dropped in after the first paragraph. Renders only when
+            `article.paragraphs` has entries; the drop-cap comes from the CSS
+            `::first-letter` on the first <p>. */}
+        {project.article?.paragraphs?.length ? (
+          <Reveal as="section" className="case-article">
+            {project.article.paragraphs.map((para, i) => (
+              <Fragment key={i}>
+                <p>{para}</p>
+                {i === 0 && project.article?.pullQuote && (
+                  <blockquote className="case-pullquote">
+                    {project.article.pullQuote}
+                  </blockquote>
+                )}
+              </Fragment>
+            ))}
+          </Reveal>
+        ) : null}
+
         {/* Case-study sections render below in this fixed order, each only when
             its data exists. V12 drops into these remaining slots:
-              ARTICLE    — editorial paragraphs + optional pull-quote (V12)
               WIDE SHOT  — second full-width screenshot (V12)
               FULL BLEED — full-screen edge-to-edge image (V12)
               BANNER     — closing banner image / text (V12)

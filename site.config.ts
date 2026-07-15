@@ -526,6 +526,17 @@ export const webProjects: WebProject[] = [
     // shots are cropped to square via object-fit so the section renders in
     // review. Swap for real square Ostiara assets when captured.
     squares: ["/images/web/mylifeinarepo.webp", "/images/web/charlieramus-com.webp"],
+    // CUSTOMIZE (V12): the editorial article — clean serif paragraphs with a
+    // drop-cap on the first one and one optional large pull-quote.
+    article: {
+      paragraphs: [
+        "Ostiara started as a platform for door-to-door sales teams across home-service verticals — pest control, solar, roofing, fencing, security — and I built the whole of it solo: the marketing site, an admin dashboard, and a teams-and-roles system on Clerk Organizations with Supabase row-level security drawing the boundaries. The data model, the interface, and the copy in between all wear a design system I built for the product.",
+        "The part that stuck with me wasn't the code. It was the customer discovery. Talking to reps who actually quote jobs on a doorstep surfaced a real split I hadn't planned for: some verticals price off a fixed menu, and others have to measure the site before they can quote at all. That one distinction changes what the tool owes each group — what a rep needs on the screen when a homeowner is standing right there.",
+        "So the build kept bending back to that split. Access control, the dashboard, the way a quote gets assembled — each decision had to hold for both the menu-priced teams and the measure-on-site ones, without forcing either into the other's workflow. The engineering was the straightforward half; keeping the product honest to how the work is really done was the rest of it.",
+      ],
+      pullQuote:
+        "The hard part wasn't the code. It was learning how a rep actually quotes a job on a doorstep.",
+    },
   },
   {
     title: "MyLifeInARepo",

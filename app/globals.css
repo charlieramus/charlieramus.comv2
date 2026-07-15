@@ -2368,6 +2368,51 @@ body {
     object-fit: cover;
   }
 
+  /* ARTICLE — the NYT-clean editorial beat. A centered serif reading column
+     (~66ch) with a generous line-height, a serif drop-cap on the first
+     paragraph, and an optional large pull-quote. No colored callout boxes. */
+  .case-article {
+    max-width: 66ch;
+    margin-inline: auto;
+    margin-top: clamp(40px, 6vw, 72px);
+    font-family: var(--font-serif);
+    font-size: clamp(16px, 1.5vw, 18px);
+    line-height: 1.85;
+    color: var(--color-ink);
+  }
+  .case-article > p {
+    margin-bottom: 1.15em;
+  }
+  .case-article > p:last-child {
+    margin-bottom: 0;
+  }
+  /* Serif drop-cap on the first paragraph — sized to ~3 lines, in body ink. */
+  .case-article > p:first-of-type::first-letter {
+    float: left;
+    font-family: var(--font-serif);
+    font-weight: 700;
+    font-size: 3.4em;
+    line-height: 0.78;
+    padding-right: 0.09em;
+    padding-top: 0.02em;
+    color: var(--color-ink);
+  }
+  /* Pull-quote — a large serif aside, quiet hairline rules + generous space,
+     never a colored box. Sits full-column between paragraphs. */
+  .case-pullquote {
+    margin: clamp(30px, 4vw, 48px) 0;
+    padding: clamp(20px, 2.6vw, 30px) 0;
+    border-top: 1px solid var(--color-line);
+    border-bottom: 1px solid var(--color-line);
+    font-family: var(--font-serif);
+    font-size: clamp(20px, 2.6vw, 28px);
+    font-style: italic;
+    line-height: 1.35;
+    letter-spacing: -0.01em;
+    text-align: center;
+    color: var(--color-ink);
+  }
+
   /* Design — per-project slide galleries */
   .design-project {
     padding: clamp(30px, 5vw, 58px) 0;

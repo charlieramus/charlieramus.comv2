@@ -145,7 +145,45 @@ centered at 1440 / 768 / 375; no horizontal scroll.
 
 ## Stage 2 Report
 
-_Pending._
+- [x] **`app/web-projects/[slug]/page.tsx` — rendered the `.case-article` section** in the
+  slot after the squares, gated on `project.article?.paragraphs?.length`. Each paragraph is a
+  direct `<p>` child of the section (so the CSS `::first-letter` drop-cap targets the true
+  first paragraph); the paragraphs are mapped inside a `Fragment` so the optional pull-quote
+  can be injected **after the first paragraph** without wrapping the `<p>`s in an extra element
+  that would break `p:first-of-type`. Wrapped in `Reveal as="section"`. Added the
+  `import { Fragment } from "react"`.
+- [x] **Pull-quote** — rendered as a real `<blockquote className="case-pullquote">` (correct
+  semantics, no `aria` hacks needed) only when `article.pullQuote` is set, dropped in right
+  after the first paragraph. A project with paragraphs but no `pullQuote` renders the article
+  and no quote.
+- [x] **CSS (`app/globals.css`):** added `.case-article` — a centered reading column
+  (`max-width: 66ch; margin-inline: auto`, narrower than the `--maxw` content width for an
+  editorial measure), `--font-serif`, `line-height: 1.85`, clamp body size; `.case-article > p`
+  bottom-margin rhythm (last `<p>` zeroed); the drop-cap via
+  `.case-article > p:first-of-type::first-letter` (`float: left`, `3.4em`, `line-height: 0.78`
+  ≈ 3 lines, body ink, tasteful not decorative); and `.case-pullquote` — a large italic serif
+  aside with quiet hairline rules top+bottom (`--color-line`) and generous whitespace,
+  centered, **not** a colored callout box. Existing tokens only, no new deps.
+- [x] **Authored a real `article` on Ostiara** in `site.config.ts`: 3 paragraphs + one
+  `pullQuote`, drawn entirely from the existing description / challenge / about copy (the
+  solo end-to-end build, the customer-discovery split between fixed-price-menu and
+  measure-on-site quoting, what that split owes each group) — **no new facts invented**. Other
+  projects stay unset.
+
+**Verify:** `npx tsc --noEmit` clean; `npm run lint` clean; `next build` (export) green — all
+24 routes. In the built HTML, `out/web-projects/ostiara.html` contains `.case-article`, the
+`.case-pullquote` blockquote, and the article body ("Ostiara started as a platform…" through
+the doorstep pull-quote); `out/web-projects/querryn.html` has no `.case-article` — a project
+without `article` shows no section. The reading column is centered at `66ch` and the
+`overflow-x: hidden` body + `margin-inline: auto` keep 375 free of horizontal scroll (live
+sweep is the Stage 5 gate).
+
+Issues: mid-build hit the same `EBUSY: rmdir out/web-projects` tooling artifact V11 Stage 4
+flagged — a shell (my HTML-inspection `cd`) held a Windows handle on `out/web-projects`, so
+the export-clean couldn't remove it. tsc + lint had already passed and the build had generated
+all 24 pages; moving the shell's CWD out of `out/`, clearing `out/`, and rebuilding ran green.
+Not a code issue — a CWD/handle artifact (I now inspect the built HTML via the Grep tool
+instead of `cd`-ing into `out/`).
 
 ---
 
