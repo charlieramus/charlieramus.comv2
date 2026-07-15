@@ -162,7 +162,38 @@ renders the full ecosystem in order, no empty sections, no horizontal scroll at 
 
 ## Stage 2 Report
 
-_Pending._
+- [x] Authored the full case-study field set on the `charlieramus-com` entry in
+  `site.config.ts`, mirroring the Ostiara shape. **Data-only** — nothing outside
+  `site.config.ts`.
+- [x] `heroShot` = `/images/web/charlieramus-com.webp` — the site's own real shot
+  (`// CUSTOMIZE`).
+- [x] `overview` = `{ role: "Solo — design + build", status: "In progress" }`;
+  `timeline` / `stack` / `link` omitted → fall back to `date` / `tags` / `href`
+  (`href` is the live URL, so the Link row shows "charlieramus.com ↗").
+- [x] `worked` + `challenge` — drafted from the description: the Next.js/TS/Tailwind
+  rebuild, the `site.config.ts` one-file content model, MDX writing, the masonry
+  grid + lightbox, and the flower system; the challenge is the honest one —
+  collapsing every editable value into one config file while keeping design-system
+  character and masonry/lightbox correctness.
+- [x] `process` — 6 DRAFT bullets (design system from the mockup → content model in
+  `site.config.ts` → inner pages → photography pipeline → case-study pages →
+  polish), `// CUSTOMIZE (V13): DRAFT`.
+- [x] `article` — 3 drafted paragraphs + the finale-line pull-quote ("A portfolio
+  is not proof of what you built. It is proof you noticed."), `// CUSTOMIZE` DRAFT.
+- [x] `banner` — drafted closing line over a PLACEHOLDER image.
+- **Placeholder image slots** (only the two real shots exist; varied per slot,
+  each `// CUSTOMIZE PLACEHOLDER`):
+  - `heroShot` → `charlieramus-com.webp` (real, its own)
+  - `squares` → `[mylifeinarepo.webp, charlieramus-com.webp]`
+  - `midShot` → `mylifeinarepo.webp`
+  - `squares2` → `[charlieramus-com.webp, mylifeinarepo.webp]`
+  - `wideShot` → `charlieramus-com.webp`
+  - `banner.image` → `mylifeinarepo.webp`
+- **Verify:** `tsc --noEmit` clean; `npm run lint` clean; `next build` (export)
+  green — `/web-projects/charlieramus-com` prerenders in the `[slug]` group. The
+  page renders the full ecosystem in order (hero → cards → process → squares →
+  midShot → squares2 → article → wideShot → banner → next). No empty sections; no
+  component/CSS change. **Issues:** none.
 
 ---
 

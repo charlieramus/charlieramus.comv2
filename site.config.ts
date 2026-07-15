@@ -670,6 +670,70 @@ export const webProjects: WebProject[] = [
     href: "https://charlieramus.com",
     tags: ["Next.js", "TypeScript", "Tailwind", "MDX"],
     image: "/images/web/charlieramus-com.webp",
+    // CUSTOMIZE (V13): case-study content for /web-projects/charlieramus-com,
+    // mirroring the Ostiara shape. Copy is a DRAFT distilled from the
+    // `description` above (and first-hand — this is the site itself). Refine it.
+    // Timeline/Stack/Link omitted → fall back to date/tags/href.
+    // CUSTOMIZE: full-width rounded hero — this site's own real shot.
+    heroShot: "/images/web/charlieramus-com.webp",
+    overview: {
+      role: "Solo — design + build",
+      status: "In progress",
+    },
+    worked:
+      "A clean-slate rebuild of my portfolio in Next.js, TypeScript, and Tailwind. Nearly everything editable collapses into one file, site.config.ts — the content model that drives every page. Writing lives as MDX, the photography is a masonry grid backed by a fullscreen lightbox, and a decorative flower system runs across the surfaces, motion-safe under prefers-reduced-motion.",
+    challenge:
+      "Collapsing every editable value into a single config file — so the copy can be changed without touching JSX — while keeping the design-system character intact and the masonry grid and lightbox correct across sizes.",
+    // CUSTOMIZE (V13): DRAFT process — a plausible build order. Refine to match.
+    process: [
+      {
+        title: "Design system from the mockup",
+        detail: "Ported the palette, type, and radii into Tailwind v4 @theme tokens.",
+      },
+      {
+        title: "Content model in site.config.ts",
+        detail: "Folded every editable value into one typed file, no JSX to chase.",
+      },
+      {
+        title: "Inner pages",
+        detail: "About, writing, design, gear, web projects — each reading its copy from config.",
+      },
+      {
+        title: "Photography pipeline",
+        detail: "Masonry grid backed by a fullscreen lightbox, fed by the synced gallery.",
+      },
+      {
+        title: "Case-study pages",
+        detail: "The screenshot-forward /web-projects/[slug] template, authored per project.",
+      },
+      {
+        title: "Polish",
+        detail: "The decorative flower system and the motion-safe finishing pass.",
+      },
+    ],
+    // CUSTOMIZE (V13): PLACEHOLDER images — reuse the two real /images/web shots
+    // (cropped to square via object-fit for the square slots). Swap when captured.
+    squares: ["/images/web/mylifeinarepo.webp", "/images/web/charlieramus-com.webp"],
+    midShot: "/images/web/mylifeinarepo.webp",
+    squares2: ["/images/web/charlieramus-com.webp", "/images/web/mylifeinarepo.webp"],
+    // CUSTOMIZE (V13): DRAFT article distilled from the description + the site's
+    // own thesis line.
+    article: {
+      paragraphs: [
+        "This site is its own case study. It's a clean-slate rebuild in Next.js, TypeScript, and Tailwind, meant to fully replace the old charlieramus.com — and the organizing idea was to make it editable by a person, not a codebase. Almost every string, list, and image path lives in one file, site.config.ts, behind // CUSTOMIZE markers, so the copy can change without anyone opening a component.",
+        "The writing runs on MDX, so an essay is just a file. The photography is a masonry grid backed by a fullscreen lightbox, and a decorative flower system threads through the surfaces — all of it motion-safe, removed or frozen under prefers-reduced-motion. The constraint I kept returning to was character: one config file is easy; one config file that still feels designed is the actual work.",
+        "The case-study pages you're reading are part of that same system — every section is data in site.config.ts, rendered by one template. Swap a placeholder, edit a paragraph, run the build, and it's live.",
+      ],
+      pullQuote:
+        "A portfolio is not proof of what you built. It is proof you noticed.",
+    },
+    // CUSTOMIZE (V13): PLACEHOLDER wide shot — reuses a real /images/web shot.
+    wideShot: "/images/web/charlieramus-com.webp",
+    // CUSTOMIZE (V13): closing banner — DRAFT text over a PLACEHOLDER image.
+    banner: {
+      image: "/images/web/mylifeinarepo.webp",
+      text: "One file to edit, a whole site to show for it.",
+    },
   },
   {
     title: "Backtrace",
