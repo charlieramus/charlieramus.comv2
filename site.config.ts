@@ -575,6 +575,73 @@ export const webProjects: WebProject[] = [
     tags: ["Next.js", "TypeScript", "Markdown", "Personal Finance"],
     spotlight: true,
     image: "/images/web/mylifeinarepo.webp",
+    // CUSTOMIZE (V13): case-study content for /web-projects/mylifeinarepo,
+    // mirroring the Ostiara shape. Copy is a DRAFT distilled from the
+    // `description` above — refine it. Timeline/Stack/Link are omitted so they
+    // fall back to date/tags/href (href is "" so the Link row stays hidden).
+    // CUSTOMIZE: full-width rounded hero — this project's own real shot.
+    heroShot: "/images/web/mylifeinarepo.webp",
+    overview: {
+      role: "Solo build",
+      status: "Mostly done — occasional contributions",
+    },
+    worked:
+      "A personal life-tracking system built as a git repo of daily markdown files, parsed into structured data and rendered through a Next.js dashboard. On top of that sits a financial module — net worth, budgeting, and cash-flow forecasting — fed by a bank-statement import pipeline and a transaction-categorization engine modeled on how Monarch Money handles rule-based categorization.",
+    challenge:
+      "The hard part was turning freeform daily markdown notes into reliable structured data — parsing something written to be human-readable into something a dashboard could trust, without forcing the writing into a rigid schema.",
+    // CUSTOMIZE (V13): DRAFT process — a plausible build order distilled from the
+    // description. Refine the titles/details to match how it actually went.
+    process: [
+      {
+        title: "Daily markdown schema",
+        detail: "Settled the shape of a daily note — human-readable first, still parseable.",
+      },
+      {
+        title: "Parser to structured data",
+        detail: "Turned freeform notes into reliable structured records the app could query.",
+      },
+      {
+        title: "Next.js dashboard",
+        detail: "The surface that renders the parsed life data back as something legible.",
+      },
+      {
+        title: "Financial module",
+        detail: "Net worth, budgeting, and cash-flow forecasting on top of the same data model.",
+      },
+      {
+        title: "Bank-statement import",
+        detail: "A pipeline to pull real transactions in from statements.",
+      },
+      {
+        title: "Categorization engine",
+        detail: "Rule-based transaction categorization modeled on Monarch Money.",
+      },
+    ],
+    // CUSTOMIZE (V13): PLACEHOLDER images — no true square/wide MyLifeInARepo
+    // captures exist yet; these reuse the two real /images/web shots (cropped to
+    // square via object-fit for the square slots) so every section renders in
+    // review. Swap for real assets when captured.
+    squares: ["/images/web/charlieramus-com.webp", "/images/web/mylifeinarepo.webp"],
+    midShot: "/images/web/charlieramus-com.webp",
+    squares2: ["/images/web/mylifeinarepo.webp", "/images/web/charlieramus-com.webp"],
+    // CUSTOMIZE (V13): DRAFT article distilled from the description.
+    article: {
+      paragraphs: [
+        "MyLifeInARepo started from a simple idea: keep the record of a life the way you'd keep a codebase. Every day is a markdown file, committed to a git repo — a plain-text log you can read on its own, with the full history that git gives you for free. The app parses those files into structured data and renders them through a Next.js dashboard.",
+        "The interesting problem sat between those two forms. A daily note is written to be human-readable, not machine-readable, and the whole point was to keep it that way — so the parser had to pull reliable structured data out of freeform writing without turning the journal into a form. Get that wrong and every downstream view inherits the noise.",
+        "On top of the parsed data sits a financial module — net worth, budgeting, and cash-flow forecasting — fed by a bank-statement import pipeline and a rule-based categorization engine modeled on how Monarch Money handles it. It's mostly done now; I still contribute to it occasionally.",
+      ],
+      pullQuote:
+        "The whole trick was turning freeform daily notes into structured data reliable enough to build on.",
+    },
+    // CUSTOMIZE (V13): PLACEHOLDER wide shot — reuses a real /images/web shot.
+    wideShot: "/images/web/mylifeinarepo.webp",
+    // CUSTOMIZE (V13): closing banner — DRAFT text over a PLACEHOLDER image
+    // (reuses a real /images/web shot until a true banner asset exists).
+    banner: {
+      image: "/images/web/charlieramus-com.webp",
+      text: "A life kept like a codebase — plain text, full history, and a dashboard on top.",
+    },
   },
   {
     title: "Querryn",
