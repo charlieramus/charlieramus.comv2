@@ -302,7 +302,43 @@ scroll at 375.
 
 ## Stage 4 Report
 
-_Pending._
+Authored BOTH thin projects together in `site.config.ts`, mirroring the Ostiara
+shape, copy kept honest to each short `description` (no padding). **Data-only.**
+
+**Querryn** (`/web-projects/querryn`):
+- [x] `overview` = `{ role: "Solo build", status: "Submitted to the Chrome Web
+  Store" }`; `timeline`/`stack`/`link` fall back; `href` is `""` → Link row hidden.
+- [x] `worked` + `challenge` — the tiered domain-trust credibility scoring + the
+  multi-format (MLA/APA/Chicago/BibTeX) citation exporter; challenge = making a
+  credibility signal a student can trust.
+- [x] `process` — 4 DRAFT bullets (domain-trust tiers → credibility scoring UI →
+  citation formatters → Chrome Web Store submission).
+- [x] `article` — 2 drafted paragraphs + a pull-quote on source credibility.
+- [x] `banner` — drafted line over a PLACEHOLDER image.
+- Placeholder slots (`// CUSTOMIZE PLACEHOLDER`): hero → `mylifeinarepo`,
+  squares → `[charlieramus-com, mylifeinarepo]`, midShot → `charlieramus-com`,
+  squares2 → `[mylifeinarepo, charlieramus-com]`, wideShot → `mylifeinarepo`,
+  banner → `charlieramus-com`.
+
+**VaultDNA** (`/web-projects/vaultdna`):
+- [x] `overview` = `{ role: "Solo build", status: "Shipped — quick build" }`;
+  fallbacks for the rest; `href` is `""` → Link row hidden.
+- [x] `worked` + `challenge` — the Obsidian plugin + the DNA-encoding scheme
+  respecting homopolymer/GC constraints; challenge = encoding arbitrary notes into
+  DNA within real biological storage constraints and decoding them back.
+- [x] `process` — 4 DRAFT bullets (encoding scheme → constraint handling → Obsidian
+  integration → round-trip decode).
+- [x] `article` — 2 drafted paragraphs + a pull-quote on notes-as-DNA.
+- [x] `banner` — drafted line over a PLACEHOLDER image.
+- Placeholder slots (`// CUSTOMIZE PLACEHOLDER`): hero → `charlieramus-com`,
+  squares → `[mylifeinarepo, charlieramus-com]`, midShot → `mylifeinarepo`,
+  squares2 → `[charlieramus-com, mylifeinarepo]`, wideShot → `charlieramus-com`,
+  banner → `mylifeinarepo`.
+
+- **Verify:** `tsc --noEmit` clean; `npm run lint` clean; `next build` (export)
+  green — both `/web-projects/querryn` and `/web-projects/vaultdna` prerender in the
+  `[slug]` group (all six slugs now build). Both render the full ecosystem in order,
+  no empty sections; no component/CSS change. **Issues:** none.
 
 ---
 

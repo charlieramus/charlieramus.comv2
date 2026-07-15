@@ -651,6 +651,59 @@ export const webProjects: WebProject[] = [
       "A Chrome extension that rates the credibility of sources for students writing academic papers, using a tiered domain-trust system, and exports citations in MLA, APA, Chicago, and BibTeX. Submitted to the Chrome Web Store.",
     href: "",
     tags: ["Chrome Extension", "TypeScript", "EdTech"],
+    // CUSTOMIZE (V13): case-study content for /web-projects/querryn, mirroring the
+    // Ostiara shape. Copy is a DRAFT distilled from the short `description` above —
+    // kept short, no padding. Timeline/Stack/Link omitted → fall back to
+    // date/tags/href (href is "" so the Link row stays hidden).
+    // CUSTOMIZE PLACEHOLDER: no real Querryn capture — reuses an existing shot.
+    heroShot: "/images/web/mylifeinarepo.webp",
+    overview: {
+      role: "Solo build",
+      status: "Submitted to the Chrome Web Store",
+    },
+    worked:
+      "A Chrome extension that scores the credibility of a source while a student writes a paper, using a tiered domain-trust system, and exports citations in MLA, APA, Chicago, and BibTeX.",
+    challenge:
+      "Designing a credibility signal a student can actually trust — turning a tiered domain-trust system into a score that's honest about what it does and doesn't know.",
+    // CUSTOMIZE (V13): DRAFT process — a plausible build order. Refine to match.
+    process: [
+      {
+        title: "Domain-trust tiers",
+        detail: "Defined the tiers that rank a source's domain by credibility.",
+      },
+      {
+        title: "Credibility scoring UI",
+        detail: "Surfaced the score inline while the student researches.",
+      },
+      {
+        title: "Citation formatters",
+        detail: "MLA, APA, Chicago, and BibTeX export from one source record.",
+      },
+      {
+        title: "Chrome Web Store submission",
+        detail: "Packaged and submitted the extension for review.",
+      },
+    ],
+    // CUSTOMIZE (V13): PLACEHOLDER images — reuse the two real /images/web shots.
+    squares: ["/images/web/charlieramus-com.webp", "/images/web/mylifeinarepo.webp"],
+    midShot: "/images/web/charlieramus-com.webp",
+    squares2: ["/images/web/mylifeinarepo.webp", "/images/web/charlieramus-com.webp"],
+    // CUSTOMIZE (V13): DRAFT article distilled from the short description.
+    article: {
+      paragraphs: [
+        "Querryn is a Chrome extension for students writing academic papers: as you research, it rates how credible a source is using a tiered domain-trust system, so a questionable citation gets flagged before it ends up in a bibliography.",
+        "It also does the tedious part — exporting citations in MLA, APA, Chicago, and BibTeX from the same source record — and it's been submitted to the Chrome Web Store. The design constraint was keeping the credibility signal honest: a tier is a useful heuristic, not a verdict.",
+      ],
+      pullQuote:
+        "A credibility signal is only worth showing if a student can actually trust it.",
+    },
+    // CUSTOMIZE (V13): PLACEHOLDER wide shot — reuses a real /images/web shot.
+    wideShot: "/images/web/mylifeinarepo.webp",
+    // CUSTOMIZE (V13): closing banner — DRAFT text over a PLACEHOLDER image.
+    banner: {
+      image: "/images/web/charlieramus-com.webp",
+      text: "Flag the shaky source before it becomes a citation.",
+    },
   },
   {
     title: "VaultDNA",
@@ -660,6 +713,59 @@ export const webProjects: WebProject[] = [
       "An Obsidian plugin that encodes a personal knowledge base into synthetic DNA sequences, built around real DNA-storage constraints like homopolymer-run limits and GC-content biasing. Scoped as a quick one-to-two-week build alongside Ostiara.",
     href: "",
     tags: ["Obsidian Plugin", "TypeScript", "Biotech"],
+    // CUSTOMIZE (V13): case-study content for /web-projects/vaultdna, mirroring the
+    // Ostiara shape. Copy is a DRAFT distilled from the short `description` above —
+    // kept short, no padding. Timeline/Stack/Link omitted → fall back to
+    // date/tags/href (href is "" so the Link row stays hidden).
+    // CUSTOMIZE PLACEHOLDER: no real VaultDNA capture — reuses an existing shot.
+    heroShot: "/images/web/charlieramus-com.webp",
+    overview: {
+      role: "Solo build",
+      status: "Shipped — quick build",
+    },
+    worked:
+      "An Obsidian plugin that encodes a personal knowledge base into synthetic DNA sequences, built around real DNA-storage constraints — homopolymer-run limits and GC-content biasing — so the output is biologically plausible, not just a novelty.",
+    challenge:
+      "Encoding arbitrary notes into DNA while respecting real biological storage constraints — keeping homopolymer runs and GC content within viable bounds without losing the ability to decode the notes back out.",
+    // CUSTOMIZE (V13): DRAFT process — a plausible build order. Refine to match.
+    process: [
+      {
+        title: "Encoding scheme",
+        detail: "Mapped arbitrary note text onto a synthetic DNA alphabet.",
+      },
+      {
+        title: "Constraint handling",
+        detail: "Kept homopolymer runs and GC content within real storage limits.",
+      },
+      {
+        title: "Obsidian plugin integration",
+        detail: "Wired the encoder into Obsidian so a vault encodes in place.",
+      },
+      {
+        title: "Round-trip decode",
+        detail: "Proved the notes decode back out losslessly.",
+      },
+    ],
+    // CUSTOMIZE (V13): PLACEHOLDER images — reuse the two real /images/web shots.
+    squares: ["/images/web/mylifeinarepo.webp", "/images/web/charlieramus-com.webp"],
+    midShot: "/images/web/mylifeinarepo.webp",
+    squares2: ["/images/web/charlieramus-com.webp", "/images/web/mylifeinarepo.webp"],
+    // CUSTOMIZE (V13): DRAFT article distilled from the short description.
+    article: {
+      paragraphs: [
+        "VaultDNA is an Obsidian plugin that takes a personal knowledge base and encodes it into synthetic DNA sequences. It's built around the actual constraints of DNA storage — homopolymer-run limits and GC-content biasing — so the sequences it produces are the kind biology could plausibly hold, not just a string of letters.",
+        "It was scoped as a quick one-to-two-week build alongside Ostiara, and the interesting part was the round trip: encoding arbitrary notes into a constrained biological alphabet and getting them back out intact.",
+      ],
+      pullQuote:
+        "Your notes, written in the alphabet biology actually uses.",
+    },
+    // CUSTOMIZE (V13): PLACEHOLDER wide shot — reuses a real /images/web shot.
+    wideShot: "/images/web/charlieramus-com.webp",
+    // CUSTOMIZE (V13): closing banner — DRAFT text over a PLACEHOLDER image.
+    banner: {
+      image: "/images/web/mylifeinarepo.webp",
+      text: "A knowledge base, encoded in four letters — and still decodable.",
+    },
   },
   {
     title: "charlieramus.comv2",
