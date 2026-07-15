@@ -1817,59 +1817,6 @@ body {
     position: relative;
   }
 
-  /* Decorative vertical marquee (components/vertical-marquee.tsx) in the left
-     gutter — a thin rail anchored to the viewport edge, inside the gallery's
-     --edge padding so it never touches the masonry grid. Desktop-only (the
-     gutter collapses on narrow viewports); frozen under reduced motion. */
-  .photo-marquee {
-    display: none;
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    width: 46px;
-    overflow: hidden;
-    pointer-events: none;
-    z-index: 0;
-  }
-  .photo-marquee-track {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    will-change: transform;
-    animation: pm-scroll 51s linear infinite;
-  }
-  .pm-seg {
-    writing-mode: vertical-rl;
-    margin-bottom: 44px;
-    font-family: var(--font-sans);
-    font-weight: 800;
-    font-size: clamp(20px, 2vw, 28px);
-    letter-spacing: 0.08em;
-    white-space: nowrap;
-  }
-  /* One copy is exactly half the duplicated track, so -50% loops seamlessly. */
-  @keyframes pm-scroll {
-    from {
-      transform: translateY(0);
-    }
-    to {
-      transform: translateY(-50%);
-    }
-  }
-  /* Only show where the gutter has room (grid keeps its --edge padding). */
-  @media (min-width: 1024px) {
-    .photo-marquee {
-      display: block;
-    }
-  }
-  /* Freeze (static text, no scroll) for reduced-motion users. */
-  @media (prefers-reduced-motion: reduce) {
-    .photo-marquee-track {
-      animation: none;
-    }
-  }
-
   .gallery-head {
     padding: clamp(24px, 5vw, 56px) 0 clamp(22px, 4vw, 38px);
   }
@@ -2233,7 +2180,7 @@ body {
   }
   /* The wide shot is the hero frame again, just spaced from the article above. */
   .case-wide {
-    margin-top: clamp(40px, 6vw, 72px);
+    margin-top: clamp(14px, 2vw, 22px);
   }
 
   /* CARDS — the row under the hero: Overview facts + the two prose cards.
@@ -2245,7 +2192,10 @@ body {
     align-items: stretch;
     margin-top: clamp(28px, 4vw, 44px);
   }
-  .card {
+  /* NOTE: named `.case-card`, NOT `.card` — the homepage work-band deck already
+     owns `.card { position: absolute; box-shadow… }`, and sharing the name pulled
+     the case-study cards out of flow (overlapping) + gave them an AI-slop shadow. */
+  .case-card {
     display: flex;
     flex-direction: column;
     background: var(--color-panel);
@@ -2253,7 +2203,7 @@ body {
     border-radius: 16px;
     padding: clamp(20px, 2.4vw, 30px);
   }
-  .card-title {
+  .case-card-title {
     font-family: var(--font-serif);
     font-weight: 700;
     font-size: clamp(17px, 2vw, 21px);
@@ -2261,41 +2211,41 @@ body {
     letter-spacing: -0.01em;
     margin-bottom: 16px;
   }
-  .card-text {
+  .case-card-text {
     font-size: 15px;
     line-height: 1.65;
     color: var(--color-ink);
   }
   /* Overview facts — quiet muted labels, values in body ink. */
-  .card-facts {
+  .case-card-facts {
     display: flex;
     flex-direction: column;
     gap: 14px;
   }
-  .card-facts .fact {
+  .case-card-facts .fact {
     display: flex;
     flex-direction: column;
     gap: 4px;
   }
-  .card-facts dt {
+  .case-card-facts dt {
     font-size: 10px;
     font-weight: 600;
     letter-spacing: 0.12em;
     text-transform: uppercase;
     color: var(--color-ink-soft);
   }
-  .card-facts dd {
+  .case-card-facts dd {
     margin: 0;
     font-size: 15px;
     line-height: 1.5;
     color: var(--color-ink);
   }
-  .card-facts .fact-tags {
+  .case-card-facts .fact-tags {
     display: flex;
     flex-wrap: wrap;
     gap: 8px;
   }
-  .card-facts .fact-link {
+  .case-card-facts .fact-link {
     margin-top: 0;
   }
 
@@ -2303,7 +2253,7 @@ body {
      a fixed marker column (so titles align) + the copy. The flower's wind-spin
      and its reduced-motion freeze come from the shared `.motif` rule. */
   .case-process {
-    margin-top: clamp(34px, 5vw, 56px);
+    margin-top: clamp(14px, 2vw, 22px);
   }
   .case-process-title {
     font-family: var(--font-serif);
@@ -2359,7 +2309,7 @@ body {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: clamp(14px, 2vw, 22px);
-    margin-top: clamp(34px, 5vw, 56px);
+    margin-top: clamp(14px, 2vw, 22px);
   }
   .case-square {
     position: relative;
@@ -2379,7 +2329,7 @@ body {
   .case-article {
     max-width: 66ch;
     margin-inline: auto;
-    margin-top: clamp(40px, 6vw, 72px);
+    margin-top: clamp(14px, 2vw, 22px);
     font-family: var(--font-serif);
     font-size: clamp(16px, 1.5vw, 18px);
     line-height: 1.85;
@@ -2418,44 +2368,20 @@ body {
     color: var(--color-ink);
   }
 
-  /* FULL BLEED — the one section that breaks the content gutter: an edge-to-edge
-     image spanning the full viewport width. `margin-left: calc(50% - 50vw)` +
-     `width: 100vw` re-centers it on the viewport (the .wrap it lives in is
-     centered via margin:0 auto, so its content-box centre is the viewport
-     centre); `body { overflow-x: hidden }` is the belt-and-braces against a
-     scrollbar-width overflow. NOT rounded, by design; height capped via clamp
-     so it never dominates on ultrawide. */
-  .case-bleed {
-    position: relative;
-    width: 100vw;
-    margin-left: calc(50% - 50vw);
-    margin-top: clamp(44px, 6vw, 80px);
-    height: clamp(320px, 68vh, 660px);
-    overflow: hidden;
-    background: var(--color-panel);
-  }
-  .case-bleed-img {
-    object-fit: cover;
-  }
-
   /* HOVER-GROW — the one shared screenshot interaction (V12). Every case-study
-     image frame (hero, wide, squares, full-bleed) clips its image
-     (`overflow: hidden` on the frame), so on hover the image scales up a touch
-     and the rounded corners stay crisp. NOT a lightbox. Defined once here; the
-     scale value lives in a single rule. GATED under
-     `prefers-reduced-motion: no-preference` so reduced-motion users get no grow
-     (no transition, no transform). The full-bleed grow is clipped by its frame
-     and can't add horizontal scroll. */
+     image frame (hero, wide/mid, squares) clips its image (`overflow: hidden` on
+     the frame), so on hover the image scales up a touch and the rounded corners
+     stay crisp. NOT a lightbox. Defined once here; the scale value lives in a
+     single rule. GATED under `prefers-reduced-motion: no-preference` so
+     reduced-motion users get no grow (no transition, no transform). */
   @media (prefers-reduced-motion: no-preference) {
     .case-hero-img,
-    .case-square-img,
-    .case-bleed-img {
+    .case-square-img {
       transition: transform 0.5s cubic-bezier(0.2, 0.7, 0.3, 1);
     }
     .case-hero:hover .case-hero-img,
     .case-wide:hover .case-hero-img,
-    .case-square:hover .case-square-img,
-    .case-bleed:hover .case-bleed-img {
+    .case-square:hover .case-square-img {
       transform: scale(1.02);
     }
   }
@@ -2467,7 +2393,7 @@ body {
      clean panel band; image-only renders the image band. */
   .case-banner {
     position: relative;
-    margin-top: clamp(44px, 6vw, 80px);
+    margin-top: clamp(14px, 2vw, 22px);
     min-height: clamp(180px, 26vw, 300px);
     display: flex;
     align-items: center;

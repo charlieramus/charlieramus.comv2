@@ -119,9 +119,9 @@ export default async function WebProjectDetail({ params }: Params) {
         {(project.overview || project.worked || project.challenge) && (
           <Reveal className="case-cards">
             {project.overview && (
-              <section className="card">
-                <h2 className="card-title">Project Overview</h2>
-                <dl className="card-facts">
+              <section className="case-card">
+                <h2 className="case-card-title">Project Overview</h2>
+                <dl className="case-card-facts">
                   {project.overview.role && (
                     <div className="fact">
                       <dt>Role</dt>
@@ -169,15 +169,15 @@ export default async function WebProjectDetail({ params }: Params) {
               </section>
             )}
             {project.worked && (
-              <section className="card">
-                <h2 className="card-title">What I worked on</h2>
-                <p className="card-text">{project.worked}</p>
+              <section className="case-card">
+                <h2 className="case-card-title">What I worked on</h2>
+                <p className="case-card-text">{project.worked}</p>
               </section>
             )}
             {project.challenge && (
-              <section className="card">
-                <h2 className="card-title">The Challenge</h2>
-                <p className="card-text">{project.challenge}</p>
+              <section className="case-card">
+                <h2 className="case-card-title">The Challenge</h2>
+                <p className="case-card-text">{project.challenge}</p>
               </section>
             )}
           </Reveal>
@@ -228,6 +228,40 @@ export default async function WebProjectDetail({ params }: Params) {
           </Reveal>
         )}
 
+        {/* MID SHOT — a full-content-width rounded screenshot between the two
+            square rows (same frame as the hero/wide shot, NOT edge-to-edge).
+            Renders only when `project.midShot` is set. No caption. */}
+        {project.midShot && (
+          <Reveal className="case-hero case-wide">
+            <Image
+              src={project.midShot}
+              alt={`${project.title} — screenshot`}
+              fill
+              sizes="(max-width: 1200px) 100vw, 1200px"
+              className="case-hero-img"
+            />
+          </Reveal>
+        )}
+
+        {/* SQUARES (second row) — another pair of side-by-side squares after the
+            full-bleed, still before the article. Renders only when
+            `project.squares2` is set. Same treatment as the first row. */}
+        {project.squares2 && (
+          <Reveal as="section" className="case-squares">
+            {project.squares2.map((src, i) => (
+              <div className="case-square" key={`${src}-${i}`}>
+                <Image
+                  src={src}
+                  alt={`${project.title} — image ${i + 3}`}
+                  fill
+                  sizes="(max-width: 880px) 100vw, 600px"
+                  className="case-square-img"
+                />
+              </div>
+            ))}
+          </Reveal>
+        )}
+
         {/* ARTICLE — the NYT-clean editorial reading beat: a centered serif
             column, a drop-cap on the first paragraph, and an optional large
             pull-quote dropped in after the first paragraph. Renders only when
@@ -259,21 +293,6 @@ export default async function WebProjectDetail({ params }: Params) {
               fill
               sizes="(max-width: 1200px) 100vw, 1200px"
               className="case-hero-img"
-            />
-          </Reveal>
-        )}
-
-        {/* FULL BLEED — an edge-to-edge, full-viewport cinematic image that
-            breaks the content gutter (NOT rounded, by design). Renders only
-            when `project.fullBleed` is set. No caption. */}
-        {project.fullBleed && (
-          <Reveal className="case-bleed">
-            <Image
-              src={project.fullBleed}
-              alt={`${project.title} — full-bleed image`}
-              fill
-              sizes="100vw"
-              className="case-bleed-img"
             />
           </Reveal>
         )}

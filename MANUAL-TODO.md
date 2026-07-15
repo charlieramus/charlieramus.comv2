@@ -251,14 +251,22 @@ component edits.** It controls five surfaces:
 **DONE (V11 + V12).** `/web-projects/<slug>` is now a complete screenshot-forward editorial case study,
 rendered in a fixed top-to-bottom order, every section optional (render-if-present) and every one authored
 from `site.config.ts`: **hero → 3 cards → process → squares → article (drop-cap + optional pull-quote) →
-wide shot → full-bleed → banner → next-project nav**, with a shared **hover-grow** on every screenshot
+wide shot → banner → next-project nav**, with a shared **hover-grow** on every screenshot
 (scale ~1.02, reduced-motion-gated). **Ostiara is the authored reference — it exercises every section.**
-The live 1440 / 768 / 375 sweep passed with 0 horizontal overflow (full-bleed spans the viewport exactly);
-a11y manual checks passed (real alt text on every image, no nested anchors, next-project is a real Link).
+The live 1440 / 768 / 375 sweep passed with 0 horizontal overflow; a11y manual checks passed (real alt text
+on every image, no nested anchors, next-project is a real Link).
+
+_Post-V12 tweaks (Charlie's call):_
+- **Removed the full-bleed full-screen image section entirely** (schema field `fullBleed`, its render, CSS,
+  and hover-grow reference all gone) — Charlie didn't want it. The order is now hero → cards → process →
+  squares → article → wide → banner → next.
+- **Fixed a card-class collision:** the case-study cards were named `.card`, which the homepage work-band
+  deck already owns as `.card { position: absolute; box-shadow… }`. That pulled the cards out of flow
+  (overlapping the process list) and gave them an AI-slop shadow. Renamed to `.case-card*`.
 
 **Still manual (deferred on purpose):**
 - 🟡 **Real screenshots for the placeholder image slots.** Ostiara's `heroShot`, `squares`, `wideShot`,
-  `fullBleed`, and `banner.image` currently **reuse the two existing `/images/web/*.webp` shots**
+  and `banner.image` currently **reuse the two existing `/images/web/*.webp` shots**
   (`charlieramus-com.webp`, `mylifeinarepo.webp`) as documented placeholders — no real Ostiara captures
   exist yet, and no files were fabricated. Drop real Ostiara screenshots into `/public` and repoint those
   fields in `site.config.ts` (square assets especially want true 1:1 crops rather than object-fit crops of

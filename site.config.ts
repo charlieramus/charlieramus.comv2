@@ -236,7 +236,7 @@ export const services: string[] = [
   "Content & community",
 ];
 
-// -----------------------------------------------------------------------------
+// -------------------------------f----------------------------------------------
 // SOCIALS  (was data/socials.ts)
 // -----------------------------------------------------------------------------
 // Social links — single source of truth (data only; icons live in the component
@@ -464,16 +464,21 @@ export type WebProject = {
    *  stage `title` + an optional one-line `detail`. Any length; the section is
    *  hidden when the array is empty/absent. */
   process?: { title: string; detail?: string }[];
-  /** CUSTOMIZE (V12): two side-by-side square images (/public paths). */
+  /** CUSTOMIZE: two side-by-side square images (/public paths). */
   squares?: [string, string];
-  /** CUSTOMIZE (V12): the editorial "article" block — body paragraphs + an
+  /** CUSTOMIZE: a full-content-width rounded screenshot (like the hero) that
+   *  sits between the two square rows (/public path). Renders after `squares`,
+   *  before `squares2`. */
+  midShot?: string;
+  /** CUSTOMIZE: a second pair of side-by-side square images, after the
+   *  mid shot and still before the article (/public paths). */
+  squares2?: [string, string];
+  /** CUSTOMIZE: the editorial "article" block — body paragraphs + an
    *  optional pull-quote. */
   article?: { paragraphs: string[]; pullQuote?: string };
-  /** CUSTOMIZE (V12): a second full-width screenshot (/public path). */
+  /** CUSTOMIZE: a second full-width screenshot (/public path). */
   wideShot?: string;
-  /** CUSTOMIZE (V12): a full-screen, edge-to-edge image (/public path). */
-  fullBleed?: string;
-  /** CUSTOMIZE (V12): the closing banner — an optional image and/or text. */
+  /** CUSTOMIZE: the closing banner — an optional image and/or text. */
   banner?: { image?: string; text?: string };
 };
 
@@ -529,7 +534,13 @@ export const webProjects: WebProject[] = [
     // square Ostiara screenshots exist yet; these two existing /images/web
     // shots are cropped to square via object-fit so the section renders in
     // review. Swap for real square Ostiara assets when captured.
-    squares: ["/images/web/mylifeinarepo.webp", "/images/web/charlieramus-com.webp"],
+    squares: ["/images/web/mylifeinarepo.webp", "/images/web/charlieramus-com.webp" ],
+    // CUSTOMIZE: a full-width rounded screenshot between the two square rows.
+    // PLACEHOLDER — reuses an existing /images/web shot; swap or remove.
+    midShot: "/images/web/mylifeinarepo.webp",
+    // CUSTOMIZE: a second pair of squares after the mid shot, before the
+    // article. PLACEHOLDER — reuses the existing shots; swap or remove.
+    squares2: ["/images/web/charlieramus-com.webp", "/images/web/mylifeinarepo.webp"],
     // CUSTOMIZE (V12): the editorial article — clean serif paragraphs with a
     // drop-cap on the first one and one optional large pull-quote.
     article: {
@@ -541,12 +552,10 @@ export const webProjects: WebProject[] = [
       pullQuote:
         "The hard part wasn't the code. It was learning how a rep actually quotes a job on a doorstep.",
     },
-    // CUSTOMIZE (V12): a second full-width rounded screenshot + a full-screen
-    // edge-to-edge image. PLACEHOLDER — no real Ostiara wide/full-bleed shots
-    // exist yet; these reuse the two existing /images/web shots so both beats
-    // render in review. Swap for real Ostiara captures when available.
+    // CUSTOMIZE (V12): a second full-width rounded screenshot. PLACEHOLDER — no
+    // real Ostiara wide shot exists yet; reuses an existing /images/web shot so
+    // the beat renders in review. Swap for a real Ostiara capture when available.
     wideShot: "/images/web/charlieramus-com.webp",
-    fullBleed: "/images/web/mylifeinarepo.webp",
     // CUSTOMIZE (V12): the closing banner — an optional background image and/or
     // an overlaid line of text. Here it's text over an image (a subtle scrim is
     // added automatically for legibility). PLACEHOLDER image — reuses an
@@ -703,11 +712,10 @@ export const previews: PreviewConfig = {
 // -----------------------------------------------------------------------------
 // DECORATION  (V10 — per-surface decorative motion, config-driven)
 // -----------------------------------------------------------------------------
-// Two flagship surfaces each get one signature decorative idea, both fully
-// editable here and both motion-safe (removed / frozen under reduced motion):
+// A flagship surface gets a signature decorative idea, fully editable here and
+// motion-safe (removed / frozen under reduced motion):
 //   • writingSpirals — rotating Archimedean-spiral quote text in the /writing
 //     margins (desktop-only). components/spiral-text.tsx renders each entry.
-//   • marquees       — a vertical color rail on /photography (Stage 5).
 
 /** One spiral quote laid down beside the /writing reading column. Decorative —
  *  desktop-only, removed entirely under prefers-reduced-motion. Every field but
