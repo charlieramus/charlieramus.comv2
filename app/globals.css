@@ -2254,6 +2254,9 @@ body {
      and its reduced-motion freeze come from the shared `.motif` rule. */
   .case-process {
     margin-top: clamp(14px, 2vw, 22px);
+    /* Override the global `section { padding: clamp(46px,6vw,80px) 0 }` — these
+       case sections are spaced by their own margins, not the big section pad. */
+    padding-block: 0;
   }
   .case-process-title {
     font-family: var(--font-serif);
@@ -2310,6 +2313,8 @@ body {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: clamp(14px, 2vw, 22px);
     margin-top: clamp(14px, 2vw, 22px);
+    /* Kill the global section vertical padding — margins do the spacing here. */
+    padding-block: 0;
   }
   .case-square {
     position: relative;
@@ -2330,6 +2335,8 @@ body {
     max-width: 66ch;
     margin-inline: auto;
     margin-top: clamp(14px, 2vw, 22px);
+    /* Kill the global section vertical padding — margins do the spacing here. */
+    padding-block: 0;
     font-family: var(--font-serif);
     font-size: clamp(16px, 1.5vw, 18px);
     line-height: 1.85;

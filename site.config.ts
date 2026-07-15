@@ -856,7 +856,7 @@ export const webProjects: WebProject[] = [
     // (href is the public GitHub, so the Link row shows "View on GitHub").
     // CUSTOMIZE PLACEHOLDER: no real Backtrace capture exists — reuses an existing
     // /images/web shot so the hero renders. Swap when captured.
-    heroShot: "/images/web/charlieramus-com.webp",
+    heroShot: "/images/backtrace/hero-16x9.png",
     overview: {
       role: "Solo build",
       status: "Shipped",
@@ -894,9 +894,9 @@ export const webProjects: WebProject[] = [
     ],
     // CUSTOMIZE (V13): PLACEHOLDER images — reuse the two real /images/web shots
     // (cropped to square via object-fit for the square slots). Swap when captured.
-    squares: ["/images/web/mylifeinarepo.webp", "/images/web/charlieramus-com.webp"],
-    midShot: "/images/web/mylifeinarepo.webp",
-    squares2: ["/images/web/charlieramus-com.webp", "/images/web/mylifeinarepo.webp"],
+    squares: ["/images/backtrace/square-1-compass-dial.png", "/images/backtrace/square-2-export-formats.png"],
+    midShot: "/images/backtrace/hero-b-midshot.png",
+    squares2: ["/images/backtrace/square-3-field-mode.png", "/images/backtrace/square-4-honest-readout.png"],
     // CUSTOMIZE (V13): DRAFT article distilled from the description.
     article: {
       paragraphs: [
@@ -908,10 +908,10 @@ export const webProjects: WebProject[] = [
         "A heatmap with credible regions, not a single false-precision dot.",
     },
     // CUSTOMIZE (V13): PLACEHOLDER wide shot — reuses a real /images/web shot.
-    wideShot: "/images/web/charlieramus-com.webp",
+    wideShot: "/images/backtrace/hero-c-wideshot.png",
     // CUSTOMIZE (V13): closing banner — DRAFT text over a PLACEHOLDER image.
     banner: {
-      image: "/images/web/mylifeinarepo.webp",
+      image: "/images/backtrace/banner.png",
       text: "Bearings are noisy. An honest instrument says so — and shows you where the evidence points anyway.",
     },
   },
