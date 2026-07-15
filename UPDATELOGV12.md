@@ -367,7 +367,91 @@ horizontal scroll. Report deferrals in MANUAL-TODO.md.
 
 ## Stage 5 Report
 
-_Pending._
+**1. HOVER-GROW (one shared rule, reduced-motion-gated).** Added a single block to
+`app/globals.css` wrapped in `@media (prefers-reduced-motion: no-preference)`: one rule gives
+`.case-hero-img, .case-square-img, .case-bleed-img` a `transition: transform .5s`, and one rule
+scales them to `scale(1.02)` on frame hover (`.case-hero:hover`, `.case-wide:hover`,
+`.case-square:hover`, `.case-bleed:hover`). The scale value lives in exactly one place — no
+per-section copies. Every frame already has `overflow: hidden`, so the grow is clipped inside
+the rounded corners; **no lightbox**. Confirmed in the compiled CSS
+(`out/_next/static/chunks/*.css`): `@media (prefers-reduced-motion:no-preference){…
+.case-hero:hover .case-hero-img{transform:scale(1.02)}}`. Live in a normal browser the
+images' `transitionProperty` computes to `transform` / `0.5s` (proving the no-preference branch
+matched), so reduced-motion users get neither the transition nor the grow.
+
+**2. OSTIARA REFERENCE — every section exercised.** Added a placeholder `heroShot` to Ostiara so
+the flagship now renders **all ten** case-study beats. Verified in the built HTML the presence
+of: `case-hero`, `case-cards`, `case-process`, `case-squares`, `case-article`, `case-pullquote`,
+`case-wide`, `case-bleed`, `case-banner`, `case-next`. Placeholder assets (documented, no files
+fabricated): `heroShot` / `wideShot` / `banner.image` reuse `charlieramus-com.webp`; `squares` +
+`fullBleed` reuse both existing `/images/web` shots.
+
+**3. FULL BUILD GATE — all green.** `npx tsc --noEmit` clean; `npm run lint` clean; `next build`
+(export) green. Route list (24 routes):
+
+```
+┌ ○ /                          ├ ○ /photography
+├ ○ /_not-found                ├ ○ /robots.txt
+├ ○ /apple-icon                ├ ○ /sitemap.xml
+├ ○ /design                    ├ ○ /web-projects
+├ ○ /gear                      ├ ● /web-projects/[slug]
+├ ○ /icon                      │   ostiara · mylifeinarepo · querryn · vaultdna ·
+├ ○ /opengraph-image           │   charlieramus-com · backtrace  (all 6 prerender)
+├ ○ /writing                   └ ● /writing/[slug]  (4 essays)
+```
+
+All six `/web-projects/<slug>` pages prerender (`●` SSG, `dynamicParams = false`).
+
+**4. RESPONSIVE SWEEP (real headless Chromium via gstack `browse`, against the built `out/`).**
+Horizontal overflow = `scrollWidth − innerWidth`; full-bleed width vs viewport:
+
+| Page | 1440 | 768 | 375 |
+|---|---|---|---|
+| ostiara (fully authored) | over 0, bleed 1440px | over 0, bleed 768px, squares 1-col | over 0, bleed 375px, squares 1-col |
+| querryn (unauthored) | over 0 | over 0 | over 0 (no hero/squares/banner, next present) |
+
+**Zero horizontal scroll at every width — including the CRITICAL full-bleed, which spans the
+viewport exactly (`.case-bleed` offsetWidth === innerWidth at 1440/768/375).** The squares grid
+collapses to one column at ≤880px; the article column stays centered/legible; the section order
+is exactly `hero → cards → process → squares → article → wide → bleed → banner → next` (read off
+the live DOM). The banner text is legible white serif over the scrimmed image (visually
+confirmed via screenshots of the squares/article and bleed/banner regions).
+
+**5. MOTION SWEEP.** Without reduced motion (the live browser state): the hover-grow
+`transition: transform 0.5s` is computed-active on the frames (the no-preference branch matched)
+and the process flowers spin (shared `.motif` windspin). With reduced motion: the hover-grow is
+gated out by `@media (prefers-reduced-motion: no-preference)` and the flowers freeze via the
+shared `.motif` reduced-motion rule — **both confirmed present in the compiled CSS.** I could
+**not** toggle `prefers-reduced-motion` live to re-observe the disabled state: the browse tool's
+CDP allowlist blocks `Emulation.setEmulatedMedia` (`DENIED — not on the CDP allowlist`, the same
+limit V11 hit). Verified at the compiled-CSS + computed-style level, flagged honestly rather
+than faked.
+
+**6. A11y.** No axe engine is wired into the browse tool, so I ran the **manual** checks the
+stage calls for (and say so honestly rather than fabricate a score): on `/web-projects/ostiara`
+— every case image carries real alt text (`"Ostiara screenshot"`, `"Ostiara — image 1/2"`,
+`"… — wide screenshot"`, `"… — full-bleed image"`, `"… — banner"`); `0` images with empty alt in
+`main`; `0` nested anchors (`a a`); the next-project link is a **real `<a>`** (Next `Link`).
+Console at load: **no errors** — only the pre-existing Next.js font-preload warnings (unrelated
+to V12).
+
+**7. ROADMAP.md / MANUAL-TODO.md updated.** MANUAL-TODO's "V11 → V12" section is marked **DONE**
+with the full section list + hover-grow, and now tracks three honest deferrals: real screenshots
+for the placeholder image slots (+ authoring other projects' copy), the next-project hero-shot
+thumbnail (deferred by decision — text link only), and the reduced-motion live-toggle tooling
+gap. ROADMAP's V4 line notes the case-study redesign is done.
+
+**Verify:** build route list pasted above (24 routes, all six `/web-projects/<slug>` prerender);
+responsive table shows 0 horizontal overflow at 1440/768/375 with the full-bleed spanning the
+viewport exactly and squares stacking; hover-grow is reduced-motion-gated (compiled-CSS
+confirmed, computed-style active live); a11y manual checks pass (real alt text, no nested
+anchors, real next Link, no console errors). Deferrals logged in MANUAL-TODO.
+
+Issues: (a) reduced-motion could only be verified via compiled-CSS + computed-style, not a live
+media toggle — the browse CDP allowlist blocks `Emulation.setEmulatedMedia` (noted, not
+fabricated). (b) No axe engine available in the tool, so a11y is a manual pass, reported as such.
+(c) All of Ostiara's image slots use documented placeholder crops of the two existing web shots
+(no real Ostiara captures exist) — logged in MANUAL-TODO for a real screenshot pass.
 
 ---
 

@@ -22,6 +22,11 @@ Design-first: get the look right on a static page before wiring real content.
 - **V4 — Inner pages**
   /photography (gallery + loading/blur pipeline), /writing/[slug], /blog, /design,
   /gear, /web-projects — all reskinned to the system.
+  _Web-project detail pages (`/web-projects/<slug>`) rebuilt as screenshot-forward
+  editorial case studies (V11 + V12): hero → cards → process → squares → article →
+  wide → full-bleed → banner → next-project, every section optional + config-driven,
+  with a reduced-motion-gated hover-grow. **Done.** Remaining: real screenshots for
+  the placeholder image slots + authoring the other projects' copy (see MANUAL-TODO)._
 
 - **V5 — Polish, responsive, a11y, deploy → cutover**
   Full pass at 1440/768/375; a11y sweep; deploy. Then point charlieramus.com at

@@ -2438,6 +2438,28 @@ body {
     object-fit: cover;
   }
 
+  /* HOVER-GROW — the one shared screenshot interaction (V12). Every case-study
+     image frame (hero, wide, squares, full-bleed) clips its image
+     (`overflow: hidden` on the frame), so on hover the image scales up a touch
+     and the rounded corners stay crisp. NOT a lightbox. Defined once here; the
+     scale value lives in a single rule. GATED under
+     `prefers-reduced-motion: no-preference` so reduced-motion users get no grow
+     (no transition, no transform). The full-bleed grow is clipped by its frame
+     and can't add horizontal scroll. */
+  @media (prefers-reduced-motion: no-preference) {
+    .case-hero-img,
+    .case-square-img,
+    .case-bleed-img {
+      transition: transform 0.5s cubic-bezier(0.2, 0.7, 0.3, 1);
+    }
+    .case-hero:hover .case-hero-img,
+    .case-wide:hover .case-hero-img,
+    .case-square:hover .case-square-img,
+    .case-bleed:hover .case-bleed-img {
+      transform: scale(1.02);
+    }
+  }
+
   /* BANNER — the customizable closing band: optional background image and/or an
      optional overlaid serif line. Rounded to match the page (kept in the content
      frame, not full-bleed). A subtle flat scrim is added ONLY when text sits over

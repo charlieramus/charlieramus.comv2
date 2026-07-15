@@ -489,6 +489,10 @@ export const webProjects: WebProject[] = [
     spotlight: true,
     // CUSTOMIZE: case-study content for /web-projects/ostiara. Timeline, Stack,
     // and Link are omitted here on purpose — they fall back to date/tags/href.
+    // CUSTOMIZE (V11): full-width rounded hero screenshot. PLACEHOLDER — no real
+    // Ostiara hero capture exists yet; reuses an existing /images/web shot so
+    // the reference exercises every section end to end. Swap when captured.
+    heroShot: "/images/web/charlieramus-com.webp",
     overview: {
       role: "Solo — full stack + design",
       status: "In progress",

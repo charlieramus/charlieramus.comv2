@@ -248,19 +248,30 @@ component edits.** It controls five surfaces:
 
 ## V11 → V12 — case-study detail pages
 
-**V11 shipped the top of the case study** (`/web-projects/<slug>`): the render-if-present schema, the
-full-width hero screenshot, the three cards (Overview facts · What I worked on · The Challenge), and the
-flower-bulleted process timeline — all authored from `site.config.ts`, with Ostiara filled in as the
-reference. Every section is optional; a project with none of the new fields renders a clean header-only page.
+**DONE (V11 + V12).** `/web-projects/<slug>` is now a complete screenshot-forward editorial case study,
+rendered in a fixed top-to-bottom order, every section optional (render-if-present) and every one authored
+from `site.config.ts`: **hero → 3 cards → process → squares → article (drop-cap + optional pull-quote) →
+wide shot → full-bleed → banner → next-project nav**, with a shared **hover-grow** on every screenshot
+(scale ~1.02, reduced-motion-gated). **Ostiara is the authored reference — it exercises every section.**
+The live 1440 / 768 / 375 sweep passed with 0 horizontal overflow (full-bleed spans the viewport exactly);
+a11y manual checks passed (real alt text on every image, no nested anchors, next-project is a real Link).
 
-- 🟡 **V12 finishes the page.** The remaining sections render in this fixed order after the process:
-  **squares → article (drop-cap + optional pull-quote) → second full-width (`wideShot`) → full-bleed →
-  banner → next-project nav**, followed by the **hover-grow motion pass** and the full responsive / a11y /
-  coherence sign-off. The schema for these (`squares`, `article`, `wideShot`, `fullBleed`, `banner`) is
-  already declared in `site.config.ts`; V12 wires the rendering. See `UPDATELOGV12.md`.
-- 🟡 **Live responsive / reduced-motion sign-off for the detail page.** As with the V10 sweep above, the
-  pixel-level 1440 / 768 / 375 pass and the reduced-motion confirmation on `/web-projects/<slug>` want a
-  real browser; the behaviors are CSS-enforced (cards stack at ≤880px, `body { overflow-x: hidden }`, the
-  process flowers freeze via the shared `.motif` reduced-motion rule).
+**Still manual (deferred on purpose):**
+- 🟡 **Real screenshots for the placeholder image slots.** Ostiara's `heroShot`, `squares`, `wideShot`,
+  `fullBleed`, and `banner.image` currently **reuse the two existing `/images/web/*.webp` shots**
+  (`charlieramus-com.webp`, `mylifeinarepo.webp`) as documented placeholders — no real Ostiara captures
+  exist yet, and no files were fabricated. Drop real Ostiara screenshots into `/public` and repoint those
+  fields in `site.config.ts` (square assets especially want true 1:1 crops rather than object-fit crops of
+  wide shots). Same applies to authoring the other projects' case-study copy — a pure `site.config.ts`
+  task now that the template is proven.
+- 🟡 **Next-project hero-shot thumbnail — deferred by decision.** The "Next project → {title}" foot link is
+  a **text link only**; a hero-shot thumbnail beside it was explicitly deferred in the V12 CEO-review
+  Decisions. Add it later if wanted (it'd read the target's `heroShot`).
+- 🟡 **Reduced-motion live toggle — tooling gap, not a code gap.** The hover-grow scale is wrapped in
+  `@media (prefers-reduced-motion: no-preference)` and the process flowers freeze via the shared `.motif`
+  rule; both are confirmed present in the compiled CSS, and the hover-grow's `transition: transform` is
+  computed-active in a normal browser. I could **not** toggle `prefers-reduced-motion` live to re-observe
+  the disabled state — the browse tool's CDP allowlist blocks `Emulation.setEmulatedMedia` (same limit
+  noted in V11). Verified at the compiled-CSS + computed-style level, not via live media emulation.
 
 _Ping me when any of the 🔴 items land and I'll wire them in immediately._
