@@ -521,6 +521,11 @@ export const webProjects: WebProject[] = [
         detail: "Shipped the public site and the copy around the product.",
       },
     ],
+    // CUSTOMIZE (V12): two side-by-side square images. PLACEHOLDER — no true
+    // square Ostiara screenshots exist yet; these two existing /images/web
+    // shots are cropped to square via object-fit so the section renders in
+    // review. Swap for real square Ostiara assets when captured.
+    squares: ["/images/web/mylifeinarepo.webp", "/images/web/charlieramus-com.webp"],
   },
   {
     title: "MyLifeInARepo",

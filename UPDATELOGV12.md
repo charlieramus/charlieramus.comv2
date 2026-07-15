@@ -84,7 +84,37 @@ frames stay square and uncropped-awkward via object-fit.
 
 ## Stage 1 Report
 
-_Pending._
+- [x] **`app/web-projects/[slug]/page.tsx` — rendered the `.case-squares` section** in the
+  slot right after the process timeline, gated on `project.squares`. It maps the 2-tuple to two
+  equal `.case-square` frames, each a `next/image` (`fill` + `sizes="(max-width: 880px) 100vw,
+  600px"`), no caption, the whole row wrapped in `Reveal as="section"`. Reused the existing
+  `Image` import (already in the file for the hero). Keyed `${src}-${i}`.
+- [x] **CSS (`app/globals.css`, `@layer components`):** added `.case-squares` (a
+  `grid-template-columns: repeat(2, minmax(0, 1fr))` — the `minmax(0,1fr)` guards against
+  track overflow — with the site's clamp gap and the same `margin-top` rhythm as
+  `.case-process`), `.case-square` (`aspect-ratio: 1/1`, 16px radius, `overflow: hidden`,
+  panel surface + line border to match the hero frame), and `.case-square-img`
+  (`object-fit: cover`). Added `.case-squares { grid-template-columns: 1fr }` to the existing
+  `@media (max-width: 880px)` block so it stacks on the same breakpoint the cards use.
+  Existing `@theme` tokens only; no new deps.
+- [x] **Authored a real `squares` on Ostiara** in `site.config.ts`. **Placeholder note:** no
+  true square Ostiara screenshots exist in `/public` (only two `/images/web/*.webp` shots
+  exist at all), so per the stage's explicit instruction I used the two existing web shots
+  (`mylifeinarepo.webp`, `charlieramus-com.webp`) cropped to square via `object-fit: cover` —
+  **no files fabricated** — and flagged it in a `// CUSTOMIZE` comment for Charlie to swap for
+  real square assets. Other projects stay unset.
+
+**Verify:** `npx tsc --noEmit` clean; `npm run lint` (the repo's bare-`eslint` flat-config
+script — `eslint .` errors under this flat config, so `npm run lint` is the correct
+invocation) clean; `next build` (export) green — all 24 routes prerender, all six
+`/web-projects/<slug>` included. In the built HTML, `out/web-projects/ostiara.html` contains
+the `case-square` markup (two frames); `out/web-projects/querryn.html` has zero — a project
+without `squares` shows no section. Frames are square via `aspect-ratio: 1/1` + `object-fit:
+cover` (no awkward crop); the `minmax(0,1fr)` tracks and `body { overflow-x: hidden }` keep
+375 free of horizontal scroll (live sweep is the Stage 5 gate).
+
+Issues: Ostiara's squares are placeholder crops of the two existing web screenshots (no real
+square assets yet) — noted in the config comment and to be logged in MANUAL-TODO at Stage 5.
 
 ---
 

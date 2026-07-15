@@ -205,9 +205,28 @@ export default async function WebProjectDetail({ params }: Params) {
           </Reveal>
         )}
 
+        {/* SQUARES — two side-by-side square screenshots, the deliberate change
+            of rhythm after the full-width hero. Renders only when
+            `project.squares` (a 2-tuple of /public paths) is set; stacks to one
+            column under the site's mobile breakpoint. Rounded, no caption. */}
+        {project.squares && (
+          <Reveal as="section" className="case-squares">
+            {project.squares.map((src, i) => (
+              <div className="case-square" key={`${src}-${i}`}>
+                <Image
+                  src={src}
+                  alt={`${project.title} — image ${i + 1}`}
+                  fill
+                  sizes="(max-width: 880px) 100vw, 600px"
+                  className="case-square-img"
+                />
+              </div>
+            ))}
+          </Reveal>
+        )}
+
         {/* Case-study sections render below in this fixed order, each only when
-            its data exists. V12 drops straight into these slots:
-              SQUARES    — two side-by-side square images (V12)
+            its data exists. V12 drops into these remaining slots:
               ARTICLE    — editorial paragraphs + optional pull-quote (V12)
               WIDE SHOT  — second full-width screenshot (V12)
               FULL BLEED — full-screen edge-to-edge image (V12)

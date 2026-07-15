@@ -2346,6 +2346,28 @@ body {
     max-width: 60ch;
   }
 
+  /* SQUARES — two square screenshots side by side, the change of rhythm after
+     the full-width beats. Equal square frames on the panel surface, the site's
+     16px image radius, no caption. Stacks to one column at the 880px breakpoint
+     (below). minmax(0,1fr) keeps the tracks from overflowing. */
+  .case-squares {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: clamp(14px, 2vw, 22px);
+    margin-top: clamp(34px, 5vw, 56px);
+  }
+  .case-square {
+    position: relative;
+    aspect-ratio: 1 / 1;
+    border-radius: 16px;
+    overflow: hidden;
+    background: var(--color-panel);
+    border: 1px solid var(--color-line);
+  }
+  .case-square-img {
+    object-fit: cover;
+  }
+
   /* Design — per-project slide galleries */
   .design-project {
     padding: clamp(30px, 5vw, 58px) 0;
@@ -2473,6 +2495,9 @@ body {
       grid-template-columns: 1fr;
     }
     .case-cards {
+      grid-template-columns: 1fr;
+    }
+    .case-squares {
       grid-template-columns: 1fr;
     }
     .gear-sections {
