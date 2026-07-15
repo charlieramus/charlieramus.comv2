@@ -282,4 +282,59 @@ _Post-V12 tweaks (Charlie's call):_
   the disabled state — the browse tool's CDP allowlist blocks `Emulation.setEmulatedMedia` (same limit
   noted in V11). Verified at the compiled-CSS + computed-style level, not via live media emulation.
 
+---
+
+## V13 — case studies for every project (placeholder assets + draft copy)  🟡
+
+**DONE (V13).** All six `/web-projects/<slug>` pages now render the **full** case-study
+ecosystem Ostiara had — hero → Overview/worked/challenge cards → process → squares →
+mid shot → squares2 → article (drop-cap + pull-quote) → wide shot → banner. It's pure
+data: every field was authored in `site.config.ts` (the V11/V12 template + CSS were not
+touched). Verified in-session: `tsc` + `eslint` + `next build` (export) green, all six
+slugs prerender, and a live 1440 / 768 / 375 sweep on `/web-projects/backtrace` and
+`/web-projects/vaultdna` showed **0 horizontal overflow** with every section present and
+the process flowers rendering.
+
+**Everything below is DRAFT / PLACEHOLDER by design (Charlie's call) — swap when ready.**
+
+- 🟡 **Real screenshots for every placeholder image slot.** Only two real web shots exist
+  (`/images/web/charlieramus-com.webp`, `/images/web/mylifeinarepo.webp`); **no files were
+  fabricated.** Every project's image slots reuse those two as documented `// CUSTOMIZE
+  PLACEHOLDER`s (square slots are object-fit crops of wide shots — real 1:1 captures are
+  better). Per project, drop real captures into `/public/images/web/` and repoint the
+  fields in `site.config.ts`:
+
+  | Project | heroShot | squares (×2) | midShot | squares2 (×2) | wideShot | banner.image |
+  |---|---|---|---|---|---|---|
+  | **MyLifeInARepo** | ✅ own shot | ☐ ☐ | ☐ | ☐ ☐ | ☐ | ☐ |
+  | **charlieramus.comv2** | ✅ own shot | ☐ ☐ | ☐ | ☐ ☐ | ☐ | ☐ |
+  | **Backtrace** | ☐ | ☐ ☐ | ☐ | ☐ ☐ | ☐ | ☐ |
+  | **Querryn** | ☐ | ☐ ☐ | ☐ | ☐ ☐ | ☐ | ☐ |
+  | **VaultDNA** | ☐ | ☐ ☐ | ☐ | ☐ ☐ | ☐ | ☐ |
+
+  (MyLifeInARepo and charlieramus.comv2 use their **own real** shot for the hero; all
+  other slots on every project are placeholders. Ostiara's placeholder slots from V12
+  still stand — see the V11→V12 note above.)
+
+- 🟡 **All case-study COPY is DRAFT distilled from each project's `description`.** The
+  `worked` / `challenge` / `process[]` / `article` / `banner.text` on the five projects
+  authored here (MyLifeInARepo, charlieramus.comv2, Backtrace, Querryn, VaultDNA) are
+  honest rewrites of what each `description` already states — **not** invented capabilities
+  — but they await your final pass. The `process` steps in particular are a **plausible
+  build order**, not a recorded history; correct any that are wrong. Each block is
+  `// CUSTOMIZE (V13): DRAFT`-marked in `site.config.ts`.
+
+- ✅ **`overview` status/role per project** — set: MyLifeInARepo *(Solo build / Mostly done
+  — occasional contributions)*, charlieramus.comv2 *(Solo — design + build / In progress)*,
+  Backtrace *(Solo build / Shipped)*, Querryn *(Solo build / Submitted to the Chrome Web
+  Store)*, VaultDNA *(Solo build / Shipped — quick build)*. `timeline` / `stack` / `link`
+  fall back to each project's `date` / `tags` / `href` (Querryn & VaultDNA have `href: ""`
+  so their Link row is hidden — add a URL to `href` to surface it).
+
+- 🟡 **Reduced-motion live toggle — same tooling gap as V11/V12.** Confirmed the process
+  flowers render on the new pages (SVGs in the DOM); could not toggle
+  `prefers-reduced-motion` live to re-observe the frozen state, because browse's CDP
+  allowlist still blocks `Emulation.setEmulatedMedia`. The freeze is governed by the
+  **unchanged** shared `.motif` rule, so a data-only change can't regress it.
+
 _Ping me when any of the 🔴 items land and I'll wire them in immediately._

@@ -375,7 +375,71 @@ MANUAL-TODO.md.
 
 ## Stage 5 Report
 
-_Pending._
+The coherence gate. All six projects now render the identical full case-study
+ecosystem; nothing regressed; the asset/copy debt is logged in `MANUAL-TODO.md`.
+
+**1. Full build gate — green.** `tsc --noEmit` clean; `eslint .` (`npm run lint`)
+clean; `next build` (`output: export`) succeeded. All six `/web-projects/<slug>`
+prerender — verified against the exported `out/` directory, which contains
+`ostiara.html`, `mylifeinarepo.html`, `charlieramus-com.html`, `backtrace.html`,
+`querryn.html`, `vaultdna.html` (plus the `/web-projects` list and the rest of the
+static routes). Route group: `● /web-projects/[slug]` (SSG, 6 paths).
+
+**2. Parity check — same section sequence for all six.** Spot-checked the exported
+`out/web-projects/backtrace.html` for the ordered markers and confirmed every
+section is present and non-empty: `case-hero` (hero + midShot + wideShot), three
+`case-card`s (`case-card-title` ×3: Project Overview / What I worked on / The
+Challenge), `case-process` with 6 `process-step`s, two `case-squares` rows (4
+`case-square`s), `case-article` + `case-pullquote`, `case-banner` (with the drafted
+banner text), and `case-next`. Sequence matches Ostiara's: hero → cards → process →
+squares → midShot → squares2 → article → wideShot → banner → next.
+
+**3. Config-is-the-surface — data-only proven.** `git diff --stat 64d9626..HEAD`
+(pre-V13 → end of Stage 4) shows **only `site.config.ts` changed** (+301) besides
+the log file itself — no `components/`, no `app/`, no `globals.css`. `git diff
+--name-only` across the stages: `site.config.ts`, `UPDATELOGV13.md`. (Note: a
+pre-existing, unrelated `app/globals.css` edit — case-section `padding-block: 0`
+spacing — was already uncommitted in the working tree before V13 started; it is
+**not** a V13 change and was deliberately left OUT of the stage commits so the
+data-only guarantee holds. Flagged to Charlie below.)
+
+**4. Honesty check — no fabricated assets, everything marked.** Only the two real
+shots are referenced (`grep` count: `charlieramus-com.webp` ×26, `mylifeinarepo.webp`
+×24) and `public/images/web/` contains exactly those two files — no new image files
+were created. Every placeholder image and every draft copy block carries a
+`// CUSTOMIZE` / `PLACEHOLDER` marker.
+
+**5. Responsive sweep — real browser, 0 overflow.** Ran the local dev server and
+drove `browse` (headless Chromium) against two newly-authored pages:
+- `/web-projects/backtrace` at 1440 / 768 / 375 → `scrollWidth === clientWidth` at
+  every width (no horizontal scroll). DOM at 375: hero ×3, cards ×3, 6 process
+  steps, 4 squares, article + pullquote, banner, 6 flower SVGs.
+- `/web-projects/vaultdna` at 1440 / 768 / 375 → no overflow at any width; all
+  sections present (4 process steps, 4 squares, banner, 4 flowers).
+- Screenshots captured at 375 (top of page + the scrolled-in process section):
+  cards stack, the flower-bulleted process list renders with distinct tinted Motif
+  flowers, squares stack one-per-row, article column legible, banner legible. The
+  `Reveal` on-scroll opacity fires (process/squares computed `opacity: 1` after
+  scroll). Console: only Next dev-mode LCP advisories, **no errors**.
+
+**6. Motion sweep — flowers present; live toggle blocked by tooling (honest).** The
+process flowers render on the new pages (4–6 `.process-marker svg` in the DOM). I
+could **not** toggle `prefers-reduced-motion` live — `browse`'s CDP allowlist blocks
+`Emulation.setEmulatedMedia` (the same limitation recorded in the V11/V12 reports).
+The reduced-motion freeze is owned by the **unchanged** shared `.motif` rule, so a
+data-only change cannot regress it; not fabricating a toggled screenshot.
+
+**7. `MANUAL-TODO.md` updated.** Added a "V13 — case studies for every project"
+section: a per-project real-screenshot checklist (hero / two square pairs / mid shot
+/ wide shot / banner), a note that all case-study copy is DRAFT distilled from each
+`description` (process steps especially are a plausible order, not history), the
+per-project `overview` status/role, and the reduced-motion tooling-gap note.
+
+**Deviations / issues:** none in the authoring. One thing for Charlie: the
+pre-existing uncommitted `app/globals.css` spacing tweak (case-section
+`padding-block: 0`) was intentionally **not** committed by any V13 stage — commit it
+separately if you want it kept. No `NOW.md` exists in this repo, so no `NOW.md`
+update applied.
 
 ---
 
