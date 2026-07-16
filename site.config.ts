@@ -494,7 +494,9 @@ export const webProjects: WebProject[] = [
     title: "Ostiara",
     slug: "ostiara",
     // CUSTOMIZE: optional /public path to a small brand mark (SVG/PNG). "" = none.
-    icon: "",
+    icon: "/images/ostiara/ostiara-icon.png",
+    // CUSTOMIZE: /web-projects list thumbnail (takes priority over the icon fallback).
+    image: "/images/ostiara/ostiara-hero-a.png",
     date: "May 2026 - Present",
     description:
       "A SaaS platform for door-to-door sales teams across home-service verticals, pest control, solar, roofing, fencing, security. Built solo end to end: marketing site, admin dashboard, and a teams-and-roles system on Clerk Organizations with Supabase row-level security. The hard part was customer discovery. Reps split between fixed-price menus and measure-on-site quoting, and that split changes what the tool owes each group.",
@@ -503,10 +505,9 @@ export const webProjects: WebProject[] = [
     spotlight: true,
     // CUSTOMIZE: case-study content for /web-projects/ostiara. Timeline, Stack,
     // and Link are omitted here on purpose — they fall back to date/tags/href.
-    // CUSTOMIZE (V11): full-width rounded hero screenshot. PLACEHOLDER — no real
-    // Ostiara hero capture exists yet; reuses an existing /images/web shot so
-    // the reference exercises every section end to end. Swap when captured.
-    heroShot: "/images/web/charlieramus-com.webp",
+    // CUSTOMIZE (V11): full-width rounded hero screenshot — the Ostiara Coverage
+    // view (territory map + ranked block groups).
+    heroShot: "/images/ostiara/ostiara-hero-a.png",
     overview: {
       role: "Solo — full stack + design",
       status: "In progress",
@@ -539,17 +540,15 @@ export const webProjects: WebProject[] = [
         detail: "Shipped the public site and the copy around the product.",
       },
     ],
-    // CUSTOMIZE (V12): two side-by-side square images. PLACEHOLDER — no true
-    // square Ostiara screenshots exist yet; these two existing /images/web
-    // shots are cropped to square via object-fit so the section renders in
-    // review. Swap for real square Ostiara assets when captured.
-    squares: ["/images/web/mylifeinarepo.webp", "/images/web/charlieramus-com.webp" ],
-    // CUSTOMIZE: a full-width rounded screenshot between the two square rows.
-    // PLACEHOLDER — reuses an existing /images/web shot; swap or remove.
-    midShot: "/images/web/mylifeinarepo.webp",
+    // CUSTOMIZE (V12): two side-by-side square images — the ranked "uncovered
+    // block groups" list and the territory choropleth map.
+    squares: ["/images/ostiara/ostiara-square-1.png", "/images/ostiara/ostiara-square-2.png"],
+    // CUSTOMIZE: a full-width rounded screenshot between the two square rows —
+    // the "Where to knock" territory-ranking view.
+    midShot: "/images/ostiara/ostiara-hero-b.png",
     // CUSTOMIZE: a second pair of squares after the mid shot, before the
-    // article. PLACEHOLDER — reuses the existing shots; swap or remove.
-    squares2: ["/images/web/charlieramus-com.webp", "/images/web/mylifeinarepo.webp"],
+    // article — the fit-distribution chart and the average-fit stat tile.
+    squares2: ["/images/ostiara/ostiara-square-3.png", "/images/ostiara/ostiara-square-4.png"],
     // CUSTOMIZE (V12): the editorial article — clean serif paragraphs with a
     // drop-cap on the first one and one optional large pull-quote.
     article: {
@@ -561,16 +560,14 @@ export const webProjects: WebProject[] = [
       pullQuote:
         "The hard part wasn't the code. It was learning how a rep actually quotes a job on a doorstep.",
     },
-    // CUSTOMIZE (V12): a second full-width rounded screenshot. PLACEHOLDER — no
-    // real Ostiara wide shot exists yet; reuses an existing /images/web shot so
-    // the beat renders in review. Swap for a real Ostiara capture when available.
-    wideShot: "/images/web/charlieramus-com.webp",
+    // CUSTOMIZE (V12): a second full-width rounded screenshot — the Overview
+    // dashboard (fit distribution, door outcomes, top-line stats).
+    wideShot: "/images/ostiara/ostiara-hero-c.png",
     // CUSTOMIZE (V12): the closing banner — an optional background image and/or
-    // an overlaid line of text. Here it's text over an image (a subtle scrim is
-    // added automatically for legibility). PLACEHOLDER image — reuses an
-    // existing /images/web shot until a real Ostiara banner asset exists.
+    // an overlaid line of text. Here it's text over the Ostiara logo lockup (a
+    // subtle scrim is added automatically for legibility).
     banner: {
-      image: "/images/web/charlieramus-com.webp",
+      image: "/images/ostiara/ostiara-banner.png",
       text: "Built solo, end to end — and still bending back to how the work is really done.",
     },
   },
@@ -659,6 +656,8 @@ export const webProjects: WebProject[] = [
     slug: "querryn",
     // CUSTOMIZE: optional /public path to a small brand mark (SVG/PNG). "" = none.
     icon: "",
+    // CUSTOMIZE: /web-projects list thumbnail (takes priority over the icon fallback).
+    image: "/images/web/mylifeinarepo.webp",
     date: "December 2025 - January 2026",
     description:
       "A Chrome extension that rates the credibility of sources for students writing academic papers, using a tiered domain-trust system, and exports citations in MLA, APA, Chicago, and BibTeX. Submitted to the Chrome Web Store.",
@@ -723,6 +722,8 @@ export const webProjects: WebProject[] = [
     slug: "vaultdna",
     // CUSTOMIZE: optional /public path to a small brand mark (SVG/PNG). "" = none.
     icon: "",
+    // CUSTOMIZE: /web-projects list thumbnail (takes priority over the icon fallback).
+    image: "/images/web/charlieramus-com.webp",
     date: "April 2026 - May 2026",
     description:
       "An Obsidian plugin that encodes a personal knowledge base into synthetic DNA sequences, built around real DNA-storage constraints like homopolymer-run limits and GC-content biasing. Scoped as a quick one-to-two-week build alongside Ostiara.",
@@ -863,11 +864,13 @@ export const webProjects: WebProject[] = [
     slug: "backtrace",
     // CUSTOMIZE: optional /public path to a small brand mark (SVG/PNG). "" = none.
     icon: "/images/backtrace/icon.png",
+    // CUSTOMIZE: /web-projects list thumbnail (takes priority over the icon fallback).
+    image: "/images/backtrace/hero-16x9.png",
     date: "July 2026 - August 2026",
     description:
       "An honest field instrument for reasoning about where a wildland fire started. You walk the burn with a map, flag physical fire-pattern indicators, and record the direction each one points. Backtrace fuses those bearings, each with its own angular uncertainty into a probability field for the origin: a heatmap with credible regions, not a single false-precision dot.",
     href: "https://github.com/charlieramus/backtrace",
-    tags: ["HTML", "TypeScript", "Vector mathematics", " Sensor fusion", "Automatic PDF generation"],
+    tags: ["HTML", "TypeScript", "Vector mathematics", " Sensor fusion", "Document Generation Software"],
     spotlight: true,
     // CUSTOMIZE (V13): case-study content for /web-projects/backtrace, mirroring
     // the Ostiara shape. Copy is a DRAFT distilled from the `description` above —
@@ -916,15 +919,19 @@ export const webProjects: WebProject[] = [
     squares: ["/images/backtrace/square-1-compass-dial.png", "/images/backtrace/square-2-export-formats.png"],
     midShot: "/images/backtrace/hero-b-midshot.png",
     squares2: ["/images/backtrace/square-3-field-mode.png", "/images/backtrace/square-4-honest-readout.png"],
-    // CUSTOMIZE (V13): DRAFT article distilled from the description.
+    // CUSTOMIZE (V13): Charlie's authored article. The equation line is a plain
+    // string rendered as its own <p>; it uses Unicode math (∝ ∏ θ σ ² and a
+    // real minus sign −) so it displays as-is without a LaTeX/KaTeX renderer.
     article: {
       paragraphs: [
-        "Backtrace is an honest field instrument for a deceptively hard question: where did a wildland fire start? The workflow is physical — you walk the burn with a map, flag the fire-pattern indicators the fire itself leaves behind, and record the direction each one points back toward the origin. Each of those readings is a bearing, and no single bearing is trustworthy on its own.",
-        "The design refuses false precision. Rather than crossing a few lines and dropping a confident pin, Backtrace treats every bearing as carrying its own angular uncertainty and fuses them into a probability field — a heatmap with credible regions that says where the origin probably is, and how sure the evidence lets you be. That honesty about uncertainty was the whole point, and the hardest part to get right.",
-        "From that fused field it generates a PDF report, so the reasoning travels with the conclusion instead of getting lost behind a single dot on a map.",
+        "I built Backtrace because finding where a wildland fire started is a much harder question than it sounds, and the honest answer is usually that we're not entirely sure. The work is physical. You walk the burn with a map, you look for the marks the fire leaves behind as it moves, and for each one you record the direction it points back toward the origin. Every mark gives you a bearing, and the thing nobody tells you is that no single bearing can be trusted on its own.",
+        "That was the part I kept coming back to. Most tools want to cross a few lines and drop one confident pin, which feels reassuring and is often wrong. I wanted something that admitted what it didn't know, so I leaned on a simple idea: treat every bearing not as a hard line but as a bell curve of belief around a direction, wider when the reading is shaky and tighter when it's clean. In plain terms, a point on the map scores well when it sits close to the direction a bearing points, and its score falls off the further it drifts:",
+        "P(origin) ∝ ∏ᵢ exp(−θᵢ² / 2σᵢ²)",
+        "You can read that left to right without knowing the notation. Each bearing gives a candidate point a score based on how far off its angle is, softened by how uncertain that reading was. You multiply the scores together rather than add them, because independent pieces of evidence should agree with each other to count, and one confident bearing pointing elsewhere can quietly veto a spot. Do that across the whole map and the numbers stop being lines and become a landscape: tall where the evidence piles up, flat where it doesn't.",
+        "That landscape is the answer Backtrace actually gives you. Instead of a single false pin, you get a heatmap with credible regions showing where the origin probably is and how sure the evidence lets you be. Getting that honesty right was the whole point, and easily the hardest part to build. From the fused field it generates a PDF report, so the reasoning travels with the conclusion and the person reading it can see how you got there rather than trusting a dot on a map.",
       ],
       pullQuote:
-        "A heatmap with credible regions, not a single false-precision dot.",
+        "I wanted something that admitted what it didn't know.",
     },
     // CUSTOMIZE (V13): PLACEHOLDER wide shot — reuses a real /images/web shot.
     wideShot: "/images/backtrace/hero-c-wideshot.png",
