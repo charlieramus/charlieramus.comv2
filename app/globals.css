@@ -2141,6 +2141,28 @@ body {
   .proj-placeholder .motif {
     width: 38%;
   }
+  /* Optional per-project brand mark (WebProject.icon). Two treatments share the
+     .proj-icon-img fill: an inline square that sits just before the project
+     name (list + detail titles), and a larger centered stand-in for the flower
+     placeholder when an imageless project supplies an icon. Any aspect ratio is
+     letterboxed via object-fit, never stretched. */
+  .proj-icon {
+    position: relative;
+    display: inline-block;
+    width: 0.9em;
+    height: 0.9em;
+    margin-right: 0.4em;
+    vertical-align: -0.1em;
+  }
+  .proj-icon-img {
+    object-fit: contain;
+  }
+  .proj-placeholder-icon {
+    position: relative;
+    display: block;
+    width: 38%;
+    aspect-ratio: 1;
+  }
 
   /* Web-project detail page (/web-projects/[slug]) — the screenshot-forward
      case study. A slim header, then a fixed top-to-bottom sequence of optional

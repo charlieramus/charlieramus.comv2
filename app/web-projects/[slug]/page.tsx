@@ -92,7 +92,20 @@ export default async function WebProjectDetail({ params }: Params) {
           <Link href="/web-projects" prefetch={false} className="case-back">
             ← All projects
           </Link>
-          <h1>{project.title}</h1>
+          <h1>
+            {project.icon && (
+              <span className="proj-icon" aria-hidden>
+                <Image
+                  src={project.icon}
+                  alt=""
+                  fill
+                  sizes="48px"
+                  className="proj-icon-img"
+                />
+              </span>
+            )}
+            {project.title}
+          </h1>
           <p className="proj-meta">{project.date}</p>
         </Reveal>
 

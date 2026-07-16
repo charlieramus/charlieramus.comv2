@@ -430,6 +430,13 @@ export type WebProject = {
   /** CUSTOMIZE: screenshot path in /public (the /web-projects list thumbnail +
    *  the detail-page OG fallback when no heroShot is set). */
   image?: string;
+  /** CUSTOMIZE: optional small brand mark for this project — a /public path
+   *  (SVG or PNG). Renders just before the project name on the /web-projects
+   *  list and the detail-page title, and stands in for the flower placeholder
+   *  when a project has no `image`. Entirely optional: leave it off and nothing
+   *  icon-related renders. Squarish marks (favicon/app-icon shaped) look best —
+   *  any aspect ratio is letterboxed, never stretched. */
+  icon?: string;
 
   // ---------------------------------------------------------------------------
   //  CASE STUDY (V11/V12) — the screenshot-forward detail page at
@@ -486,6 +493,8 @@ export const webProjects: WebProject[] = [
   {
     title: "Ostiara",
     slug: "ostiara",
+    // CUSTOMIZE: optional /public path to a small brand mark (SVG/PNG). "" = none.
+    icon: "",
     date: "May 2026 - Present",
     description:
       "A SaaS platform for door-to-door sales teams across home-service verticals, pest control, solar, roofing, fencing, security. Built solo end to end: marketing site, admin dashboard, and a teams-and-roles system on Clerk Organizations with Supabase row-level security. The hard part was customer discovery. Reps split between fixed-price menus and measure-on-site quoting, and that split changes what the tool owes each group.",
@@ -568,6 +577,8 @@ export const webProjects: WebProject[] = [
   {
     title: "MyLifeInARepo",
     slug: "mylifeinarepo",
+    // CUSTOMIZE: optional /public path to a small brand mark (SVG/PNG). "" = none.
+    icon: "",
     date: "May 2026 - June 2026",
     description:
       "A personal life-tracking system built as a git repo of daily markdown files, parsed into structured data and rendered through a Next.js dashboard. Includes a financial module for net worth, budgeting, and cash-flow forecasting, plus a bank-statement import pipeline and a transaction-categorization engine modeled on how Monarch Money handles rule-based categorization. The hard part: turning freeform daily notes into reliable structured data. I still contribute to it occasionally but it is mostly done.",
@@ -646,6 +657,8 @@ export const webProjects: WebProject[] = [
   {
     title: "Querryn",
     slug: "querryn",
+    // CUSTOMIZE: optional /public path to a small brand mark (SVG/PNG). "" = none.
+    icon: "",
     date: "December 2025 - January 2026",
     description:
       "A Chrome extension that rates the credibility of sources for students writing academic papers, using a tiered domain-trust system, and exports citations in MLA, APA, Chicago, and BibTeX. Submitted to the Chrome Web Store.",
@@ -708,6 +721,8 @@ export const webProjects: WebProject[] = [
   {
     title: "VaultDNA",
     slug: "vaultdna",
+    // CUSTOMIZE: optional /public path to a small brand mark (SVG/PNG). "" = none.
+    icon: "",
     date: "April 2026 - May 2026",
     description:
       "An Obsidian plugin that encodes a personal knowledge base into synthetic DNA sequences, built around real DNA-storage constraints like homopolymer-run limits and GC-content biasing. Scoped as a quick one-to-two-week build alongside Ostiara.",
@@ -770,6 +785,8 @@ export const webProjects: WebProject[] = [
   {
     title: "charlieramus.comv2",
     slug: "charlieramus-com",
+    // CUSTOMIZE: optional /public path to a small brand mark (SVG/PNG). "" = none.
+    icon: "",
     date: "May 2026 — Present",
     description:
       "This site — a personal portfolio in Next.js, TypeScript, and Tailwind, with MDX for writing and a masonry photography grid backed by a fullscreen lightbox.",
@@ -844,6 +861,8 @@ export const webProjects: WebProject[] = [
   {
     title: "Backtrace",
     slug: "backtrace",
+    // CUSTOMIZE: optional /public path to a small brand mark (SVG/PNG). "" = none.
+    icon: "/images/backtrace/icon.png",
     date: "July 2026 - August 2026",
     description:
       "An honest field instrument for reasoning about where a wildland fire started. You walk the burn with a map, flag physical fire-pattern indicators, and record the direction each one points. Backtrace fuses those bearings, each with its own angular uncertainty into a probability field for the origin: a heatmap with credible regions, not a single false-precision dot.",

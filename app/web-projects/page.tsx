@@ -54,6 +54,17 @@ export default function WebProjectsPage() {
                   </span>
                 )}
                 <h2>
+                  {p.icon && (
+                    <span className="proj-icon" aria-hidden>
+                      <Image
+                        src={p.icon}
+                        alt=""
+                        fill
+                        sizes="40px"
+                        className="proj-icon-img"
+                      />
+                    </span>
+                  )}
                   <Link
                     href={`/web-projects/${p.slug}`}
                     prefetch={false}
@@ -92,6 +103,18 @@ export default function WebProjectsPage() {
                     sizes="(max-width: 880px) 100vw, 440px"
                     className="proj-img"
                   />
+                ) : p.icon ? (
+                  <div className="proj-placeholder">
+                    <span className="proj-placeholder-icon">
+                      <Image
+                        src={p.icon}
+                        alt={`${p.title} icon`}
+                        fill
+                        sizes="200px"
+                        className="proj-icon-img"
+                      />
+                    </span>
+                  </div>
                 ) : (
                   <div className="proj-placeholder">
                     <Motif fill={PETALS[i % PETALS.length]} index={i} />
