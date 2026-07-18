@@ -496,7 +496,7 @@ export const webProjects: WebProject[] = [
     // CUSTOMIZE: optional /public path to a small brand mark (SVG/PNG). "" = none.
     icon: "/images/ostiara/ostiara-icon.png",
     // CUSTOMIZE: /web-projects list thumbnail (takes priority over the icon fallback).
-    image: "/images/ostiara/ostiara-hero-a.png",
+    image: "/images/ostiara/ostiara-all-ui.png",
     date: "May 2026 - Present",
     description:
       "A SaaS platform for door-to-door sales teams across home-service verticals, pest control, solar, roofing, fencing, security. Built solo end to end: marketing site, admin dashboard, and a teams-and-roles system on Clerk Organizations with Supabase row-level security. The hard part was customer discovery. Reps split between fixed-price menus and measure-on-site quoting, and that split changes what the tool owes each group.",
@@ -542,13 +542,13 @@ export const webProjects: WebProject[] = [
     ],
     // CUSTOMIZE (V12): two side-by-side square images — the ranked "uncovered
     // block groups" list and the territory choropleth map.
-    squares: ["/images/ostiara/ostiara-square-1.png", "/images/ostiara/ostiara-square-2.png"],
+    squares: ["/images/ostiara/ostiara-square-10.png", "/images/ostiara/ostiara-square-2.png"],
     // CUSTOMIZE: a full-width rounded screenshot between the two square rows —
     // the "Where to knock" territory-ranking view.
     midShot: "/images/ostiara/ostiara-hero-b.png",
     // CUSTOMIZE: a second pair of squares after the mid shot, before the
     // article — the fit-distribution chart and the average-fit stat tile.
-    squares2: ["/images/ostiara/ostiara-square-3.png", "/images/ostiara/ostiara-square-4.png"],
+    squares2: ["/images/ostiara/ostiara-square-11.png", "/images/ostiara/ostiara-square-9.png"],
     // CUSTOMIZE (V12): the editorial article — clean serif paragraphs with a
     // drop-cap on the first one and one optional large pull-quote.
     article: {
