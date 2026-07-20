@@ -1145,9 +1145,9 @@ export type PhotographyView = {
 export const photographyView: PhotographyView = {
   viewLabels: { all: "All", byTrip: "By trip" },
   tripOrder: [
-    "Iceland 2026",
     "Colorado 2026",
-    "British Virgin Islands 2026",
+    "Iceland 2026",
+    "British Virgin Islands 2025",
     "Kauai 2026",
     "Mexico 2026",
     "Boston 2026",
