@@ -337,4 +337,41 @@ the process flowers rendering.
   allowlist still blocks `Emulation.setEmulatedMedia`. The freeze is governed by the
   **unchanged** shared `.motif` rule, so a data-only change can't regress it.
 
+## V14 — photography "All / By trip" toggle  🟡 ✅ built (editable)
+
+**DONE (V14).** `/photography` now opens on the familiar masonry (**All**) and, one click
+away, regroups every frame into labeled trip sections (**By trip**) — each tile showing a
+corner number badge (its print `code`) and no caption, each section a flower-marked
+heading + frame count. It's config + data driven; the code template is done. Verified
+in-session: `tsc` + `eslint` green; `next build` compiles + typechecks + prerenders all
+24 routes (`/photography` still one static route); the real static export was driven in a
+headless browser at 1440 / 768 / 375 — both views, **0 horizontal overflow**, badges +
+flower headings legible, the By-trip lightbox shows the number (not the caption) while All
+keeps the caption, and arrow-stepping walks each view's own list.
+
+**Everything below is yours to shape (the seed is just a working starting point):**
+
+- 🟡 **Rename / regroup the seeded trips.** Every current photo was auto-tagged in
+  `public/photos/gallery.json` from its `location` + year as a STARTING POINT: **Iceland
+  2026** (22), **Colorado 2026** (22 — the three Colorado location strings merged),
+  **British Virgin Islands 2026** (7), **Kauai 2026** (2), **Mexico 2026** (2), **Boston
+  2026** (1), **Portland 2026** (1); four location-less shots (the Ripple abstract + three
+  Land Rover frames) are untagged and fall into a **"More frames"** section. Edit the
+  `trip` strings in `gallery.json` to your real trips (split Colorado if you want, add
+  "Cape Cod 2026", etc.), then run `npm run sync-gallery`.
+
+- 🟡 **Add trip-only EXTRA frames** (shots that never make the main grid). Drop the image
+  into `/public/photos/`, add a `gallery.json` line with `"main": false` + the right
+  `"trip"`, and run `npm run sync-gallery`. It appears in that trip section (with its
+  number badge) but not in All. Proven this session: setting one photo `main:false` drops
+  it from All (61 → 60) while it stays in its trip section — pure content, no code.
+
+- 🟡 **Tune the trip section order.** `photographyView.tripOrder` in `site.config.ts` sets
+  the order sections appear (seeded biggest/recent first); any trip not listed there sorts
+  after the listed ones by most-recent photo. The two toggle labels (`viewLabels.all` /
+  `viewLabels.byTrip`) live in the same block.
+
+- ✅ **`data/photos.ts` stays generated** — never hand-edit it. All trip tagging happens in
+  `gallery.json`; re-run `npm run sync-gallery` to regenerate.
+
 _Ping me when any of the 🔴 items land and I'll wire them in immediately._

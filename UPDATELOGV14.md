@@ -403,7 +403,73 @@ authoring debt in MANUAL-TODO.md.
 
 ## Stage 5 Report
 
-_Pending._
+- [x] **1 · Build gate.** `tsc --noEmit` clean · `npm run lint` clean · `next build`
+  compiles (`✓ Compiled successfully`), runs TypeScript, and **prerenders all 24
+  routes green** (`✓ Generating static pages (24/24)`). Route list unchanged from
+  V13: `/`, `/design`, `/gear`, `/photography`, `/web-projects`,
+  `/web-projects/[slug]` (6 slugs), `/writing`, `/writing/[slug]` (4 slugs), plus
+  the generated `icon`/`apple-icon`/`opengraph-image`/`robots`/`sitemap`.
+  **`/photography` stays one static route.**
+  - **Honest build note:** the `next build` **process exits non-zero** on Windows
+    due to a post-export `rmdir('out')` **cleanup** step hitting
+    `EBUSY: resource busy or locked` — a file-lock race against a real-time
+    scanner / the concurrently-running dev-server watcher on the freshly-written
+    `out/`, **not** a code error. Everything up to and including the static export
+    is green: I confirmed `out/` contains all exported routes and that
+    `out/photography.html` carries the `gallery-toggle-btn` + "By trip" markup.
+    The **identical code exited 0 fully green** (compile → export) at Stages 1–4,
+    with the working tree unchanged since, and the real exported output was
+    additionally driven in a headless browser (below).
+- [x] **2 · Regeneration integrity.** `npm run sync-gallery` is **idempotent** —
+  run twice from a clean tree, `git status` stays empty (no diff). `data/photos.ts`
+  carries `trip` on the 57 located photos (no `main` keys, none are false) and is
+  fully generated (no hand edits).
+- [x] **3 · Non-regression (All === today).** `galleryPhotos` = all 61 photos in
+  the original manifest order (all seeded `main:true`); the All grid renders the
+  same tiles in the same order, and the All lightbox still shows captions
+  (verified in-browser: `#0001` + "Colorful coastal buildings in Reykjavik,
+  Iceland"). **Marquee caveat:** the log's context says a vertical marquee rail
+  lives on this page, but the `marquees` data in site.config.ts is **not rendered
+  by any component** in the current codebase (no marquee component/CSS exists), so
+  there was nothing to preserve or collide with — flagged honestly, not faked.
+- [x] **4 · By-trip integrity.** Every photo appears in exactly one section (61
+  unique codes, 0 duplicates), section order follows `tripOrder` then unlisted-by-
+  date, within-trip order is by `date` asc. Resolved sections + counts (verified
+  both via the resolver replay and live in the browser):
+  Iceland 2026 **22** · Colorado 2026 **22** · British Virgin Islands 2026 **7** ·
+  Kauai 2026 **2** · Mexico 2026 **2** · Boston 2026 **1** · Portland 2026 **1** ·
+  More frames **4**. **Sum = 61 = photos.length.**
+- [x] **5 · `main:false` proof.** Temporarily set photo `0001` `main:false`,
+  re-synced: All dropped to **60** (0001 hidden) while Iceland 2026 stayed **22**
+  (0001 still in its trip section); total across sections still 61. Reverted +
+  re-synced → clean tree.
+- [x] **6 · Lightbox (live).** Arrow-stepping works in both views (By trip:
+  `#0001 → #0002` within `tripFlat`); the **By-trip lightbox shows the number, not
+  the caption** (`code=#0001`, 1 span, text "#0001"); the **All lightbox shows the
+  caption** (2 spans, code + caption text). Toggle exposes `role="group"` +
+  per-button `aria-pressed` (flips `All:false / By trip:true` on switch) and is
+  keyboard-operable native buttons; images keep real `alt`; the badge is
+  `aria-hidden` so it's not part of the tile's accessible name. No console errors.
+- [x] **7 · Responsive + reduced-motion (live).** Headless sweep at
+  **1440 / 768 / 375**: `scrollWidth == clientWidth` at every width in **both**
+  views (no horizontal scroll); trip headings + number badges legible, toggle
+  usable, sections stack cleanly (screenshots captured at 1440 and 375). The
+  shipped CSS bundle carries the reduced-motion guards
+  `@media (prefers-reduced-motion:reduce){ … .gallery-toggle-btn{transition:none} }`
+  and the flower marker inherits the already-frozen `.motif{animation:none}` — so
+  no new motion escapes the guard (the CDP `Emulation.setEmulatedMedia` toggle is
+  still blocked by browse's allowlist, same tooling gap noted in V11–V13, so the
+  freeze was verified by the shipped rule rather than a live media emulation).
+- [x] **8 · MANUAL-TODO.md** — added a **V14** section logging the authoring debt:
+  (a) rename/regroup the seeded trips in `gallery.json` (incl. adding "Cape Cod
+  2026" etc.); (b) add trip-only extras via `main:false` + `trip` + re-sync;
+  (c) tune `tripOrder` in `site.config.ts`.
+
+Verify: build compiles + typechecks + prerenders all 24 routes (export output
+correct; process exit non-zero only on the Windows `rmdir('out')` cleanup race —
+see note 1); sync idempotent; By-trip sections sum to 61 = photos.length; live
+1440/768/375 sweep on both views showed 0 horizontal overflow with badges/headings
+legible and caption-suppression correct; `main:false` proof passed and reverted.
 
 ---
 
