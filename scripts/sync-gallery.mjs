@@ -39,11 +39,42 @@ const root = join(__dirname, "..");
 const photosDir = join(root, "public", "photos");
 const thumbsDir = join(photosDir, "thumbs");
 const galleryPath = join(photosDir, "gallery.json");
+const numbersPath = join(photosDir, "numbers.json");
 const outputPath = join(root, "data", "photos.ts");
 
 mkdirSync(thumbsDir, { recursive: true });
 
 const entries = JSON.parse(readFileSync(galleryPath, "utf8"));
+
+// STICKY GLOBAL NUMBER MAP (V15) ------------------------------------------------
+// public/photos/numbers.json is the committed print-reference source of truth:
+//   { "<path relative to public/photos/>": "<zero-padded code>" }
+// It is append-only — a photo keeps its code for life, and a removed photo's
+// entry is retained so its number is retired (never reused). codeFor() returns
+// the existing code for a path or mints the next (max+1). Seeding an empty map
+// from the gallery in array order reproduces today's 0001…0061 exactly.
+let numbers = {};
+try {
+  numbers = JSON.parse(readFileSync(numbersPath, "utf8"));
+} catch {
+  numbers = {};
+}
+let numbersDirty = false;
+
+function codeFor(relPath) {
+  const existing = numbers[relPath];
+  if (existing) return existing;
+  let max = 0;
+  for (const c of Object.values(numbers)) {
+    const n = parseInt(c, 10);
+    if (Number.isFinite(n) && n > max) max = n;
+  }
+  const next = max + 1;
+  const code = String(next).padStart(Math.max(4, String(next).length), "0");
+  numbers[relPath] = code;
+  numbersDirty = true;
+  return code;
+}
 
 // Pull "YYYY-MM" out of a filename's date stamp: either a leading YYYYMMDD
 // (20260412-…) or an embedded YYYY-MM-DD (Frame1-2026-06-20). Returns undefined
@@ -60,8 +91,8 @@ let downscaled = 0;
 let thumbed = 0;
 
 const photos = await Promise.all(
-  entries.map(async (entry, i) => {
-    const code = String(i + 1).padStart(4, "0");
+  entries.map(async (entry) => {
+    const code = codeFor(entry.file);
     const fullPath = join(photosDir, entry.file);
     const thumbPath = join(thumbsDir, entry.file);
 
@@ -188,6 +219,18 @@ ${lines.join(",\n")}
 `;
 
 writeFileSync(outputPath, output, "utf8");
+
+// Persist the sticky number map when it grew (new photos took fresh codes).
+// Sorted by code for a clean, append-only diff. Untouched map → no rewrite
+// (idempotent), so re-running sync leaves numbers.json byte-identical.
+if (numbersDirty) {
+  const sorted = Object.fromEntries(
+    Object.entries(numbers).sort((a, b) => a[1].localeCompare(b[1]))
+  );
+  writeFileSync(numbersPath, JSON.stringify(sorted, null, 2) + "\n", "utf8");
+  console.log(`  ↦ Updated numbers.json (${Object.keys(sorted).length} codes)`);
+}
+
 console.log(
   `✓ Synced ${photos.length} photos → data/photos.ts ` +
     `(${thumbed} thumbnails, ${downscaled} downscaled)`
