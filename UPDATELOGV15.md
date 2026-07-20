@@ -290,7 +290,35 @@ caption; the All lightbox still shows its caption. No horizontal scroll at 1440/
 
 ## Stage 4 Report
 
-_Pending._
+- [x] **`components/photography-gallery.tsx`** — added `const hasTrips = tripSections.length > 0` and
+  `const activeView = hasTrips ? view : "all"`. The `.gallery-toggle` group is now wrapped in
+  `{hasTrips && (...)}`, so with no trip folders the toggle is gone entirely and the page is a single
+  captioned view. All rendering, `aria-pressed`, and `showCaptions={activeView === "all"}` switched to
+  `activeView`. The per-view flat lightbox lists (`galleryPhotos` for All, `tripFlat` for By trip) and
+  global-index discipline from V14 are unchanged; trip tiles keep the corner badge, All tiles stay
+  badge-free.
+- [x] **`components/lightbox.tsx`** — split the figcaption: when `showCaptions` is true it keeps the
+  existing `.lightbox-cap` row (small `#code` chip beside the caption); when false (By-trip) and a code
+  exists it renders a single large centered `<figcaption className="lightbox-number">{code}</figcaption>`.
+  Alt, keyboard, focus-trap, and arrow stepping untouched.
+- [x] **`app/globals.css`** — shrank `.photo-badge` (font-size `11px→9px`, padding `2px 7px→1px 5px`,
+  offsets `8px→6px`, lighter bg) so a wall of thumbnails reads quietly. Added `.lightbox-number`
+  (`font-size: clamp(22px, 4vw, 34px)`, `tabular-nums`, `--color-paper`, centered, comfortable
+  `margin-top`). No animation → inherently motion-safe; the toggle stays in the existing
+  `prefers-reduced-motion` block.
+- **Verify (build + live browser):** `tsc --noEmit` clean; `npm run lint` clean; `next build` (export)
+  green — `/photography` still one static route. **Empty state:** live at 1440px, no `.gallery-toggle`
+  in the DOM, 61-tile captioned grid renders. **Populated** (temporary `Sample 2026` trip, 2 images,
+  synced): toggle appears; By-trip section renders with SMALL corner badge `0062` (computed
+  `font-size: 9px`); clicking a trip tile opens the lightbox with the number LARGE and centered
+  (`.lightbox-number`, computed `34px` at desktop) and NO `.lightbox-cap`; the All lightbox still shows
+  `#0001` + its caption. No horizontal scroll at 1440 / 768 / 375 in By-trip view. Screenshot captured.
+  Then removed the sample, `git checkout numbers.json`, re-synced → clean tree (only `globals.css`,
+  `lightbox.tsx`, `photography-gallery.tsx` changed).
+- **Issues:** The pre-existing dev server (started before this stage's `globals.css` edit) served a
+  stale stylesheet missing `.lightbox-number` (rendered ~16px). Confirmed the rule is correct in the
+  production-built CSS, restarted the dev server (cleared `.next`), and re-verified the live 34px render
+  — consistent with the known Turbopack stale-CSS behavior. No code issue.
 
 ---
 

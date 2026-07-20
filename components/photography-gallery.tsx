@@ -98,30 +98,36 @@ export default function PhotographyGallery() {
   };
 
   const labels = photographyView.viewLabels;
-  const activeItems = view === "all" ? galleryPhotos : tripFlat;
+  // With no trip folders present the By-trip dataset is empty, so the whole
+  // toggle is hidden and /photography is a normal single-view captioned gallery.
+  const hasTrips = tripSections.length > 0;
+  const activeView: View = hasTrips ? view : "all";
+  const activeItems = activeView === "all" ? galleryPhotos : tripFlat;
 
   return (
     <>
-      <div className="gallery-toggle" role="group" aria-label="Gallery view">
-        <button
-          type="button"
-          className="gallery-toggle-btn"
-          aria-pressed={view === "all"}
-          onClick={() => switchTo("all")}
-        >
-          {labels.all}
-        </button>
-        <button
-          type="button"
-          className="gallery-toggle-btn"
-          aria-pressed={view === "trip"}
-          onClick={() => switchTo("trip")}
-        >
-          {labels.byTrip}
-        </button>
-      </div>
+      {hasTrips && (
+        <div className="gallery-toggle" role="group" aria-label="Gallery view">
+          <button
+            type="button"
+            className="gallery-toggle-btn"
+            aria-pressed={activeView === "all"}
+            onClick={() => switchTo("all")}
+          >
+            {labels.all}
+          </button>
+          <button
+            type="button"
+            className="gallery-toggle-btn"
+            aria-pressed={activeView === "trip"}
+            onClick={() => switchTo("trip")}
+          >
+            {labels.byTrip}
+          </button>
+        </div>
+      )}
 
-      {view === "all" ? (
+      {activeView === "all" ? (
         <div className="gallery-grid">
           {galleryPhotos.map((p, i) => (
             <Tile key={p.src} photo={p} priority={i < 4} onOpen={() => setIdx(i)} />
@@ -168,7 +174,7 @@ export default function PhotographyGallery() {
         index={idx}
         onClose={() => setIdx(null)}
         onIndex={setIdx}
-        showCaptions={view === "all"}
+        showCaptions={activeView === "all"}
       />
     </>
   );

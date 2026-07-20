@@ -143,12 +143,18 @@ export default function Lightbox({
               ? { placeholder: "blur" as const, blurDataURL: item.blurDataURL }
               : {})}
           />
-          {((showCaptions && item.caption) || item.code) && (
-            <figcaption className="lightbox-cap">
-              {item.code && <span className="lightbox-code">#{item.code}</span>}
-              {showCaptions && item.caption && <span>{item.caption}</span>}
-            </figcaption>
-          )}
+          {showCaptions
+            ? (item.caption || item.code) && (
+                <figcaption className="lightbox-cap">
+                  {item.code && <span className="lightbox-code">#{item.code}</span>}
+                  {item.caption && <span>{item.caption}</span>}
+                </figcaption>
+              )
+            : /* By-trip view: no caption, so the sticky number is the hero —
+                 large and centered under the photo. */
+              item.code && (
+                <figcaption className="lightbox-number">{item.code}</figcaption>
+              )}
         </figure>
 
         {items.length > 1 && (

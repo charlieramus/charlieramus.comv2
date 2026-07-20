@@ -1914,18 +1914,18 @@ body {
      image. Above the thumb, non-interactive, not part of the button's name. */
   .photo-badge {
     position: absolute;
-    top: 8px;
-    left: 8px;
+    top: 6px;
+    left: 6px;
     z-index: 2;
     pointer-events: none;
-    padding: 2px 7px;
-    border-radius: 6px;
-    background: rgba(10, 10, 8, 0.62);
+    padding: 1px 5px;
+    border-radius: 5px;
+    background: rgba(10, 10, 8, 0.58);
     color: var(--color-paper);
     font-family: var(--font-sans);
-    font-size: 11px;
+    font-size: 9px;
     font-variant-numeric: tabular-nums;
-    letter-spacing: 0.08em;
+    letter-spacing: 0.06em;
     line-height: 1.5;
     backdrop-filter: blur(2px);
   }
@@ -2024,6 +2024,20 @@ body {
     border: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: 6px;
     padding: 2px 8px;
+  }
+  /* By-trip lightbox: no caption, so the sticky print-reference number is the
+     hero of the caption row — large, tabular, centered under the photo. No
+     animation, so inherently motion-safe. */
+  .lightbox-number {
+    margin-top: clamp(14px, 2.4vw, 22px);
+    text-align: center;
+    color: var(--color-paper);
+    font-family: var(--font-sans);
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.14em;
+    font-size: clamp(22px, 4vw, 34px);
+    font-weight: 500;
+    line-height: 1;
   }
   .lightbox-btn {
     position: absolute;
