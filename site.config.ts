@@ -1128,6 +1128,33 @@ export const marquees: Marquee[] = [
   { color: "yellow", text: ".ROAM.CAPTURE." },
 ];
 
+/** /photography view toggle (V14). The gallery opens on `All` (the masonry) and
+ *  can switch to `By trip` — every frame grouped into labeled trip sections.
+ *  `viewLabels` are the two toggle button labels; `tripOrder` is the explicit
+ *  order the trip sections appear in. Any trip NOT listed here still shows — it
+ *  just sorts after the listed ones, by most-recent photo. Trips are authored in
+ *  public/photos/gallery.json (the `trip` field); this only orders them. */
+export type PhotographyView = {
+  viewLabels: { all: string; byTrip: string };
+  tripOrder: string[];
+};
+
+// CUSTOMIZE: rename/reorder trips to match your real trips (they must match the
+// `trip` strings in gallery.json), and tweak the two toggle labels. Seeded with
+// the V14 trip names in a sensible default order — big/recent trips first.
+export const photographyView: PhotographyView = {
+  viewLabels: { all: "All", byTrip: "By trip" },
+  tripOrder: [
+    "Iceland 2026",
+    "Colorado 2026",
+    "British Virgin Islands 2026",
+    "Kauai 2026",
+    "Mexico 2026",
+    "Boston 2026",
+    "Portland 2026",
+  ],
+};
+
 // -----------------------------------------------------------------------------
 // SECTION COPY  (folded in from components + pages, V9 Stage 2)
 // -----------------------------------------------------------------------------

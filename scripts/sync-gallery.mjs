@@ -2,7 +2,12 @@
  * sync-gallery.mjs — the reproducible photography pipeline (V4 Stage 2).
  *
  * `public/photos/gallery.json` is the hand-authored source of truth. Each entry is
- *   { "file": "<name>.webp", "caption": "...", "location"?: "...", "featured"?: true }
+ *   { "file": "<name>.webp", "caption": "...", "location"?: "...", "featured"?: true,
+ *     "trip"?: "Iceland 2026", "main"?: false }
+ * where the two V14 fields are optional:
+ *   • `trip`  — curated section label for the /photography "By trip" view.
+ *   • `main`  — defaults true; set false to HIDE a frame from the "All" grid while
+ *               still showing it in its trip section (trip-only extras).
  * For every entry this script:
  *   1. Downscales the full image to MAX_FULL px on the long edge (in place) so a
  *      stray full-res export can't blow up mobile Safari in the lightbox.
@@ -116,6 +121,10 @@ const photos = await Promise.all(
       featured: entry.featured === true ? true : undefined,
       location: entry.location || undefined,
       date: deriveDate(entry.file),
+      trip: entry.trip || undefined,
+      // Omit `main` when true (the default) to keep the manifest lean; only
+      // emit it when explicitly false (hidden from the All grid).
+      main: entry.main === false ? false : undefined,
     };
   })
 );
@@ -134,6 +143,8 @@ const lines = photos.map((p) => {
   if (p.featured) parts.push(`featured: true`);
   if (p.location) parts.push(`location: ${JSON.stringify(p.location)}`);
   if (p.date) parts.push(`date: ${JSON.stringify(p.date)}`);
+  if (p.trip) parts.push(`trip: ${JSON.stringify(p.trip)}`);
+  if (p.main === false) parts.push(`main: false`);
   return `  { ${parts.join(", ")} }`;
 });
 
@@ -165,6 +176,10 @@ export type Photo = {
   location?: string;
   /** capture month "YYYY-MM" — lets the homepage pick the most recent trip */
   date?: string;
+  /** curated trip/section label, e.g. "Iceland 2026" (V14 "By trip" view) */
+  trip?: string;
+  /** false = hidden from the All grid but still shown in its trip section */
+  main?: boolean;
 };
 
 export const photos: Photo[] = [
