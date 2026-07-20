@@ -375,3 +375,51 @@ keeps the caption, and arrow-stepping walks each view's own list.
   `gallery.json`; re-run `npm run sync-gallery` to regenerate.
 
 _Ping me when any of the 🔴 items land and I'll wire them in immediately._
+
+---
+
+## V15 — photography "By trip" is now FOLDER-DRIVEN (+ sticky print numbers)  🟡 ✅ built (drop a folder)
+
+**DONE (V15).** V15 rebuilt what feeds the **By trip** view. It is no longer tagged inside
+`gallery.json` — it is now a **separate, folder-driven, caption-free dataset**, and every photo
+across both views carries a **sticky, globally-unique print-reference number**. **V14's `trip` /
+`main` tags in `gallery.json` are GONE** — the note above about editing `trip` strings and setting
+`main:false` no longer applies. The **All** grid is byte-identical to before (same 61 captioned
+photos, same order, same codes `0001…0061`).
+
+**How to add a trip (pure content drop — no JSON, no captions):**
+
+- 🟢 **Make a folder, drop photos, sync.** Create `public/photos/trips/<Trip Name>/` — the **folder
+  name is the section heading** (e.g. `public/photos/trips/Iceland 2026/`). Drop photos in (jpg / jpeg
+  / png / webp), then run **`npm run sync-gallery`**. Thumbnails, ratios, blur placeholders, and the
+  print numbers are all generated for you into `data/trip-photos.ts` (generated — never hand-edit).
+  With no folders present the By-trip view is empty and the **toggle is hidden entirely** — the page
+  is a normal single-view captioned gallery until you drop a folder.
+
+- 🟢 **Numbers are sticky, global, and PERMANENT.** `public/photos/numbers.json` is generated **but
+  COMMITTED** — it is the print-reference source of truth mapping every photo's path to its code. A
+  photo keeps its number for life; **deleting a photo RETIRES its number** (the entry stays, the number
+  is never reused), so a reference a customer was given stays valid. Gallery photos are `0001…0061`;
+  trip photos number upward from there. Do **not** hand-edit or delete `numbers.json`. (Proven this
+  session: added two trip photos → `0062`/`0063`; deleted one → its number retired; added another →
+  it took `0064`, not the retired code.)
+
+- 🟡 **Within-trip order is by FILENAME** (natural sort). Prefix files `01_`, `02_`, … to control the
+  order inside a section. Order must be deterministic so the sticky numbers never reshuffle.
+
+- 🟡 **Section order via `photographyView.tripOrder`** in `site.config.ts` (listed trips first, in that
+  order; any unlisted folder falls to the end alphabetically). The two toggle labels
+  (`viewLabels.all` / `viewLabels.byTrip`) live in the same block. The `tripOrder` list still holds the
+  V14 trip names as a sensible default — rename entries to match your real trip folders.
+
+- 🔴 **Your real trip dataset.** `public/photos/trips/` **ships empty on purpose** (the By-trip view
+  and toggle stay hidden until you populate it). Drop your real trip folders in and run
+  `npm run sync-gallery` when ready.
+
+- 🟡 **Optional, deferred:** a per-trip display-order override beyond filename prefixes; surfacing the
+  number on the **All** grid tiles too (today the number shows on By-trip tiles + both lightboxes, and
+  on the All grid only in the lightbox).
+
+**In the lightbox:** By-trip photos have **no caption**, so the sticky number renders **large and
+centered under the photo**; the All lightbox keeps its caption + a small `#code` chip. Grid tiles in a
+trip carry a **small** corner number badge.

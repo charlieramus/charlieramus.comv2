@@ -362,7 +362,56 @@ browser genuinely can't run — do NOT fabricate). Log the author workflow in MA
 
 ## Stage 5 Report
 
-_Pending._
+- [x] **1 · Full build gate.** `tsc --noEmit` clean; `npm run lint` (whole repo) clean; `next build`
+  (export) green. Route list: `/`, `/_not-found`, `/apple-icon`, `/design`, `/gear`, `/icon`,
+  `/opengraph-image`, `/photography`, `/robots.txt`, `/sitemap.xml`, `/web-projects`,
+  `/web-projects/[slug]` (SSG, 6 slugs), `/writing`, `/writing/[slug]` (SSG). **`/photography` is a
+  single static (`○`) route** — no new route, static export intact.
+- [x] **2 · Preserved codes.** `data/photos.ts` codes are byte-identical to pre-V15 (diff of code lines
+  vs `HEAD~4`/`stage5v14` empty — 61 codes `0001…0061`). Previews refs resolve to the same photos:
+  `0001`→`20260412-IMGL5331-2`, `0013`→`20260411-IMGL5222-3`, `0030`→`20260414-IMGL7279`,
+  `0004`→`20260413-IMGL6446` (photographyBento), `0055`→`Frame1-2026-06-20` (rightNowPhoto).
+- [x] **3 · Sticky-number proof (temporary `Sample 2026`).**
+    - Added `01_a.webp` + `02_b.webp`, sync → `"trips/Sample 2026/01_a.webp": "0062"`,
+      `"…/02_b.webp": "0063"` (append from gallery max).
+    - **Deleted** `01_a.webp`, sync → `0062` **retired**: still present in `numbers.json`, but `01_a`
+      no longer in `data/trip-photos.ts` (manifest shows only `0063`).
+    - **Added** `03_c.webp`, sync → `"…/03_c.webp": "0064"` — the **next free** code, NOT the retired
+      `0062`. Proves append-only + retire-never-reuse.
+    - Removed the `Sample 2026` folder + thumbs, `git checkout public/photos/numbers.json`, re-synced →
+      `numbers.json` back to 61 entries, `tripPhotoGroups` `[]`, working tree clean (no sample codes
+      committed).
+- [x] **4 · Non-regression.** The All grid renders the same 61 captioned photos, same order, same codes;
+  captions still in the All lightbox. `gallery.json` diff vs pre-V15 is **tags-only** (HEAD~4 with
+  `trip`/`main` stripped is byte-identical to the current file).
+- [x] **5 · Empty state.** With `trips/` empty (committed state), the By-trip toggle is **hidden** (no
+  `.gallery-toggle` in the DOM, verified live) and `/photography` is a normal single-view captioned
+  gallery (61 tiles).
+- [x] **6 · Lightbox.** Live (temporary sample): arrow-stepping works in By-trip (`0062` → ArrowRight →
+  `0063`) and in All (V14 logic unchanged); the By-trip lightbox shows the LARGE centered number and no
+  caption, the All lightbox shows `#0001` + its caption. The toggle has `role="group"` +
+  `aria-label="Gallery view"` + keyboard/`aria-pressed`; trip images keep real alt (`Sample 2026 — 63`).
+- [x] **7 · Responsive + reduced-motion.** No horizontal scroll at **1440 / 768 / 375** in the By-trip
+  view (scrollWidth ≤ innerWidth at all three); grid badges small + legible (`9px`), lightbox number
+  legible (`34px` desktop). Reduced-motion: the built CSS `@media (prefers-reduced-motion:reduce)` block
+  sets `transition: none` on `.gallery-img`, `.gallery-toggle-btn`, `.lightbox-btn`, and
+  `.lightbox-number` has no transition/animation (motion-safe by construction). **Deferral:** live
+  reduced-motion media-emulation could not run — the browse build's CDP `Emulation.setEmulatedMedia`
+  is not allowlisted — so this was verified at the compiled-CSS level, not via a live toggle (same
+  tooling gap noted in V11–V14).
+- [x] **8 · Docs.** Added a **V15 section** to `MANUAL-TODO.md`: the folder-drop author workflow (create
+  `public/photos/trips/<Trip Name>/`, drop photos, `npm run sync-gallery`); sticky/global numbers
+  (`numbers.json` generated but committed; delete retires a number); within-trip order by filename
+  (prefix `01_`/`02_`); section order via `photographyView.tripOrder`; and an explicit note that V14's
+  `trip`/`main` tags are gone.
+- **Verify:** build green (route list pasted above); codes preserved (`0001…0061`, previews intact);
+  sticky-number deltas pasted (append `0062`/`0063`/`0064` + retire `0062`); empty-state toggle hidden;
+  responsive 0-overflow at 1440/768/375; reduced-motion verified via compiled CSS (live emulation
+  honestly deferred). Author workflow logged in `MANUAL-TODO.md`.
+- **Issues:** Only the tooling gaps noted honestly above — live reduced-motion emulation (CDP method not
+  allowlisted) and the earlier Turbopack stale-CSS artifact from Stage 4 (resolved by a clean dev
+  restart). No code issues; `public/photos/trips/` ships empty by design (git can't track an empty dir;
+  the pipeline creates it at build time).
 
 ---
 
