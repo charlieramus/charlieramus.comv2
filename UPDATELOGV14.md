@@ -261,7 +261,44 @@ toggle doesn't collide with the marquee.
 
 ## Stage 3 Report
 
-_Pending._
+- [x] **`components/photography-gallery.tsx` — now a two-view component.** Added
+  `const [view, setView] = useState<"all" | "trip">("all")` plus the existing
+  `idx` state, and a segmented toggle above the grid: a `.gallery-toggle`
+  `role="group" aria-label="Gallery view"` wrapping two `.gallery-toggle-btn`
+  buttons whose labels come from `photographyView.viewLabels`, each with
+  `aria-pressed` reflecting the active view (keyboard-operable native buttons;
+  focus ring styled in Stage 4).
+- [x] **All view** renders `galleryPhotos` (main !== false) in the existing
+  `.gallery-grid` masonry via a shared `<Tile>` (same markup as before: `fill`
+  Image, blur placeholder, `aria-label`, `priority` on the first 4). No badge.
+- [x] **By trip view** renders `tripSections`: each is a `.trip-section` with a
+  `.trip-head` row — a `<Motif>` flower marker (cycling petal color by section
+  index), the trip title as `<h2>`, and a right-aligned `.trip-count`
+  ("22 frames" / singular "1 frame") — followed by a `.gallery-grid` of that
+  section's tiles. Each trip tile passes `badge`, rendering a `.photo-badge`
+  (the photo `code`) as an `aria-hidden` corner span; no caption on the tile.
+- [x] **Per-view lightbox correctness.** The active flat list is `galleryPhotos`
+  in All and `tripFlat = tripSections.flatMap(s => s.photos)` in By trip
+  (module-scope, render order). Each section carries a precomputed `start`
+  offset, so a trip tile's `onOpen` sets `idx = start + j` — the correct global
+  index into `tripFlat`. `← / →` step the whole active list (Lightbox wraps on
+  `items.length`). Switching views calls `switchTo`, which resets `idx` to null
+  first, so a stale index can never point into the wrong list.
+- [x] **Toggle sits in the content column**, rendered inside the page's `.wrap`
+  (the gallery already lives there), not in any gutter.
+- **Note on the "marquee":** the log's context says a vertical marquee rail lives
+  on this page, but in the current codebase the `marquees` data in site.config.ts
+  is **not rendered by any component** (no marquee component/CSS exists — it was
+  seeded in V10 for a build that isn't wired up). So there is no rail to collide
+  with; the toggle inside `.wrap` is correct regardless. Flagged, not "fixed."
+- **Scope note:** this stage is structure + behavior; the on-brand styling of
+  `.gallery-toggle` / `.trip-section` / `.trip-head` / `.photo-badge` lands in
+  Stage 4, and the live click-through + responsive/reduced-motion sweep is
+  consolidated into Stage 5's gate (once the CSS is present) rather than run
+  three times.
+
+Verify: `tsc --noEmit` clean · `npm run lint` clean · `next build` (export) green,
+`/photography` still one static route.
 
 ---
 
@@ -298,7 +335,37 @@ dark placeholder tiles; toggle + trip headings match the site's look; no horizon
 
 ## Stage 4 Report
 
-_Pending._
+- [x] **`components/lightbox.tsx` — `showCaptions?: boolean` prop (default true).**
+  When false, the caption text is suppressed but the `#code` badge still renders
+  and the image `alt` is untouched; the figcaption now renders when
+  `(showCaptions && caption) || code`. No change to keyboard, focus-trap,
+  scroll-lock, focus-return, or arrow stepping.
+- [x] **`photography-gallery.tsx`** passes `showCaptions={view === "all"}` — All
+  keeps captions in the lightbox, By trip shows the number only.
+- [x] **`app/globals.css` (@layer components, existing @theme tokens, no new
+  tokens/deps):**
+  - `.gallery-toggle` / `.gallery-toggle-btn` — a pill segmented control: panel
+    bg with a `--line` border, inactive labels in `--font-sans` `--color-ink-soft`,
+    the active segment (`[aria-pressed="true"]`) on `--color-paper` with a soft
+    shadow ring, and a `--color-blue` `focus-visible` ring. Small and quiet under
+    the header.
+  - `.trip-views` / `.trip-section` (flex column w/ generous gap) + `.trip-head` —
+    a heading row with the `.trip-flower` marker, an `<h2>` in `--font-serif`, a
+    `--line` bottom rule, and a right-aligned muted tabular `.trip-count`.
+  - `.photo-badge` — a top-left corner chip: `--color-paper` tabular text on a
+    translucent dark background (`rgba(10,10,8,0.62)` + slight blur), readable
+    over any photo, `z-index:2`, `pointer-events:none`, and `aria-hidden` in the
+    markup so it's not part of the tile button's accessible name.
+- [x] **Motion.** The only new transition (the toggle button) is disabled under
+  `prefers-reduced-motion` (added `.gallery-toggle-btn { transition: none }` to
+  the existing gallery reduced-motion block). The flower marker reuses `.motif`,
+  whose spin is already frozen under reduced motion (globals.css line ~125), so
+  no new animation escapes the guard. No marquee exists to disturb (see Stage 3).
+
+Verify: `tsc --noEmit` clean · `npm run lint` clean · `next build` (export) green.
+The live in-browser check (caption suppression in By trip vs. captions in All,
+badge legibility, responsive + reduced-motion sweep) is run as Stage 5's gate now
+that all CSS is present.
 
 ---
 

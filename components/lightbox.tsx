@@ -30,11 +30,15 @@ export default function Lightbox({
   index,
   onClose,
   onIndex,
+  showCaptions = true,
 }: {
   items: LightboxItem[];
   index: number | null;
   onClose: () => void;
   onIndex: (i: number) => void;
+  /** false suppresses the caption text (the `code` number + `alt` are kept).
+   *  The /photography "By trip" view passes false. */
+  showCaptions?: boolean;
 }) {
   const open = index !== null;
 
@@ -139,10 +143,10 @@ export default function Lightbox({
               ? { placeholder: "blur" as const, blurDataURL: item.blurDataURL }
               : {})}
           />
-          {(item.caption || item.code) && (
+          {((showCaptions && item.caption) || item.code) && (
             <figcaption className="lightbox-cap">
               {item.code && <span className="lightbox-code">#{item.code}</span>}
-              {item.caption && <span>{item.caption}</span>}
+              {showCaptions && item.caption && <span>{item.caption}</span>}
             </figcaption>
           )}
         </figure>
