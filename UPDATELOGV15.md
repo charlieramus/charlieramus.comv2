@@ -224,7 +224,33 @@ captioned photos in the same order with unchanged codes; By-trip is empty (no fo
 
 ## Stage 3 Report
 
-_Pending._
+- [x] **`data/trips.ts` rewritten** to the two-independent-dataset model:
+    - `galleryPhotos: Photo[] = photos` — the All set is now simply the full captioned gallery in
+      manifest order (no `main` filter).
+    - `tripSections` imports `tripPhotoGroups` from `data/trip-photos.ts` and orders them via
+      `orderTripSections()`: `photographyView.tripOrder` titles first (in that order), then any unlisted
+      title alphabetically (`localeCompare`); empty groups dropped. Type is
+      `{ title: string; photos: TripPhoto[] }[]`.
+    - Removed the V14 tag-grouping logic, the `date`/index tie-break sorting, the "More frames" untagged
+      bucket, and `UNTAGGED_SECTION_TITLE` (no untagged concept — each trip photo lives in exactly one
+      folder). `TripSection` is now `{ title; photos: TripPhoto[] }`.
+- [x] **V14 tags stripped from the gallery pipeline:**
+    - `public/photos/gallery.json` — removed every `trip` field (no `main` fields existed), preserving
+      formatting so the diff is **trip-removal-only** (verified: HEAD-with-trips-stripped is byte-identical
+      to the new file — captions, locations, `featured`, and order all unchanged).
+    - `scripts/sync-gallery.mjs` — removed `trip`/`main` from the generated object, the serializer, and
+      the generated `Photo` type block, and reverted the header doc comment to the pre-V14 entry shape
+      (`{ file, caption, location?, featured? }`). `codeFor` + the trips pass are kept.
+    - Re-ran `npm run sync-gallery` → `data/photos.ts` no longer carries `trip`/`main` (grep: 0), codes
+      still `0001…0061` (diff of code lines empty).
+- [x] **Components untouched** — `components/photography-gallery.tsx` still imports
+  `galleryPhotos`/`tripSections`; `TripPhoto` is structurally assignable to `Photo`, so
+  `tripFlat: Photo[] = tripSections.flatMap(...)` and the lightbox usage compile unchanged.
+- **Verify:** `tsc --noEmit` clean; `npm run lint` clean; `next build` (export) green — `/photography`
+  still a single static route. All grid renders the same 61 captioned photos, same order, unchanged
+  codes; By-trip is empty (no folders) so `tripSections` is `[]`; previews refs still resolve. The
+  `gallery.json` diff is tags-only.
+- **Issues:** None.
 
 ---
 
