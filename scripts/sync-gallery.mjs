@@ -22,7 +22,7 @@
  * Thumbnails, resizing, ratio and blur are all handled for you.
  */
 
-import { readFileSync, writeFileSync, mkdirSync } from "fs";
+import { readFileSync, writeFileSync, mkdirSync, readdirSync } from "fs";
 import { join, dirname } from "path";
 import { fileURLToPath } from "url";
 import { imageSize } from "image-size";
@@ -38,9 +38,11 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const root = join(__dirname, "..");
 const photosDir = join(root, "public", "photos");
 const thumbsDir = join(photosDir, "thumbs");
+const tripsDir = join(photosDir, "trips");
 const galleryPath = join(photosDir, "gallery.json");
 const numbersPath = join(photosDir, "numbers.json");
 const outputPath = join(root, "data", "photos.ts");
+const tripOutputPath = join(root, "data", "trip-photos.ts");
 
 mkdirSync(thumbsDir, { recursive: true });
 
@@ -89,6 +91,53 @@ function deriveDate(file) {
 
 let downscaled = 0;
 let thumbed = 0;
+
+// Shared per-image processing (used by the trips pass; the gallery pass inlines
+// the same steps for its own manifest): downscale guard → grid thumbnail → blur.
+// Returns the intrinsic ratio, blur placeholder, and whether a thumbnail landed.
+async function processImage(fullPath, thumbPath, label) {
+  let ratio = 1.5;
+  let blurDataURL = null;
+  let hasThumb = false;
+  try {
+    let buf = readFileSync(fullPath);
+    let { width, height } = imageSize(buf);
+
+    if (Math.max(width, height) > MAX_FULL) {
+      buf = await sharp(buf)
+        .resize({ width: MAX_FULL, height: MAX_FULL, fit: "inside", withoutEnlargement: true })
+        .webp({ quality: 82 })
+        .toBuffer();
+      writeFileSync(fullPath, buf);
+      ({ width, height } = imageSize(buf));
+      downscaled++;
+      console.log(`  ↓ Downscaled ${label} to ${width}x${height}`);
+    }
+
+    ratio = Math.round((width / height) * 1000) / 1000;
+
+    try {
+      await sharp(buf)
+        .resize({ width: MAX_THUMB, height: MAX_THUMB, fit: "inside", withoutEnlargement: true })
+        .webp({ quality: 72 })
+        .toFile(thumbPath);
+      hasThumb = true;
+      thumbed++;
+    } catch {
+      console.warn(`  ⚠ Could not generate thumbnail for ${label}`);
+    }
+
+    try {
+      const { base64 } = await getPlaiceholder(buf, { size: 10 });
+      blurDataURL = base64;
+    } catch {
+      console.warn(`  ⚠ Could not generate blur for ${label}`);
+    }
+  } catch {
+    console.warn(`  ⚠ Could not read ${label} — defaulting to ratio 1.5`);
+  }
+  return { ratio, blurDataURL, hasThumb };
+}
 
 const photos = await Promise.all(
   entries.map(async (entry) => {
@@ -219,6 +268,103 @@ ${lines.join(",\n")}
 `;
 
 writeFileSync(outputPath, output, "utf8");
+
+// TRIPS PASS (V15) --------------------------------------------------------------
+// Folder-driven "By trip" dataset. Each immediate subdir of public/photos/trips/
+// is a trip; its basename is the section title. Photos are listed in NATURAL
+// filename order (deterministic, so the sticky numbers never reshuffle). Same
+// downscale guard + thumbnail + blur as the gallery, and the same codeFor() so
+// trip photos number upward from the gallery max. No captions — alt is the trip
+// name + the photo's number ("<title> — <NN>"). Runs after the gallery pass so
+// gallery codes are all assigned first.
+mkdirSync(tripsDir, { recursive: true });
+
+const IMAGE_RE = /\.(jpe?g|png|webp)$/i;
+const IGNORED_DIRS = new Set(["thumbs", ".thumbs"]);
+const naturalSort = (a, b) =>
+  a.localeCompare(b, undefined, { numeric: true, sensitivity: "base" });
+
+const tripDirNames = readdirSync(tripsDir, { withFileTypes: true })
+  .filter((d) => d.isDirectory() && !IGNORED_DIRS.has(d.name))
+  .map((d) => d.name)
+  .sort(naturalSort);
+
+const tripPhotoGroups = [];
+for (const title of tripDirNames) {
+  const tripDir = join(tripsDir, title);
+  const tripThumbsDir = join(tripDir, "thumbs");
+  const files = readdirSync(tripDir, { withFileTypes: true })
+    .filter((d) => d.isFile() && IMAGE_RE.test(d.name))
+    .map((d) => d.name)
+    .sort(naturalSort);
+  if (files.length === 0) continue;
+  mkdirSync(tripThumbsDir, { recursive: true });
+
+  const groupPhotos = [];
+  for (const file of files) {
+    const relPath = `trips/${title}/${file}`;
+    const code = codeFor(relPath);
+    const fullPath = join(tripDir, file);
+    const thumbPath = join(tripThumbsDir, file);
+    const { ratio, blurDataURL, hasThumb } = await processImage(fullPath, thumbPath, relPath);
+    groupPhotos.push({
+      src: `/photos/${relPath}`,
+      thumb: hasThumb ? `/photos/trips/${title}/thumbs/${file}` : `/photos/${relPath}`,
+      alt: `${title} — ${parseInt(code, 10)}`,
+      ratio,
+      code,
+      blurDataURL,
+    });
+  }
+  tripPhotoGroups.push({ title, photos: groupPhotos });
+}
+
+// Serialize the grouped trip manifest — grouped by folder, ordered
+// alphabetically by title here (Stage 3's resolver applies tripOrder). Omit
+// undefined optionals; deterministic field order for clean diffs.
+const tripGroupBlocks = tripPhotoGroups.map((group) => {
+  const photoLines = group.photos.map((p) => {
+    const parts = [
+      `src: ${JSON.stringify(p.src)}`,
+      `thumb: ${JSON.stringify(p.thumb)}`,
+      `alt: ${JSON.stringify(p.alt)}`,
+      `ratio: ${p.ratio}`,
+      `code: ${JSON.stringify(p.code)}`,
+    ];
+    if (p.blurDataURL) parts.push(`blurDataURL: ${JSON.stringify(p.blurDataURL)}`);
+    return `      { ${parts.join(", ")} }`;
+  });
+  return `  {\n    title: ${JSON.stringify(group.title)},\n    photos: [\n${photoLines.join(",\n")}\n    ],\n  }`;
+});
+
+const tripOutput = `// AUTO-GENERATED by scripts/sync-gallery.mjs — do not edit directly.
+// Drop photos into public/photos/trips/<Trip Name>/, then run: npm run sync-gallery
+//
+// The folder-driven "By trip" dataset (V15). Each subdir of public/photos/trips/
+// is a trip; the folder name is the section title. No captions — the sticky
+// print-reference \`code\` (see public/photos/numbers.json) is the only label.
+
+export type TripPhoto = {
+  /** full-res image path in /public */
+  src: string;
+  /** thumbnail path */
+  thumb: string;
+  /** alt text — trip name + the photo's number (there is no caption) */
+  alt: string;
+  /** intrinsic aspect ratio, width / height (drives masonry sizing) */
+  ratio: number;
+  /** sticky global print-reference number */
+  code: string;
+  /** base64 blur placeholder for next/image */
+  blurDataURL?: string;
+};
+
+export const tripPhotoGroups: { title: string; photos: TripPhoto[] }[] = [${
+  tripGroupBlocks.length ? "\n" + tripGroupBlocks.join(",\n") + "\n" : ""
+}];
+`;
+
+writeFileSync(tripOutputPath, tripOutput, "utf8");
 
 // Persist the sticky number map when it grew (new photos took fresh codes).
 // Sorted by code for a clean, append-only diff. Untouched map → no rewrite

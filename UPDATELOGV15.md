@@ -163,7 +163,35 @@ back to []. Report the proof (group + codes seen) and confirm the revert is clea
 
 ## Stage 2 Report
 
-_Pending._
+- [x] **`scripts/sync-gallery.mjs` — TRIPS pass** added after the gallery pass. `mkdirSync(tripsDir)`
+  ensures `public/photos/trips/` exists, then globs its immediate subdirectories via
+  `readdirSync(..., { withFileTypes: true })` (each subdir = a trip, basename = title), skipping any
+  `thumbs` / `.thumbs` dir. Per trip it lists image files (`/\.(jpe?g|png|webp)$/i`) in **natural
+  filename order** (`localeCompare` with `numeric: true`). For each image it calls
+  `codeFor("trips/<title>/<file>")`, runs the shared `processImage()` helper (same `MAX_FULL` downscale
+  guard, thumbnail into `trips/<title>/thumbs/<file>`, ratio + `blurDataURL`), and sets
+  `alt = "<title> — <NN>"` (trip name + the number, e.g. `Sample 2026 — 62`). No caption field.
+- [x] **Shared `processImage(fullPath, thumbPath, label)` helper** factored out (downscale → thumbnail →
+  blur), used by the trips pass; the gallery pass is left inlined and byte-identical.
+- [x] **`data/trip-photos.ts` (NEW, generated)** — same "do not edit" banner as `data/photos.ts`.
+  `export type TripPhoto = { src; thumb; alt; ratio; code; blurDataURL? }` (no `caption`); grouped
+  manifest `export const tripPhotoGroups: { title: string; photos: TripPhoto[] }[]`, ordered
+  alphabetically by title (Stage 3's resolver applies `tripOrder`). Undefined optionals omitted;
+  deterministic field order.
+- [x] **`numbers.json` covers trips** — the trips pass runs after the gallery `Promise.all`, so gallery
+  codes are all assigned first; trip photos append upward from the gallery max (`0062`, `0063`, …).
+- [x] **Nothing else touched** — `data/trips.ts`, the components, and `gallery.json` are unchanged. With
+  `trips/` empty, `tripPhotoGroups` is `[]` and the generated file is unused so far.
+- **Verify:** `tsc --noEmit` clean; `npm run lint` clean; `next build` (export) green with empty
+  `tripPhotoGroups` (renders nothing). **Scan proof:** temporarily created
+  `public/photos/trips/Sample 2026/` with two throwaway images (`01_a.webp`, `02_b.webp` copied from
+  existing photos) → sync produced a `"Sample 2026"` group of 2 photos, codes **`0062`/`0063`**
+  (continuing from the gallery max), alt `"Sample 2026 — 62"`/`"…63"`, thumbs written to
+  `trips/Sample 2026/thumbs/`. Then deleted the folder, `git checkout public/photos/numbers.json`, and
+  re-synced → `data/trip-photos.ts` back to `[]`, `numbers.json` back to 61 entries, working tree clean
+  (only `scripts/sync-gallery.mjs` + the new `data/trip-photos.ts` remain). No sample codes committed.
+- **Issues:** None. `public/photos/trips/` is created empty at build time (git cannot track an empty
+  dir), matching the "ships empty" decision.
 
 ---
 
