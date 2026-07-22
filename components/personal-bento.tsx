@@ -33,11 +33,9 @@ export default function PersonalBento() {
   return (
     <section id="personal" className="mtc">
       <div className="wrap">
-        <Reveal className="head">
-          {/* CUSTOMIZE: section title + subline in site.config.ts (sections.personalBento) */}
-          <h2>{sections.personalBento.title}</h2>
-          <p>{sections.personalBento.subline}</p>
-        </Reveal>
+        {/* Section title + subline intentionally omitted (Charlie): the career
+            block hugs "Right now" above, separated only by the .mtc divider rule.
+            Copy still lives in site.config.ts (sections.personalBento) if reinstated. */}
 
         {/* Career journey — a readable, flowing vertical timeline (V6 rework:
             replaces the old fixed-pixel, absolutely-positioned axis). ← experience */}

@@ -65,7 +65,7 @@ export const snapshot: Snapshot = {
 // entry verbatim — it keeps only the discovery insight the timeline doesn't have.
 // CUSTOMIZE: edit copy freely — types don't care how long each paragraph is.
 export const aboutParagraphs: string[] = [
-  "I'm a high school junior in Boulder and a self-taught developer who builds full products solo, backend architecture, the design system, and the marketing copy in between. I work mostly in Next.js, TypeScript, and Tailwind, with Claude Code as a regular collaborator.",
+  "I'm a high school junior in Boulder and a self taught aspiring developer who builds full products solo, backend architecture, the design system, and the marketing copy in between. I work mostly in Next.js, TypeScript, and Tailwind, with Claude Code as a regular collaborator.",
   "Most of my time right now goes to Ostiara. The part that stuck with me wasn't the code but the customer discovery, talking to door-to-door reps surfaced a real split between menu-priced and measure-on-site quoting, and that split changes what the tool owes each group.",
   "Before Ostiara there were e-commerce stores that never took off but taught me business, and years of building architecture content on platforms that grew into a global community of builders and passed 300,000+ impressions. Alongside Ostiara I keep smaller builds moving — VaultDNA, MyLifeInARepo, and this site itself.",
   "Off the screen I shoot on a Canon EOS R5 (with a photo credit at Boulder Reporting Lab), climb, ski, and ride gravel bikes. I read and journal. Lots of ideas are still queued, I plan to keep building and sharing the journey.",
@@ -124,9 +124,9 @@ export const entries: Experience[] = [
     title: "Stealth Startup (Ostiara)",
     org: "",
     href: "",
-    links: [{ label: "GitHub", href: "https://github.com/charlieramus/ostiara" }],
+    links: [{ label: "Showcase", href: "charlieramus.com/web-projects/ostiara" }],
     description:
-      "Building Ostiara solo, end to end: a SaaS platform for door-to-door sales teams across home-service verticals — pest control, solar, roofing, fencing, security. Shipped the marketing site, an admin dashboard, and a teams-and-roles system on Clerk Organizations with Supabase row-level security, all wearing a design system I built for it. Ran customer-discovery interviews to learn how reps actually quote prices on a doorstep.",
+      "Building Ostiara solo, end to end: a platform for door-to-door sales teams across home-service verticals, built for, pest control, solar, roofing, fencing, security. Shipped the marketing site, an admin dashboard, and a teams-and-roles system on Clerk Organizations with Supabase row-level security, all wearing a design system I built for it. Ran customer-discovery interviews to learn how reps actually quote prices on a doorstep.",
     tags: ["Next.js", "TypeScript", "Marketing", "Full Stack", "Design Systems", "Customer Discovery"],
     logo: "S",
     logoBg: "var(--color-blue)",
@@ -412,7 +412,7 @@ export const designProjects: DesignProject[] = [
 
 export type WebProject = {
   /** CUSTOMIZE: project name */
-  title: string;
+  title: string; 
   /** CUSTOMIZE: the URL segment for this project's detail page —
    *  `/web-projects/<slug>`. Stable + URL-safe, required (titles can carry dots
    *  like "charlieramus.comv2", so slugs are explicit, not derived). */
@@ -976,20 +976,11 @@ export type DesignPick = {
   previewImage?: string;
 };
 
-/** A carousel pick: a web-project `title` + which browser-window skin to use. */
-export type CarouselPick = {
-  /** exact project `title` from data/projects-web.ts */
-  title: string;
-  /** browser-window skin class (see `.shot` variants in globals.css) */
-  variant: "s-acie" | "s-dark" | "s-warm" | "s-lav" | "s-mint";
-};
-
 export type PreviewConfig = {
   photographyBento: PhotoPick[];
   graphicDesignBento: DesignPick[];
   /** the "Right now" highlight photo, named by `code` (see rightNowPhoto below) */
-  rightNowPhoto: string;
-  digitalHomeCarousel: CarouselPick[];
+  rightNowPhoto: string; 
   workBands: string[];
 };
 
@@ -999,10 +990,10 @@ export const previews: PreviewConfig = {
   // (Film-strip Frames like Longs Peak are skipped here — a square crop clips
   // their baked border.) A `previewImage` may override any tile's thumb.
   photographyBento: [
-    { code: "0001" },
-    { code: "0013" },
+    { code: "0051" },
+    { code: "0018" },
     { code: "0030" },
-    { code: "0004" },
+    { code: "0039" },
   ],
 
   // CUSTOMIZE: Graphic-design bento — which design projects appear, in order.
@@ -1017,23 +1008,12 @@ export const previews: PreviewConfig = {
   // CUSTOMIZE: "Right now" highlight photo — named directly by its `code` from
   // data/photos.ts. (This card is driven entirely from here now; the `featured`
   // flag in photos.ts no longer decides it.)
-  rightNowPhoto: "0055",
-
-  // CUSTOMIZE: Digital-home carousel — which projects tour, in order, and the
-  // browser-window skin for each. Titles come from data/projects-web.ts.
-  digitalHomeCarousel: [
-    { title: "Ostiara", variant: "s-acie" },
-    { title: "MyLifeInARepo", variant: "s-dark" },
-    { title: "Querryn", variant: "s-warm" },
-    { title: "VaultDNA", variant: "s-lav" },
-    { title: "charlieramus.com", variant: "s-mint" },
-    { title: "Backtrace", variant: "s-dark" },
-  ],
+  rightNowPhoto: "0012",
 
   // CUSTOMIZE: Work bands — the curated projects (in order) for the "Tiny
   // fraction of my work" section. The homepage renders exactly 4 bespoke band
   // visuals, so keep this at 4 titles; extras beyond 4 are ignored.
-  workBands: ["Ostiara", "MyLifeInARepo", "charlieramus.com", "VaultDNA"],
+  workBands: ["Ostiara", "MyLifeInARepo", "charlieramus.comv2", "VaultDNA"],
 };
 
 // -----------------------------------------------------------------------------
@@ -1168,7 +1148,9 @@ export const sections = {
   // { label, href } pair; href is a "#anchor" on the homepage or an inner route.
   // CUSTOMIZE: nav labels + hrefs.
   nav: [
-    { label: "work", href: "#work" },
+    // Points at the full projects page (absolute so it resolves once v2 is the
+    // live charlieramus.com) rather than the homepage #work teaser section.
+    { label: "projects", href: "https://charlieramus.com/web-projects" },
     { label: "photography", href: "/photography" },
     { label: "about", href: "#about" },
   ],
@@ -1197,7 +1179,7 @@ export const sections = {
   work: {
     // CUSTOMIZE: work subline
     subline:
-      "A few things I've built solo, end to end, from the backend and data model to the design system and the copy.",
+      "",
   },
 
   // components/right-now.tsx — the "Right now" section.
@@ -1206,7 +1188,7 @@ export const sections = {
     title: "Right now",
     // CUSTOMIZE: section subline
     subline:
-      "A quick pulse on what's fresh, the active build, the open journal, and the latest essay.",
+      "A quick showcase on what's fresh, a build, the open journal, and the latest essay.",
   },
 
   // components/petal-simon.tsx — the Playground game card.

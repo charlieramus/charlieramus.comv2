@@ -34,12 +34,12 @@ const items: NowItem[] = [
     dot: "var(--color-blue)",
     title: building.title,
     desc: firstSentence(building.description),
-    href: building.href || "/web-projects",
-    cta: building.href ? "View on GitHub ↗" : "See the build ↗",
-    external: Boolean(building.href),
+    href: `/web-projects/${building.slug}`,
+    cta: "View build ↗",
+    external: false,
   },
   {
-    kick: "Journaling",
+    kick: "For the Community",
     dot: "var(--color-yellow)",
     title: journal.title,
     desc: firstSentence(journal.description),
@@ -60,7 +60,7 @@ const items: NowItem[] = [
 
 export default function RightNow() {
   return (
-    <section className="now">
+    <section id="right-now" className="now">
       <div className="wrap">
         <Reveal className="head">
           {/* CUSTOMIZE: section heading + subline in site.config.ts (sections.rightNow) */}

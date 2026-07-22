@@ -200,14 +200,13 @@ surface shows. **As of V9 the `previews` curation object lives in `site.config.t
 `data/previews.ts`.
 
 **To change what's previewed, edit the `previews` object in `site.config.ts` — no
-component edits.** It controls five surfaces:
+component edits.** It controls four surfaces:
 
 | Surface | Field | You edit |
 |---|---|---|
 | Photography bento | `photographyBento` | photo `code`s (from `data/photos.ts`) |
 | Graphic-design bento | `graphicDesignBento` | design-project `title`s |
 | "Right now" photo | `rightNowPhoto` | a photo `code` (currently `"0055"`) |
-| Digital-home carousel | `digitalHomeCarousel` | web-project `title` + window skin |
 | Work bands | `workBands` | 4 web-project `title`s, in order |
 
 - **Reorder / swap** — change the array order or the ids.

@@ -13,12 +13,11 @@ import { photos, type Photo } from "@/data/photos";
 import { designProjects, type DesignProject } from "@/data/projects-design";
 import { webProjects, type WebProject } from "@/data/projects-web";
 import { previews } from "@/site.config";
-import type { CarouselPick } from "@/site.config";
 
 // Re-export the curation config + pick types so existing importers of
 // "@/data/previews" keep resolving unchanged.
 export { previews };
-export type { PhotoPick, DesignPick, CarouselPick, PreviewConfig } from "@/site.config";
+export type { PhotoPick, DesignPick, PreviewConfig } from "@/site.config";
 
 // -----------------------------------------------------------------------------
 // Resolvers — turn the curation into ready-to-render data, skipping any pick
@@ -66,20 +65,6 @@ export function bentoDesignTiles(): PreviewTile[] {
  *  to the first catalog photo if the code is a typo, so the card never empties. */
 export function rightNowPhoto(): Photo | undefined {
   return photos.find((p) => p.code === previews.rightNowPhoto) ?? photos[0];
-}
-
-/** A resolved carousel shot: the canonical title + its window skin. */
-export type CarouselShot = { title: string; variant: CarouselPick["variant"] };
-
-/** Digital-home carousel shots, in curation order, missing titles skipped. */
-export function carouselShots(): CarouselShot[] {
-  return previews.digitalHomeCarousel
-    .map((pick): CarouselShot | undefined => {
-      const project = webProjects.find((p) => p.title === pick.title);
-      if (!project) return undefined;
-      return { title: project.title, variant: pick.variant };
-    })
-    .filter((s): s is CarouselShot => Boolean(s));
 }
 
 /** Curated work-band projects, in order, missing titles skipped. */

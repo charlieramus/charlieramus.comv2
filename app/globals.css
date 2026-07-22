@@ -192,11 +192,6 @@ body {
   #main-content:focus-visible {
     outline: none;
   }
-  /* The horizontally-scrollable carousel is keyboard-focusable (arrow-scroll). */
-  .carousel:focus-visible {
-    outline: 2px solid var(--color-blue);
-    outline-offset: 4px;
-  }
 }
 
 /* ---------------------------------------------------------------------------
@@ -335,93 +330,69 @@ body {
     display: block;
   }
 
-  /* ---------- STEP + CAROUSEL ---------- */
+  /* ---------- "VIEW MORE" CUE ---------- */
+  /* Replaced the old project carousel (V15): a centered link into /web-projects
+     with a chevron that slowly fades in and out. */
   .step {
-    text-align: center;
-    padding: 18px 0 30px;
-  }
-  .step .bm {
-    font-size: 22px;
-    display: block;
-    margin-bottom: 8px;
-    color: var(--color-red-ink);
-  }
-  .step .t {
-    font-family: var(--font-serif);
-    font-size: 17px;
-  }
-
-  .carousel {
     display: flex;
-    gap: 20px;
-    overflow-x: auto;
-    padding: 6px var(--edge) 30px;
-    scroll-snap-type: x mandatory;
+    justify-content: center;
+    /* The hero above is ~90vh tall, so a few px does nothing — pull the cue up
+       well into the first screen. Responsive so it scales across heights. */
+    margin-top: clamp(-220px, -18vh, -110px);
+    padding: 0 0 40px;
   }
-  .carousel::-webkit-scrollbar {
-    height: 0;
-  }
-  .shot {
-    scroll-snap-align: center;
-    flex: 0 0 auto;
-    width: 330px;
-    height: 210px;
-    border-radius: 14px;
-    overflow: hidden;
-    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.1);
-    background: #fff;
-  }
-  .bbar {
-    height: 26px;
-    background: #f0efe9;
-    display: flex;
+  .step-more {
+    display: inline-flex;
+    flex-direction: column;
     align-items: center;
-    gap: 5px;
-    padding: 0 10px;
-    border-bottom: 1px solid #e6e4db;
+    gap: 4px;
+    color: var(--color-red-ink);
+    font-weight: 500;
+    font-size: 14px;
   }
-  .bbar i {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: #d9d7cd;
-    display: inline-block;
+  .step-more:hover {
+    opacity: 0.6;
   }
-  .shot .body {
-    height: calc(100% - 26px);
-    display: grid;
-    place-items: center;
-    color: #fff;
-    font-family: var(--font-serif);
-    font-size: 18px;
-    text-align: center;
-    padding: 12px;
+  .step-arrow {
+    animation: step-arrow-pulse 2.6s ease-in-out infinite;
   }
-  .s-acie .body {
-    background: #fbfbf8;
-    color: var(--color-ink-soft); /* was #888 (3.4:1); ink-soft is ~7:1 on the light shot */
-    font-size: 13px;
+  @keyframes step-arrow-pulse {
+    0%,
+    100% {
+      opacity: 0.25;
+      transform: translateY(-2px);
+    }
+    50% {
+      opacity: 1;
+      transform: translateY(2px);
+    }
   }
-  .s-dark .body {
-    background: radial-gradient(circle at 50% 45%, #2c2c2c, #111);
-  }
-  .s-warm .body {
-    background: linear-gradient(120deg, #f6b24a, #e8743b);
-    /* Dark warm ink instead of the default white — white on this orange was
-       ~2.6:1 (fails AA). Matches the dark-on-tint pattern of .s-mint / .s-lav
-       (V5 Stage 3 note resolved). #3d1c00 is ≥5:1 across the whole gradient. */
-    color: #3d1c00;
-  }
-  .s-mint .body {
-    background: linear-gradient(120deg, #dff5e1, #bfe9c8);
-    color: #2f6b3d;
-  }
-  .s-lav .body {
-    background: linear-gradient(120deg, #e7d9ff, #c7b3f0);
-    color: #4a3b6b;
+  @media (prefers-reduced-motion: reduce) {
+    .step-arrow {
+      animation: none;
+      opacity: 0.8;
+      transform: none;
+    }
   }
 
   /* ---------- PERSONAL / EXPLORE BENTO ---------- */
+  /* Headless section (title/subline removed): the career block hugs "Right now"
+     above, so collapse the stacked section padding and mark the seam with a
+     single noticeable rule spanning the content width. */
+  .now {
+    padding-bottom: clamp(20px, 2.5vw, 32px);
+  }
+  .mtc {
+    padding-top: 0;
+  }
+  .mtc > .wrap {
+    border-top: 1px solid var(--color-line);
+    padding-top: clamp(26px, 3.5vw, 40px);
+  }
+  .mtc .cj {
+    margin-top: 0;
+  }
+
   /* Motif accents dividing the timeline from the explore cards. */
   .mtc-accents {
     display: flex;
@@ -926,16 +897,48 @@ body {
   .tile .motif {
     width: 46%;
   }
-  .card {
-    position: absolute;
-    border-radius: 12px;
-    box-shadow: 0 14px 34px rgba(0, 0, 0, 0.16);
-    background: #fff;
-    overflow: hidden;
-    transition: transform 0.35s cubic-bezier(0.2, 0.7, 0.3, 1);
+  /* Each band is a link to /web-projects/<slug>; strip the anchor defaults and
+     keep the grid layout the .band rule already sets. */
+  a.band {
+    color: inherit;
+    text-decoration: none;
+    cursor: pointer;
   }
-  .band:hover .card {
-    transform: translateY(-4px);
+  a.band:focus-visible {
+    outline: 2px solid var(--color-blue);
+    outline-offset: 4px;
+    border-radius: 24px;
+  }
+
+  /* ---------- WORK-BAND SCREENSHOTS ---------- */
+  /* Static grid inside each panel: the project's hero shot on the left, its two
+     square shots stacked on the right. Plain lazy images — no absolute deck, no
+     hover motion — so the section stays light under the full-res screenshots. */
+  /* `.stage.pshots` (not just `.pshots`) so this height wins over the
+     `.panel .stage { height: 100% }` rule above (equal specificity, later wins).
+     Right column + both rows are a fixed square size, so the two side shots are
+     always squares; the hero fills the remaining width on the left. Kept small
+     so the caption below never gets crunched against the panel edge. */
+  .stage.pshots {
+    display: grid;
+    grid-template-columns: 1fr 96px;
+    grid-template-rows: 96px 96px;
+    gap: 12px;
+    height: 204px;
+  }
+  .pshot {
+    position: relative;
+    border-radius: 12px;
+    overflow: hidden;
+    background: #fff;
+    box-shadow: 0 14px 34px rgba(0, 0, 0, 0.12);
+  }
+  .pshot img {
+    object-fit: cover;
+  }
+  .pshot-hero {
+    grid-column: 1;
+    grid-row: 1 / 3;
   }
 
   .ui {

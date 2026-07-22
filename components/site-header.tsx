@@ -7,7 +7,7 @@ import { usePathname } from "next/navigation";
 // pages (the script wordmark was removed in V6 — see UPDATELOGV6 Stage 1). The
 // homepage keeps its own hero nav; this is only mounted on the content routes.
 const LINKS: { href: string; label: string }[] = [
-  { href: "/web-projects", label: "Work" },
+  { href: "/web-projects", label: "Projects" },
   { href: "/design", label: "Design" },
   { href: "/photography", label: "Photography" },
   { href: "/writing", label: "Writing" },
